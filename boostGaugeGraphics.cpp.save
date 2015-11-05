@@ -1,0 +1,348 @@
+#include <iostream>
+
+#include <stdio.h>
+#include "VG/openvg.h"
+#include "VG/vgu.h"
+#include "fontinfo.h"
+#include "shapes.h"
+#include <stdlib.h>
+
+#include <math.h>
+#include "boostGaugeGraphics.h" // this is so the function at this level can scope the other function at this level.  bad cpp coding? you decide!
+
+void setupGraphics(int* widthPtr, int* heightPtr)
+{
+	init(widthPtr, heightPtr); //INIT Graphics
+
+}
+
+void boostGaugeGraphics(float pressure, float time ,  int width, int height)
+{
+
+	Start(width, height);	//this should go in setup			   // Start the picture
+	Background(0, 0, 0);	//this should go in setup			   // Black background
+
+
+	// Draw the background as black, 
+	int borderWidth = 5;
+
+
+
+
+
+
+	/**********************************************************************
+				Draw Gauge Outer ring
+	***********************************************************************/
+
+	StrokeWidth(borderWidth);	//Set the stroke defining outer rim of  Gauge Outer ring
+	Stroke(44, 77, 232, 1);		// Set the stroke attribute colors
+//	Fill( 0 , 0 , 0 , 0);		// Set the fill of the Circle to black, with alpha 0
+	Circle(width / 2, height/2 , height-(2*borderWidth));	//Draw the Gauge outer Ring
+	VGfloat stopsNew2[]={	0.000,	0,0,0,1,
+				0.500,  0,  0,  0,  1,
+				1.000,	44,77,232,1};
+	FillRadialGradient(width/2, height/2, width/2, height/2, height-2*borderWidth  ,stopsNew2,3);
+	StrokeWidth(0);
+	Circle(width / 2, height/2 , height-(2*borderWidth));	//Draw the Gauge
+
+
+int bigSw = 0;
+if(bigSw==1)
+{
+
+	VGfloat stopsFade1[]={	0,	0,0,255,0.45,
+			0.8,	44,77,232,0.45,
+			1.,	255,255,255,0.45};
+
+	VGfloat stopsFade2[]={	0,	0,0,255,0.3,
+			0.8,	44,77,232,0.3,
+			1.,	255,255,255,0.3};
+
+	VGfloat stopsFade3[]={	0,	0,0,255,0.1,
+			0.8,	44,77,232,0.1,
+			1.,	255,255,255,0.1};
+
+
+
+
+//	FillRadialGradient(width/2, height/2, width/2, height/2,  500,stops,3);
+
+//	Circle(width/2,height/2, 500);
+
+
+
+//	StrokeWidth(borderWidth+2.5);
+//	Stroke(44,77,232,0.5);			   // The "world"
+//	Circle(width/2, height/2, height-(2*borderWidth));
+	
+//	StrokeWidth(borderWidth+10);
+//	Stroke(44,77,232,0.2);
+//	Circle(width/2, height/2, height-(2*borderWidth));
+	
+
+//	Fill(255, 255, 255, 1);				   // White text
+//	char text[10];
+//	sprintf(text, "%.2f", pressure);
+//	TextMid(width / 2, height / 2, text, SerifTypeface, width / 10);	// Greetings 
+
+
+	float angle = 10*pressure;
+	float theta = angle;
+	int centerX = width/2;
+	int centerY = height/2;
+
+
+	int sw=0;
+
+
+/*
+	int baseWidth = 10; 	//[pixels]
+	int topWidth = 8;	//[pixels]
+	int length1 = 200; 	//[pixels]
+	int length2 = 180;	//[pixels]
+	float vertX[5];
+	float vertY[5];
+	
+	vertX[0] = centerX + baseWidth*cos(degToRad(90-theta));
+	vertY[0] = centerY + baseWidth*sin(degToRad(90-theta));
+
+	vertX[1] = centerX - length1*cos(degToRad(theta)) + topWidth*cos(degToRad(90-theta));
+	vertY[1] = centerY + length1*sin(degToRad(theta)) - topWidth*sin(degToRad(90-theta));
+
+	vertX[2] = centerX - length2*cos(degToRad(theta));
+	vertY[2] = centerY + length2*sin(degToRad(theta));
+
+	vertX[3] = centerX;
+	vertY[3] = centerY;
+
+//	vertX[3] = centerX - length1*cos(degToRad(theta)) + topWidth*cos(degToRad(90-theta));
+//	vertY[3] = centerY + length1*sin(degToRad(theta)) + topWidth*sin(degToRad(90-theta));
+
+//	vertX[4] = centerX - baseWidth*cos(degToRad(90-theta));
+//	vertY[4] = centerY - baseWidth*sin(degToRad(90-theta));
+
+	VGfloat	stops2[]={	0.000,	255,255,255,1,
+				1.000,	0,0,255,1};
+		FillRadialGradient(width/2, height/2, width/2, height/2,  length2 ,stops2,2);
+		StrokeWidth(0);
+		Polygon( vertX , vertY , 4 );
+
+*/
+
+
+
+
+
+
+	
+	sw=1;
+	if(sw==1)
+	{
+
+		int needleLength = 200;
+		int needleLengthFade1 = 205;
+		int needleLengthFade2 = 210;
+		int needleLengthFade3 = 240;
+		int needleSubHeight = 180;
+		int needleWidthB = 10;
+		int needleWidthBFade1 = 13;
+		int needleWidthBFade2 = 18;
+		int needleWidthBFade3 = 40;
+
+	//	int needleWidthT = 8;
+
+		float xVertices[5];
+		float yVertices[5];
+		float xVertFade1[5];
+		float yVertFade1[5];
+		float xVertFade2[5];
+		float yVertFade2[5];
+		float xVertFade3[5];
+		float yVertFade3[5];
+
+		xVertices[0] = centerX - needleWidthB*cos(degToRad(angle+90));
+		yVertices[0] = centerY + needleWidthB*sin(degToRad(angle+90));
+//		xVertFade1[0] = centerX - needleWidthBFade1*cos(degToRad(angle+90));
+//		yVertFade1[0] = centerY + needleWidthBFade1*sin(degToRad(angle+90));
+//		xVertFade2[0] = centerX - needleWidthBFade2*cos(degToRad(angle+90));
+//		yVertFade2[0] = centerY + needleWidthBFade2*sin(degToRad(angle+90));
+//		xVertFade3[0] = centerX - needleWidthBFade3*cos(degToRad(angle+90));
+//		yVertFade3[0] = centerY + needleWidthBFade3*sin(degToRad(angle+90));
+//
+		xVertices[1] = centerX - needleSubHeight*cos(degToRad(angle))-7*cos(degToRad(angle+90));
+		yVertices[1] = centerY + needleSubHeight*sin(degToRad(angle))+7*sin(degToRad(angle+90));
+//		xVertFade1[1] = centerX - needleSubHeight*cos(degToRad(angle))-9*cos(degToRad(angle+90));
+//		yVertFade1[1] = centerY + needleSubHeight*sin(degToRad(angle))+9*sin(degToRad(angle+90));
+//		xVertFade2[1] = centerX - needleSubHeight*cos(degToRad(angle))-12*cos(degToRad(angle+90));
+//		yVertFade2[1] = centerY + needleSubHeight*sin(degToRad(angle))+12*sin(degToRad(angle+90));
+//		xVertFade3[1] = centerX - needleSubHeight*cos(degToRad(angle))-25*cos(degToRad(angle+90));
+//		yVertFade3[1] = centerY + needleSubHeight*sin(degToRad(angle))+25*sin(degToRad(angle+90));
+
+		xVertices[2] = centerX - needleLength*cos(degToRad(angle));
+		yVertices[2] = centerY + needleLength*sin(degToRad(angle));
+//		xVertFade1[2] = centerX - needleLengthFade1*cos(degToRad(angle));
+//		yVertFade1[2] = centerY + needleLengthFade1*sin(degToRad(angle));
+//		xVertFade2[2] = centerX - needleLengthFade2*cos(degToRad(angle));
+//		yVertFade2[2] = centerY + needleLengthFade2*sin(degToRad(angle));
+//		xVertFade3[2] = centerX - needleLengthFade3*cos(degToRad(angle));
+//		yVertFade3[2] = centerY + needleLengthFade3*sin(degToRad(angle));
+
+		xVertices[3] = centerX - needleSubHeight*cos(degToRad(angle))-7*cos(degToRad(angle-90));
+		yVertices[3] = centerY + needleSubHeight*sin(degToRad(angle))+7*sin(degToRad(angle-90));
+//		xVertFade1[3] = centerX - needleSubHeight*cos(degToRad(angle))-9*cos(degToRad(angle-90));
+//		yVertFade1[3] = centerY + needleSubHeight*sin(degToRad(angle))+9*sin(degToRad(angle-90));
+//		xVertFade2[3] = centerX - needleSubHeight*cos(degToRad(angle))-12*cos(degToRad(angle-90));
+//		yVertFade2[3] = centerY + needleSubHeight*sin(degToRad(angle))+12*sin(degToRad(angle-90));
+//		xVertFade3[3] = centerX - needleSubHeight*cos(degToRad(angle))-25*cos(degToRad(angle-90));
+//		yVertFade3[3] = centerY + needleSubHeight*sin(degToRad(angle))+25*sin(degToRad(angle-90));
+
+		xVertices[4] = centerX - needleWidthB*cos(degToRad(angle-90));
+		yVertices[4] = centerY + needleWidthB*sin(degToRad(angle-90));
+//		xVertFade1[4] = centerX - needleWidthBFade1*cos(degToRad(angle-90));
+//		yVertFade1[4] = centerY + needleWidthBFade1*sin(degToRad(angle-90));
+//		xVertFade2[4] = centerX - needleWidthBFade2*cos(degToRad(angle-90));
+//		yVertFade2[4] = centerY + needleWidthBFade2*sin(degToRad(angle-90));
+//		xVertFade3[4] = centerX - needleWidthBFade3*cos(degToRad(angle-90));
+//		yVertFade3[4] = centerY + needleWidthBFade3*sin(degToRad(angle-90));
+
+
+//		float theta1 = atan((xVertices[0]-xVertices[1])/needleSubHeight);
+//		FillLinearGradient(xVertices[0],yVertices[0],)
+
+//		FillRadialGradient(width/2, height/2, width/2, height/2,  needleLengthFade3,stopsFade1,3);
+//		Polygon(xVertFade1,yVertFade1,5);
+//		StrokeWidth(0); // 
+//		Circle(centerX,centerY,(needleWidthBFade1)*2);
+
+//		FillRadialGradient(width/2, height/2, width/2, height/2,  needleLengthFade3,stopsFade2,3);
+//		Polygon(xVertFade2,yVertFade2,5);
+//		StrokeWidth(0);
+//		Circle(centerX,centerY,(needleWidthBFade2)*2);
+
+//		FillRadialGradient(width/2, height/2, width/2, height/2,  needleLengthFade3,stopsFade3,3);
+//		Polygon(xVertFade3,yVertFade3,5);
+//		StrokeWidth(0);
+//		Circle(centerX,centerY,(needleWidthBFade3)*2);
+	VGfloat stops[]={	0.000,	0,0,0,1,
+				0.25,	0,0,255,1,
+				0.5,	255,255,255,1,
+				0.75,	0,0,255,1,
+				1.0,	0,0,0,1	};
+
+//FillLinearGradient(centerX-100,centerY,centerX+100,centerY,stops,5);
+//Rect(centerX-100,centerY,200,needleLength);
+
+
+		/***************************************************************************************************
+						APPLY GRADIENT and DRAW NEEDLE + CAP
+		***************************************************************************************************/
+		VGfloat stopsNew[]={	0.000,	255,255,255,1,
+				1.000,	0,0,255,1};
+		FillRadialGradient(width/2, height/2, width/2, height/2,  needleLength,stopsNew,2);
+		StrokeWidth(0);
+		Polygon( xVertices , yVertices , 5 );
+
+		Stroke(10,10,10,1);
+		StrokeWidth(needleWidthB*2);
+		int needleCapLength = 40;
+		float needleCapX = centerX - needleCapLength*cos(degToRad(angle+180));
+		float needleCapY = centerY + needleCapLength*sin(degToRad(angle+180));
+		Line(centerX, centerY, needleCapX, needleCapY);
+
+
+	}
+
+
+
+/*
+
+	Stroke(255,255,255,1);
+	StrokeWidth(4);
+	int gaugeRadius = height/2-borderWidth;
+	int tickLength = 30;
+	int startX, startY, endX, endY;
+	angle = 0;
+	for(angle;angle<=180;angle+=30)
+	{
+		startX = centerX-(gaugeRadius-tickLength)*cos(degToRad(angle));
+		startY = centerY+(gaugeRadius-tickLength)*sin(degToRad(angle));
+		endX = centerX-(gaugeRadius)*cos(degToRad(angle));
+		endY = centerY+(gaugeRadius)*sin(degToRad(angle));
+		Line(startX,startY,endX,endY);
+	}
+
+	int tickLengthMinor = 18;
+	angle = 0;
+	StrokeWidth(4);
+	for(angle;angle<=180;angle+=6)
+	{
+		startX = centerX-(gaugeRadius-tickLengthMinor)*cos(degToRad(angle));
+		startY = centerY+(gaugeRadius-tickLengthMinor)*sin(degToRad(angle));
+		endX = centerX-(gaugeRadius)*cos(degToRad(angle));
+		endY = centerY+(gaugeRadius)*sin(degToRad(angle));
+		Line(startX,startY,endX,endY);
+	}		
+
+	int tickLengthMinor2 = 11;
+	angle = 0;
+	StrokeWidth(2);
+	for(angle;angle<=180;angle+=3)
+	{
+		startX = centerX-(gaugeRadius-tickLengthMinor2)*cos(degToRad(angle));
+		startY = centerY+(gaugeRadius-tickLengthMinor2)*sin(degToRad(angle));
+		endX = centerX-(gaugeRadius)*cos(degToRad(angle));
+		endY = centerY+(gaugeRadius)*sin(degToRad(angle));
+		Line(startX,startY,endX,endY);
+	}
+
+*/
+
+
+
+
+
+
+//	Fill(255,255,255,1);
+	char text[10];
+	sprintf(text, "%.2f",time);
+	TextMid(width/2, height/2, text, SerifTypeface, width/10);
+//	StrokeWidth(0);
+//	Circle(centerX,centerY,(centerRadius)*2);
+
+
+	
+//	Fill(255,255,255,1);
+//	Rect(300,300,5,15);
+//	Rotate(5);
+//	Rect(300,300,5,15);
+//	Rotate(5);
+//	Rect(300,300,5,15);
+//	Rotate(5);
+//	Rect(300,300,5,15);
+//	Rotate(5);
+//	Rect(300,300,5,15);
+//	Rotate(5);
+
+// Test for linear gradient
+
+//Rect(0,0,500,500);
+
+
+}//end to bigSw
+
+	End();						   // End the picture
+
+
+
+}
+
+
+
+float degToRad(float degrees)
+{
+
+float radians = degrees*3.14159/180.0;
+return radians;
+
+}
