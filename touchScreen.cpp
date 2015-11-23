@@ -59,8 +59,8 @@ void *eventThread(void *arg) {
 		
 		
 		
-		std::cout<<"event type is: "<<touch.ev.type<<endl;
-		std::cout<<"event code is: "<<touch.ev.code<<endl;
+		//std::cout<<"event type is: "<<touch.ev.type<<endl;
+		//std::cout<<"event code is: "<<touch.ev.code<<endl;
 		if(touch.ev.type==EV_SYN){
 			
 			// std::cout<<"event type is: "<<touch.ev.type<<endl;
@@ -81,7 +81,7 @@ void *eventThread(void *arg) {
 				// std::cout<<"absX: "<<abs_x<<endl;
 			}
 			if(touch.ev.code == ABS_Y){
-				abs_y =  touch.ev.value;
+				abs_y =  480 - touch.ev.value; //the touch 0,0 origin is defined on the upper left (the way we are using the screen) so need to flip the y value so that we convert the origin to bottom left
 				// std::cout<<"absY: "<<abs_y<<endl;
 			}
 			if(touch.ev.code==ABS_MT_TRACKING_ID){
@@ -91,10 +91,10 @@ void *eventThread(void *arg) {
 		}
 		
 		else if(touch.ev.type==EV_KEY){
-			std::cout<<"event type is: "<<touch.ev.type<<endl;
+			//std::cout<<"event type is: "<<touch.ev.type<<endl;
 			if(touch.ev.code == BTN_TOUCH){
 				btn_touch = touch.ev.value;
-				std::cout<<"btn_touch: "<<btn_touch<<endl;
+				//std::cout<<"btn_touch: "<<btn_touch<<endl;
 			}
 			
 		}

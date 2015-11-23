@@ -173,15 +173,15 @@ void DataStream::update(char* serialData, uint64_t updateTime){ // Data being se
 	if(*serialData!=0) // Check if null pointer is returned by readSerial function(that func called in main project file)
 		{
 			int serialDataSize=0;
-			printf("This is the address of the buffer: %p\n",serialData);
-			printf("This is the content of the buffer:");
+			//printf("This is the address of the buffer: %p\n",serialData);
+			//printf("This is the content of the buffer:");
 			//determine the size of the array:
 			for( ; serialData[serialDataSize]!=0; serialDataSize++)
 			{
-				printf("%c", serialData[serialDataSize]);
+				//printf("%c", serialData[serialDataSize]);
 
 			}
-			printf("\n");
+			//printf("\n");
 			
 			
 			

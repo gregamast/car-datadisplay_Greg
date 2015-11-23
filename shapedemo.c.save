@@ -8,11 +8,10 @@
 #include <string.h>
 #include <fcntl.h>
 //#include "VG/openvg.h"  
-#include "/opt/vc/include/VG/openvg.h"  
-//#include "VG/vgu.h"
-#include "/opt/vc/include/VG/vgu.h"
-#include "/home/pi/openvg/fontinfo.h"
-#include "/home/pi/openvg/shapes.h"
+#include "//openvg.h"  
+#include "VG/vgu.h"
+#include "fontinfo.h"
+#include "shapes.h"
 
 // randcolor returns a random number 0..255
 unsigned int randcolor() {

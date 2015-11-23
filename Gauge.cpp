@@ -7,13 +7,13 @@ using namespace std;
 #include "shapes.h"
 #include <stdlib.h>
 #include <math.h>
-#include <iostream>
+#include <iostream> 
 
 #include <cmath>
 #include "TouchableObject.h"
-  
-  #include "Gauge.h"
-
+   
+  #include "Gauge.h"       
+   
 
 /****************************************************************
 	CONSTRUCTOR

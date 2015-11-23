@@ -27,7 +27,7 @@ using namespace std;
 // *** Label Fonts & other includes (for sprintf) ***
 #include "avengeance.inc"
 #include "digits.inc"
-#include <stdio.h>
+
 
 // This is for the touchsceen stuff and NEEDS to occur before include touchScreen.h
 #include <linux/input.h>
@@ -38,8 +38,8 @@ using namespace std;
 #include "touchScreen.h"
 
 #include "Project.h"
-#include "Readout.h"
- 
+#include "Button.h"
+
 /***********************************************************************************************************************************
 							VARIABLE DECLARATIONS
 ***********************************************************************************************************************************/
@@ -48,9 +48,15 @@ using namespace std;
 Fontinfo avengeance;
 Fontinfo digits;
 
-uint64_t loopTime;
+
+
+
+
+
 touch_t touch;
 int quitState = 0;
+
+
 
 /***********************************************************************************************************************************
 							PROTOTYPES
@@ -81,10 +87,13 @@ int main(){
 	//float majorTickColor2[] = {0, 1, 0, 1};
 	float majorTickColor2[] = {1 , 0, 127.0/255.0, 1};
 	float minorTickColor2[] = {1, 1, 1, 1};
-	float black[] = {0, 0, 0, 1};
 	
-
+	
+	float black[] = {0, 0, 0, 1};
+	float red[] = {1,0,0,1};
 	float green[] = {0,1,0,1};
+	float blue[]=	{0,0,1,1};
+	float white[]=	{1,1,1,1};
 	
 	/****************************************************************
 		Initialize Screen Graphics
@@ -100,7 +109,7 @@ int main(){
 	/****************************************************************
 		touch Thread Creation: THis is for reading touch data from touchscreen actions
 	****************************************************************/
-		if (touchinit(width, height) != 0) {
+	if (touchinit(width, height) != 0) {
 		fprintf(stderr, "Unable to initialize the touch\n");
 		exit(1);
 	}
@@ -201,7 +210,7 @@ int main(){
 
 	
 	BoostGauge.setDataRange(0 , 30, 2); // Always provide in stern order: min value first, then max
-	BoostGauge.setDataAngleRange(0,90, 2);
+	BoostGauge.setDataAngleRange(0,90, 2); 
 	BoostGauge.setMajorInterval(10,2);
 	BoostGauge.setMinorInterval(2, 2);
 	BoostGauge.setMajorTickColor(majorTickColor2, 2);
@@ -219,24 +228,115 @@ int main(){
 
 	BoostGauge.touchEnable(); 	//Enable the touch functionaltiy  of this touchable object gauge object BoostGauge object
 
-/****************************************************************
-		Create READOUT objects
+	/****************************************************************
+		Create BUTTON objects
 	****************************************************************/
-
-	Readout readout1(width-100, height/2, 100, 50, 2);
-	readout1.setDecPlaces(2);
-	readout1.setRefreshRate(5);
-	string labelString = "Hz update";
-	readout1.setLabel(labelString);
-	readout1.setBorder(green, 2); 
+	// Screen Refresh Rate Button:
 	
+	Button ScreenRRButton(width/2, height/2, 100, 50);
+	ScreenRRButton.setBorder(green, 2); 
+	string textString = "Hz update";
+	ScreenRRButton.enableText('B'); 
+	ScreenRRButton.setText(textString);
+	
+	ScreenRRButton.enableValue('T');
+	ScreenRRButton.setValueDecPlaces(2);
+	ScreenRRButton.setValueRefreshRate(5);
+	ScreenRRButton.setValueColor(green);
+	
+	ScreenRRButton.touchEnable();
+	
+	// Exit Button:
+	
+	// Button constructor: center X, center Y, width, height
+	// Button ExitButton(width-50, -50/2,100,50);
+	Button ExitButton(width-50, -22,100,50);
+	ExitButton.setBorder(red,2);
+	string ExitButtonText = "X";
+	ExitButton.setTextColor(red);
+	ExitButton.enableText('C');
+	ExitButton.setText(ExitButtonText);
+	ExitButton.touchEnable();
+	
+	Button ExitButton1(width-150-10, -22,100,50);
+	ExitButton1.setBorder(green,2);
+	string ExitButtonText1 = "X";
+	ExitButton1.setTextColor(green);
+	ExitButton1.enableText('C');
+	ExitButton1.setText(ExitButtonText1);
+	ExitButton1.touchEnable();
+	
+	Button ExitButton2(width-250-20, -22,100,50);
+	ExitButton2.setBorder(white,2);
+	string ExitButtonText2 = "X";
+	ExitButton2.setTextColor(white);
+	ExitButton2.enableText('C');
+	ExitButton2.setText(ExitButtonText2);
+	ExitButton2.touchEnable();
+	
+	Button ExitButton3(width-350-30, -22,100,50);
+	ExitButton3.setBorder(blue,2);
+	string ExitButtonText3 = "X";
+	ExitButton3.setTextColor(blue);
+	ExitButton3.enableText('C');
+	ExitButton3.setText(ExitButtonText3);
+	ExitButton3.touchEnable();
+	
+	Button ExitButton4(width-450-40, -22,100,50);
+	ExitButton4.setBorder(red,2);
+	string ExitButtonText4 = "X";
+	ExitButton4.setTextColor(green);
+	ExitButton4.enableText('C');
+	ExitButton4.setText(ExitButtonText4);
+	ExitButton4.touchEnable();
+	
+	Button ExitButton5(width-550-50, -22,100,50);
+	ExitButton5.setBorder(blue,2);
+	string ExitButtonText5 = "X";
+	ExitButton5.setTextColor(white);
+	ExitButton5.enableText('C');
+	ExitButton5.setText(ExitButtonText5);
+	ExitButton5.touchEnable();
+	
+	
+	
+	
+	
+	
+	
+	/****************************************************************
+		Loop through program start sequence
+	****************************************************************/
+	
+	
+	
+	// Image(VGfloat x, VGfloat y, int w, int h, char * filename)
+	/* 	for(float alpha=0;alpha<=1;alpha+=0.01){
+	Image(0, 0, width, height, "digitalsolutions.jpg");
+	//Background(0, 0, 0,alpha);
+	Fill(0,0,0,alpha);
+	Rect(0,0,width,height);
+	End();//This ends the picture
+	
+	bcm2835_delay(10);
 
+	}
+	
+	Background(0, 0, 0); */
+	
+	
 	/****************************************************************
 		Draw Created Objects
 	****************************************************************/
 
 	BoostGauge.draw();
-	readout1.draw();
+	ScreenRRButton.draw();
+	ExitButton.draw();
+	ExitButton1.draw();
+	ExitButton2.draw();
+	ExitButton3.draw();
+	ExitButton4.draw();
+	ExitButton5.draw();
 	End();//This ends the picture
 	
 	
@@ -253,9 +353,12 @@ int main(){
 	/****************************************************************
 		Execution Loop
 	****************************************************************/
+	// currentTime1 = bcm2835_st_read();
+	
+	
 	while(1){
 		// Read the current time
-		loopTime = bcm2835_st_read();
+		uint64_t loopTime = bcm2835_st_read();
 		char serialData[256];
 		readSerial(uart0_filestream , serialData);
 		
@@ -265,20 +368,76 @@ int main(){
 		
 		
 		BoostDataStream.update( serialData, loopTime );
-		readout1.update(BoostDataStream.getRawUpdateRate());
-/* 		std::cout<<BoostDataStream.getRawUpdateRate()<<endl; */
+		//ScreenRRButton.update(BoostDataStream.getRawUpdateRate());
 		
-/* 		float x1 = BoostDataStream.getRawDatum();
-		std::cout<< "raw datum: " << x1 << '\n';
+		ScreenRRButton.setValue(BoostDataStream.getRawUpdateRate());
+		ScreenRRButton.update();
+		ScreenRRButton.updateTouch(touch);
 		
-		float x2 = BoostDataStream.getSimpleMADatum();
-		std::cout<< "simple MA datum: " << x2 << '\n';
+	
+
+		if (ScreenRRButton.isTouched())
+		{
+			std::cout << "ScreenRRButton was touched!!!" << endl;
+			
+		}
+
+
+		//exitButton.move(0,1,1);
+
+		ExitButton.update();
+		ExitButton1.update();
+		ExitButton2.update();
+		ExitButton3.update();
+		ExitButton4.update();
+		ExitButton5.update();
 		
-		float x3 = BoostDataStream.getWeightedMADatum();
-		std::cout<< "weighted MA datum,: " << x3 << '\n';
+		ExitButton.updateTouch(touch);
+		ExitButton1.updateTouch(touch);
+		ExitButton2.updateTouch(touch);
+		ExitButton3.updateTouch(touch);
+		ExitButton4.updateTouch(touch);
+		ExitButton5.updateTouch(touch);
 		
-		string s1 = BoostDataStream.getEngUnits();
-		std::cout<<"Current units: "<< s1<<'\n'; */
+		ExitButton.updateVisuals();
+		ExitButton1.updateVisuals();
+		ExitButton2.updateVisuals();
+		ExitButton3.updateVisuals();
+		ExitButton4.updateVisuals();
+		ExitButton5.updateVisuals();
+		
+	
+		
+		
+		if (ScreenRRButton.isTouched())
+		{
+			std::cout << "screen RR Button was touched!!!" << endl;
+			// void TouchableObject::move(int finalX, int finalY, int transTime, string motionType )
+			
+			if(ExitButton.getCurrentPosY() <0){
+			ExitButton.move(width-50, 25,250,"emptyForNow");
+			ExitButton1.move(width-150-10, 25, 250+50,"emptyForNow");
+			ExitButton2.move(width-250-20,25, 250+100, "emptyForNow");
+			ExitButton3.move(width-350-30,25,250+150,"emptyForNow");
+			ExitButton4.move(width-450-40,25,250+200,"emptyForNow");
+			ExitButton5.move(width-550-50,25,300+250,"emptyForNow");
+			}
+			
+			if(ExitButton.getCurrentPosY() >0){
+			ExitButton.move(width-50, -20,250,"emptyForNow");
+			ExitButton1.move(width-150-10, -22, 250+50,"emptyForNow");
+			ExitButton2.move(width-250-20,-22, 250+100, "emptyForNow");
+			ExitButton3.move(width-350-30,-22,250+150,"emptyForNow");
+			ExitButton4.move(width-450-40,-22,250+200,"emptyForNow");
+			ExitButton5.move(width-550-50,-22,300+250,"emptyForNow");
+			}
+			
+			
+		}
+		
+		
+		
+		
 		
 		/****************************************************************
 			Update all Gauge Objects with New Data 
@@ -291,8 +450,7 @@ int main(){
 		****************************************************************/
 		
 		BoostGauge.updateTouch(touch);
-			
-			std::cout<<"!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!"<<BoostGauge.isTouched()<<'\n';
+		
 		if(BoostGauge.isTouched()){
 			std::cout<<"The Boost Gauge was Touched!!!!"<<'\n';
 		}

@@ -1,31 +1,28 @@
+CXX=distcc arm-linux-gnueabihf-g++ -std=gnu++0x $(INCLUDEFLAGS)
+
 INCLUDEFLAGS=-I/opt/vc/include -I/opt/vc/include/interface/vmcs_host/linux -I/opt/vc/include/interface/vcos/pthreads -I..
-LIBFLAGS=-L/opt/vc/lib -lGLESv2 -lEGL -lbcm_host -lpthread  -ljpeg 
 
-all: shapedemo hellovg mouse-hellovg particles clip Project
+LIBFLAGS=-L/opt/vc/lib -L/opt/vc/lib -lGLESv2 -lEGL -lbcm_host -lpthread  -ljpeg
 
-shapedemo:	shapedemo.c ../libshapes.o ../oglinit.o
-	gcc -Wall $(INCLUDEFLAGS) $(LIBFLAGS) -o shapedemo shapedemo.c ../libshapes.o ../oglinit.o
+objects = serial.o touchScreen.o Gauge.o TouchableObject.o DataStream.o Button.o Project.o
 
-test:	shapedemo
-	./shapedemo demo 5
+all: $(objects) Project
 
-hellovg:	hellovg.c ../libshapes.o ../oglinit.o
-	gcc -Wall $(INCLUDEFLAGS) $(LIBFLAGS) -o  hellovg hellovg.c ../libshapes.o ../oglinit.o
+Project.o: Project.cpp
 
-mouse-hellovg:	mouse-hellovg.c ../libshapes.o ../oglinit.o
-	gcc -Wall $(INCLUDEFLAGS) $(LIBFLAGS) -o  mouse-hellovg mouse-hellovg.c ../libshapes.o ../oglinit.o
+Button.o: Button.cpp
 
-particles:	particles.c ../libshapes.o ../oglinit.o
-	gcc -Wall $(INCLUDEFLAGS) $(LIBFLAGS) -o  particles particles.c ../libshapes.o ../oglinit.o
+DataStream.o: DataStream.cpp
 
-clip:	clip.c ../libshapes.o ../oglinit.o
-	gcc -Wall $(INCLUDEFLAGS) $(LIBFLAGS) -o  clip clip.c ../libshapes.o ../oglinit.o
+Gauge.o: Gauge.cpp
 
-indent:
-	indent -linux -c 60 -brf -l 132 shapedemo.c hellovg.c mouse-hellovg.c particles.c clip.c
+serial.o: serial.cpp
 
-Project: Project.cpp Gauge.cpp serial.cpp DataStream.cpp touchScreen.cpp TouchableObject.cpp Readout.cpp  ../libshapes.o ../oglinit.o
-	g++ -std=gnu++0x -Wall $(INCLUDEFLAGS) $(LIBFLAGS) -o Project Project.cpp Gauge.cpp serial.cpp DataStream.cpp touchScreen.cpp TouchableObject.cpp Readout.cpp  ../libshapes.o ../oglinit.o -lbcm2835
+TouchableObject.o: TouchableObject.cpp
 
+touchScreen.o: touchScreen.cpp
 
-
+Project: Project $(objects) 
+	g++ -Wall -std=gnu++0x $(LIBFLAGS) -o Project $(objects) ../libshapes.o ../oglinit.o -lbcm2835 
+	rm *.o 
+	rm /tmp/distcc*.*
