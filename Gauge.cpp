@@ -14,7 +14,7 @@ using namespace std;
    
   #include "Gauge.h"       
    
-
+VGImage gaugeBuffer;
 /****************************************************************
 	CONSTRUCTOR
 ****************************************************************/
@@ -204,10 +204,32 @@ void Gauge::draw(void){
 		drawTickSet(startAng[range], stopAng[range], angMajorInt, angRatio, majorTickColor, true);		// Draw major ticks
 		drawTickSet(startAng[range], stopAng[range], angMinorInt, angRatio, minorTickColor, false);		// Draw minor ticks
 	}
+	
+	
+	range = 0;
+		
+		for(;range<numRanges;range++)
+		{
+
+			float labelColor[] =		{labelColorRed[range],
+				labelColorGreen[range],
+				labelColorBlue[range],
+				labelColorAlpha[range]};
+			
+			drawLabelSet(labelStartVal[range], labelStopVal[range], labelIncrement[range], labelDecPlaces[range], labelStartAng[range], labelStopAng[range], labelColor, labelFont[range] ); // draw label set
+		}
+		
+		
 	StrokeWidth(borderWidth);
 	Fill(0,0,0,0);
 	setstroke(borderColor);
 	Circle(centerX,centerY,gaugeRadius*2);	// Draw gauge border (on top of ticks)
+	
+	gaugeBuffer = vgCreateImage(VG_sABGR_8888, 2*radius, 2*radius, VG_IMAGE_QUALITY_BETTER);
+	
+	vgGetPixels(gaugeBuffer, 0 , 0 , centerX-radius, centerY-radius, 2*radius , 2*radius);
+	
+	
 }
 
 void Gauge::update(float needleValue, string units){
@@ -239,28 +261,11 @@ void Gauge::update(float needleValue, string units){
 	if(unitsFound){
 		
 	/****************************************************************
-		Draw Black Circle (refresh background to gauge territory for needle and labels)
+		Redrawing all static components of gauge from buffer
 	****************************************************************/
-		setfill(backgroundColor);
-		StrokeWidth(0);
-		Circle(centerX,centerY,dynamicContentRadius*2);
+		vgSetPixels(centerX-radius, centerY-radius, gaugeBuffer, 0 , 0 , 2*radius , 2*radius);
 		
-	/****************************************************************
-		Draw the Labels (need to be updated every time since needle tip traverses over label territory)
-	****************************************************************/
-		int range = 0;
-		
-		for(;range<numRanges;range++)
-		{
 
-			float labelColor[] =		{labelColorRed[range],
-				labelColorGreen[range],
-				labelColorBlue[range],
-				labelColorAlpha[range]};
-			
-			drawLabelSet(labelStartVal[range], labelStopVal[range], labelIncrement[range], labelDecPlaces[range], labelStartAng[range], labelStopAng[range], labelColor, labelFont[range] ); // draw label set
-		}
-		
 	/****************************************************************
 		Draw the Needle
 	****************************************************************/

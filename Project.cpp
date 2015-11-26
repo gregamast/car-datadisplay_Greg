@@ -46,7 +46,7 @@ using namespace std;
 
 // Label and readout fonts
 Fontinfo avengeance;
-Fontinfo digits;
+Fontinfo digits; 
 
 
 
@@ -56,6 +56,7 @@ Fontinfo digits;
 touch_t touch;
 int quitState = 0;
 
+VGImage backgroundImage;
 
 
 /***********************************************************************************************************************************
@@ -90,10 +91,13 @@ int main(){
 	
 	
 	float black[] = {0, 0, 0, 1};
+	float blackLowA[] = {0, 0, 0, 0.75};
 	float red[] = {1,0,0,1};
 	float green[] = {0,1,0,1};
 	float blue[]=	{0,0,1,1};
 	float white[]=	{1,1,1,1};
+	
+	
 	
 	/****************************************************************
 		Initialize Screen Graphics
@@ -174,15 +178,16 @@ int main(){
 	/****************************************************************
 		Create BOOST GAUGE Object
 	****************************************************************/
-	Gauge BoostGauge(width/6, height/2, width/6 , 2); // used the constructor of class Gauge to instantiate object BoostGauge
+	// Gauge(int x, int y, int r, int ranges)
+	Gauge BoostGauge(width/2, height/2, height/2 , 2); // used the constructor of class Gauge to instantiate object BoostGauge
 	
 	
 	BoostGauge.setEngUnits(eu1, 1);
 	BoostGauge.setEngUnits(eu2, 2);
 
-	BoostGauge.setBorderColor(gaugeColor);
+	BoostGauge.setBorderColor(blue);
 	BoostGauge.setBackgroundColor(black);
-	BoostGauge.setNeedleColor(gaugeColor);
+	BoostGauge.setNeedleColor(white);
 	
 	
 	
@@ -193,12 +198,12 @@ int main(){
 	BoostGauge.setDataAngleRange(0,-180, 1);
 	BoostGauge.setMajorInterval(5,1);
 	BoostGauge.setMinorInterval(1,1);
-	BoostGauge.setMajorTickColor(majorTickColor, 1);
-	BoostGauge.setMinorTickColor(minorTickColor, 1);
+	BoostGauge.setMajorTickColor(white, 1);
+	BoostGauge.setMinorTickColor(white, 1);
 	
 	
 	BoostGauge.setLabelFont(avengeance, 1);
-	BoostGauge.setLabelColor(labelColor, 1);			// Set label label color 		(rgba, range #)
+	BoostGauge.setLabelColor(white, 1);			// Set label label color 		(rgba, range #)
 	BoostGauge.setLabelRange(0, 30, 1);		// Set label display range 		(min, max, range #)
 	BoostGauge.setLabelAngleRange(0, 180, 1);	// Set label angle range 		(min, max, range #)
 	BoostGauge.setLabelIncrement(5, 1);			// Set label increment 			(increment, range #)
@@ -213,12 +218,12 @@ int main(){
 	BoostGauge.setDataAngleRange(0,90, 2); 
 	BoostGauge.setMajorInterval(10,2);
 	BoostGauge.setMinorInterval(2, 2);
-	BoostGauge.setMajorTickColor(majorTickColor2, 2);
-	BoostGauge.setMinorTickColor(minorTickColor2, 2);
+	BoostGauge.setMajorTickColor(red, 2);
+	BoostGauge.setMinorTickColor(red, 2);
 	
 	
 	BoostGauge.setLabelFont(avengeance, 2);
-	BoostGauge.setLabelColor(labelColor, 2);			// Set label label color 		(rgba, range #)
+	BoostGauge.setLabelColor(white, 2);			// Set label label color 		(rgba, range #)
 	BoostGauge.setLabelRange(10, 30, 2);		// Set label display range 		(min, max, range #)
 	BoostGauge.setLabelAngleRange(-30, -90, 2);	// Set label angle range 		(min, max, range #)
 	BoostGauge.setLabelIncrement(10, 2);			// Set label increment 			(increment, range #)
@@ -233,16 +238,17 @@ int main(){
 	****************************************************************/
 	// Screen Refresh Rate Button:
 	
-	Button ScreenRRButton(width/2, height/2, 100, 50);
-	ScreenRRButton.setBorder(green, 2); 
+	Button ScreenRRButton(width-300, height/2, 100, 50);
+	ScreenRRButton.setBorder(white, 2); 
 	string textString = "Hz update";
 	ScreenRRButton.enableText('B'); 
 	ScreenRRButton.setText(textString);
-	
+	float blueLowA[]={0,0,1,0.75};
+	ScreenRRButton.setBackgroundColor(blackLowA);
 	ScreenRRButton.enableValue('T');
 	ScreenRRButton.setValueDecPlaces(2);
 	ScreenRRButton.setValueRefreshRate(5);
-	ScreenRRButton.setValueColor(green);
+	ScreenRRButton.setValueColor(white);
 	
 	ScreenRRButton.touchEnable();
 	
@@ -251,6 +257,7 @@ int main(){
 	// Button constructor: center X, center Y, width, height
 	// Button ExitButton(width-50, -50/2,100,50);
 	Button ExitButton(width-50, -22,100,50);
+	ExitButton.setBackgroundColor(blackLowA);
 	ExitButton.setBorder(red,2);
 	string ExitButtonText = "X";
 	ExitButton.setTextColor(red);
@@ -259,14 +266,16 @@ int main(){
 	ExitButton.touchEnable();
 	
 	Button ExitButton1(width-150-10, -22,100,50);
-	ExitButton1.setBorder(green,2);
+	ExitButton1.setBackgroundColor(blackLowA);
+	ExitButton1.setBorder(white,2);
 	string ExitButtonText1 = "X";
-	ExitButton1.setTextColor(green);
+	ExitButton1.setTextColor(white);
 	ExitButton1.enableText('C');
 	ExitButton1.setText(ExitButtonText1);
 	ExitButton1.touchEnable();
 	
 	Button ExitButton2(width-250-20, -22,100,50);
+	ExitButton2.setBackgroundColor(blackLowA);
 	ExitButton2.setBorder(white,2);
 	string ExitButtonText2 = "X";
 	ExitButton2.setTextColor(white);
@@ -275,28 +284,40 @@ int main(){
 	ExitButton2.touchEnable();
 	
 	Button ExitButton3(width-350-30, -22,100,50);
-	ExitButton3.setBorder(blue,2);
+	ExitButton3.setBackgroundColor(blackLowA);
+	ExitButton3.setBorder(white,2);
 	string ExitButtonText3 = "X";
-	ExitButton3.setTextColor(blue);
+	ExitButton3.setTextColor(white);
 	ExitButton3.enableText('C');
 	ExitButton3.setText(ExitButtonText3);
 	ExitButton3.touchEnable();
 	
 	Button ExitButton4(width-450-40, -22,100,50);
-	ExitButton4.setBorder(red,2);
+	ExitButton4.setBackgroundColor(blackLowA);
+	ExitButton4.setBorder(white,2);
 	string ExitButtonText4 = "X";
-	ExitButton4.setTextColor(green);
+	ExitButton4.setTextColor(white);
 	ExitButton4.enableText('C');
 	ExitButton4.setText(ExitButtonText4);
 	ExitButton4.touchEnable();
 	
 	Button ExitButton5(width-550-50, -22,100,50);
-	ExitButton5.setBorder(blue,2);
+	ExitButton5.setBackgroundColor(blackLowA);
+	ExitButton5.setBorder(white,2);
 	string ExitButtonText5 = "X";
 	ExitButton5.setTextColor(white);
 	ExitButton5.enableText('C');
 	ExitButton5.setText(ExitButtonText5);
 	ExitButton5.touchEnable();
+	
+	Button ExitButton6(width-650-60, -22,100,50);
+	ExitButton6.setBackgroundColor(blackLowA);
+	ExitButton6.setBorder(white,2);
+	string ExitButtonText6 = "Home :)";
+	ExitButton6.setTextColor(white);
+	ExitButton6.enableText('C');
+	ExitButton6.setText(ExitButtonText6);
+	ExitButton6.touchEnable();
 	
 	
 	
@@ -324,6 +345,9 @@ int main(){
 	
 	Background(0, 0, 0); */
 	
+	Image(0, 0, width, height, "bgImage2.jpg");
+	backgroundImage = vgCreateImage(VG_sABGR_8888, width, height, VG_IMAGE_QUALITY_BETTER);
+	vgGetPixels(backgroundImage , 0 , 0 , 0 , 0 , width , height);
 	
 	/****************************************************************
 		Draw Created Objects
@@ -337,7 +361,9 @@ int main(){
 	ExitButton3.draw();
 	ExitButton4.draw();
 	ExitButton5.draw();
-	End();//This ends the picture
+	ExitButton6.draw();
+	
+	
 	
 	
 	/****************************************************************
@@ -348,6 +374,12 @@ int main(){
 		Create + Draw {NEXT}Object
 	****************************************************************/
 
+	/****************************************************************
+		DRAW all created objects
+	****************************************************************/
+	End();//This ends the picture
+	
+	
 	
 	
 	/****************************************************************
@@ -357,40 +389,31 @@ int main(){
 	
 	
 	while(1){
-		// Read the current time
-		uint64_t loopTime = bcm2835_st_read();
-		char serialData[256];
-		readSerial(uart0_filestream , serialData);
 		
 		/****************************************************************
-			Update all Data Stream Objects with New Data 
+			Set background image into buffer - for every loop 
+		****************************************************************/
+		vgSetPixels(0, 0, backgroundImage, 0 , 0 , width , height);
+		
+		
+		
+		/****************************************************************
+			Time
+		****************************************************************/
+		// Read the current time
+		uint64_t loopTime = bcm2835_st_read();
+		
+		/****************************************************************
+			Update all Touchable Objects with new touch Data 
 		****************************************************************/
 		
+		BoostGauge.updateTouch(touch);
 		
-		BoostDataStream.update( serialData, loopTime );
-		//ScreenRRButton.update(BoostDataStream.getRawUpdateRate());
-		
-		ScreenRRButton.setValue(BoostDataStream.getRawUpdateRate());
-		ScreenRRButton.update();
-		ScreenRRButton.updateTouch(touch);
-		
-	
-
-		if (ScreenRRButton.isTouched())
-		{
-			std::cout << "ScreenRRButton was touched!!!" << endl;
-			
+		if(BoostGauge.isTouched()){
+			std::cout<<"The Boost Gauge was Touched!!!!"<<'\n';
 		}
-
-
-		//exitButton.move(0,1,1);
-
-		ExitButton.update();
-		ExitButton1.update();
-		ExitButton2.update();
-		ExitButton3.update();
-		ExitButton4.update();
-		ExitButton5.update();
+		
+		ScreenRRButton.updateTouch(touch);
 		
 		ExitButton.updateTouch(touch);
 		ExitButton1.updateTouch(touch);
@@ -398,6 +421,50 @@ int main(){
 		ExitButton3.updateTouch(touch);
 		ExitButton4.updateTouch(touch);
 		ExitButton5.updateTouch(touch);
+		ExitButton6.updateTouch(touch);
+		
+		/****************************************************************
+			READ serial line input data 
+		****************************************************************/
+		char serialData[256];
+		readSerial(uart0_filestream , serialData);
+		
+		/****************************************************************
+			Update all Data Stream Objects with New Data 
+		****************************************************************/
+		
+		BoostDataStream.update( serialData, loopTime );
+		
+		/****************************************************************
+			Update all Gauge Objects with New Data 
+		****************************************************************/
+		BoostGauge.update(BoostDataStream.getWeightedMADatum(), BoostDataStream.getEngUnits()); 
+		
+		
+		
+		/****************************************************************
+			Update all Button Objects with new Data and location 
+				- Resets location (handles move actions), redefines border and rect, etc.
+				- Calls a draw
+		****************************************************************/
+		
+		ScreenRRButton.setValue(BoostDataStream.getRawUpdateRate());
+		ScreenRRButton.update();
+		
+		ExitButton.update();
+		ExitButton1.update();
+		ExitButton2.update();
+		ExitButton3.update();
+		ExitButton4.update();
+		ExitButton5.update();
+		ExitButton6.update();
+		
+		
+		/****************************************************************
+			Update all Touchable Objects with new center location 
+				- Resets center location properties
+		****************************************************************/
+		ScreenRRButton.updateVisuals();
 		
 		ExitButton.updateVisuals();
 		ExitButton1.updateVisuals();
@@ -405,9 +472,13 @@ int main(){
 		ExitButton3.updateVisuals();
 		ExitButton4.updateVisuals();
 		ExitButton5.updateVisuals();
+		ExitButton6.updateVisuals();
 		
-	
 		
+		/****************************************************************
+			MAIN MENU Logic to process touch
+		****************************************************************/
+
 		
 		if (ScreenRRButton.isTouched())
 		{
@@ -420,7 +491,8 @@ int main(){
 			ExitButton2.move(width-250-20,25, 250+100, "emptyForNow");
 			ExitButton3.move(width-350-30,25,250+150,"emptyForNow");
 			ExitButton4.move(width-450-40,25,250+200,"emptyForNow");
-			ExitButton5.move(width-550-50,25,300+250,"emptyForNow");
+			ExitButton5.move(width-550-50,25,250+250,"emptyForNow");
+			ExitButton6.move(width-650-60,25,250+300,"emptyForNow");
 			}
 			
 			if(ExitButton.getCurrentPosY() >0){
@@ -429,34 +501,19 @@ int main(){
 			ExitButton2.move(width-250-20,-22, 250+100, "emptyForNow");
 			ExitButton3.move(width-350-30,-22,250+150,"emptyForNow");
 			ExitButton4.move(width-450-40,-22,250+200,"emptyForNow");
-			ExitButton5.move(width-550-50,-22,300+250,"emptyForNow");
+			ExitButton5.move(width-550-50,-22,250+250,"emptyForNow");
+			ExitButton6.move(width-650-60,-22,250+300,"emptyForNow");
 			}
 			
 			
 		}
 		
-		
-		
-		
-		
+
 		/****************************************************************
-			Update all Gauge Objects with New Data 
+			DRAW all updated objects/visuals 
 		****************************************************************/
-		BoostGauge.update(BoostDataStream.getWeightedMADatum(), BoostDataStream.getEngUnits()); //Temp comment: 0 for a junk input for now, just draws a nonupdating needle
+		// Call the End at the end of each while loop
 		End();//This ends the picture
-		
-		/****************************************************************
-			Update all Touchable Objects in touchable sense with New Data 
-		****************************************************************/
-		
-		BoostGauge.updateTouch(touch);
-		
-		if(BoostGauge.isTouched()){
-			std::cout<<"The Boost Gauge was Touched!!!!"<<'\n';
-		}
-		
-		
-		
 	}
 	
 	

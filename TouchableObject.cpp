@@ -38,17 +38,7 @@ TouchableObject::TouchableObject( void ){
 	
 
 
-	/* 	movingOffRight = false;
-	movingOnRight = false;
-	
-	movingOffLeft = false;
-	movingOnLeft = false;
-	
-	movingOffTop = false;
-	movingOnTop = false;
-	
-	movingOffBottom = false;
-	movingOnBottom = false; */
+
 	
 	
 }
@@ -71,24 +61,24 @@ void TouchableObject::move(int finalX, int finalY, int transTime, string motionT
 		finalPosX = finalX;
 		finalPosY = finalY;
 		
-		int movementBufferWidth = abs(finalPosX - moveStartRX)+rW;
-		int movementBufferHeight = abs(finalPosY - moveStartRY) +rH;
+		// int movementBufferWidth = abs(finalPosX - moveStartRX)+rW;
+		// int movementBufferHeight = abs(finalPosY - moveStartRY) +rH;
 		
-		MovementBuffer = vgCreateImage(VG_sABGR_8888 ,  movementBufferWidth , movementBufferHeight , VG_IMAGE_QUALITY_BETTER);
+		// MovementBuffer = vgCreateImage(VG_sABGR_8888 ,  movementBufferWidth , movementBufferHeight , VG_IMAGE_QUALITY_BETTER);
 		
-		int sx, sy; //Screen pixels to be placed at 0,0 of the buffer (the start)
+		// int sx, sy; //Screen pixels to be placed at 0,0 of the buffer (the start)
 		
-		if(finalPosX-moveStartRX >=0) //This would mean the button is moving right
-			sx = moveStartRX - rW/2;
-		else//This would mean the button is moving left
-			sx = finalPosX+rW/2;
+		// if(finalPosX-moveStartRX >=0) //This would mean the button is moving right
+			// sx = moveStartRX - rW/2;
+		// else//This would mean the button is moving left
+			// sx = finalPosX+rW/2;
 		
-		if(finalPosY-moveStartRY >=0) //This would mean the button is moving up
-			sy = moveStartRY - rH/2;
-		else//This would mean the button is moving down
-			sy = finalPosY+rH/2;
+		// if(finalPosY-moveStartRY >=0) //This would mean the button is moving up
+			// sy = moveStartRY - rH/2;
+		// else//This would mean the button is moving down
+			// sy = finalPosY+rH/2;
 		
-		vgGetPixels(MovementBuffer,0,0, sx , sy , movementBufferWidth , movementBufferHeight);
+		// vgGetPixels(MovementBuffer,0,0, sx , sy , movementBufferWidth , movementBufferHeight);
 			
 		moveDuration = transTime;
 		moveStartTime =  bcm2835_st_read(); //This is microseconds

@@ -47,7 +47,7 @@ private:
 	bool 	containsValue;
 	
 	
-	bool firstDrawn;
+
 	
 	
 	
