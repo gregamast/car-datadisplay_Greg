@@ -24,7 +24,9 @@ Gauge::Gauge(int x, int y, int r, int ranges){
 	radius = r;
 	numRanges = ranges;
 	
+	borderDesired=false;
 	
+
 	/****************************************************************
 		Caling relevant setters from inherited Class Touchable Object
 	****************************************************************/
@@ -172,9 +174,20 @@ float Gauge::degToRad(float degrees){
 
 void Gauge::draw(void){
 	
+	/****************************************************************
+		Draw the gauge background
+	****************************************************************/
+	
 	float borderWidth = 0.03*radius;
 	gaugeRadius = radius - borderWidth/2;
-	dynamicContentRadius = 0.85*gaugeRadius;
+	dynamicContentRadius = 0.85*gaugeRadius; // this can be removed now
+	
+	
+	StrokeWidth(0);
+	setfill(backgroundColor);
+	Circle(centerX,centerY,gaugeRadius*2);	
+	
+	
 	
 	/****************************************************************
 		Draw the Major and Minor Ticks: Range1 && Range 2 Optional
@@ -219,11 +232,12 @@ void Gauge::draw(void){
 			drawLabelSet(labelStartVal[range], labelStopVal[range], labelIncrement[range], labelDecPlaces[range], labelStartAng[range], labelStopAng[range], labelColor, labelFont[range] ); // draw label set
 		}
 		
-		
+	if(borderDesired){
 	StrokeWidth(borderWidth);
 	Fill(0,0,0,0);
 	setstroke(borderColor);
 	Circle(centerX,centerY,gaugeRadius*2);	// Draw gauge border (on top of ticks)
+	}
 	
 	gaugeBuffer = vgCreateImage(VG_sABGR_8888, 2*radius, 2*radius, VG_IMAGE_QUALITY_BETTER);
 	

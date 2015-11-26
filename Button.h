@@ -19,6 +19,7 @@ private:
 	int rectWidth, rectHeight;				// Size of rectangle to be drawn
 	int centerX, centerY;					// Location of readout center
 	int bottomLeftX, bottomLeftY;			// Location of rectangle bottom left corner
+	float ALPHA;
 	
 	
 	// Timing related properties
@@ -78,7 +79,7 @@ public:
 
 	
 
-	void draw(void);						// Draw readout
+
 	void update();
 	
 };

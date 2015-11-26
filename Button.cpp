@@ -10,7 +10,7 @@
 #include "Button.h"
 #include <stdio.h>
 #include <bcm2835.h>
-
+ 
 using namespace std;		// ??
 
 /* Button Constructor */
@@ -41,14 +41,7 @@ Button::Button(int cx, int cy, int w, int h)
 
 	
 }
-/* Button draw */
-void Button::draw(void)
-{
-	
-	
-	
 
-}
 
 void Button::setValueDecPlaces(int dec){						// Set number of digits before & after decimal
 	
@@ -66,12 +59,7 @@ void Button::update(void)
 {
 	
 	
-	
-	
-	setfill(backgroundColor);
-	StrokeWidth(borderWidth);
-	setstroke(borderColor);
-	Rect(bottomLeftX, bottomLeftY, rectWidth, rectHeight);
+
 
 	
 	// Handle movement
@@ -87,15 +75,34 @@ void Button::update(void)
 		bottomLeftX = centerX - (rectWidth+borderWidth) / 2;
 		bottomLeftY = centerY - (rectHeight+borderWidth) / 2;
 		
-		draw();
+	
 		lastText = "";
 
 	}
+	
+			if(ALPHA!=getDesiredAlpha()){
+		
+		ALPHA = getDesiredAlpha();
+		
+		
+	}
+	
+	//setfill(backgroundColor);
+	//cout<<alpha<<endl;
+	Fill(0,0,0,ALPHA);
+	StrokeWidth(borderWidth);
+	borderColor[3] = ALPHA;
+	setstroke(borderColor);
+	//void Roundrect(VGfloat x, VGfloat y, VGfloat w, VGfloat h, VGfloat rw, VGfloat rh)
+	Roundrect(bottomLeftX, bottomLeftY, rectWidth, rectHeight,10,10);
+	
+
 
 	if(containsText){
 		if(text.compare(lastText)!=0){
 			
 			lastText.assign(text);
+			textColor[3] = ALPHA;
 			setfill(textColor);
 			StrokeWidth(0);
 			textFontSize = (rectHeight-borderWidth)/2;
@@ -131,6 +138,7 @@ void Button::update(void)
 
 	if(containsValue )
 	{
+		valueColor[3] = ALPHA;
 		setfill(valueColor);
 		// need to imploement logic to accept no value color, then set it black with alpha 0
 		StrokeWidth(0);

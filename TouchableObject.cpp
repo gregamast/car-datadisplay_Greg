@@ -31,6 +31,7 @@ TouchableObject::TouchableObject( void ){
 	rH = 0;
 	rX = 0;
 	rY = 0;
+	alpha=0.2;
 	touchEnabled = false;
 	visible = false;
 	lpVisible = false;
@@ -61,24 +62,6 @@ void TouchableObject::move(int finalX, int finalY, int transTime, string motionT
 		finalPosX = finalX;
 		finalPosY = finalY;
 		
-		// int movementBufferWidth = abs(finalPosX - moveStartRX)+rW;
-		// int movementBufferHeight = abs(finalPosY - moveStartRY) +rH;
-		
-		// MovementBuffer = vgCreateImage(VG_sABGR_8888 ,  movementBufferWidth , movementBufferHeight , VG_IMAGE_QUALITY_BETTER);
-		
-		// int sx, sy; //Screen pixels to be placed at 0,0 of the buffer (the start)
-		
-		// if(finalPosX-moveStartRX >=0) //This would mean the button is moving right
-			// sx = moveStartRX - rW/2;
-		// else//This would mean the button is moving left
-			// sx = finalPosX+rW/2;
-		
-		// if(finalPosY-moveStartRY >=0) //This would mean the button is moving up
-			// sy = moveStartRY - rH/2;
-		// else//This would mean the button is moving down
-			// sy = finalPosY+rH/2;
-		
-		// vgGetPixels(MovementBuffer,0,0, sx , sy , movementBufferWidth , movementBufferHeight);
 			
 		moveDuration = transTime;
 		moveStartTime =  bcm2835_st_read(); //This is microseconds
@@ -86,8 +69,21 @@ void TouchableObject::move(int finalX, int finalY, int transTime, string motionT
 	}
 }
 
-void TouchableObject::fade(float finalAlpha, int transTime, string fadeType){
+void TouchableObject::fade(float finalA, int transTime, string fadeType){
 	
+		if(finalA!=finalAlpha){
+			fadeStartAlpha = alpha;
+			
+			finalAlpha = finalA;
+
+				
+
+		
+			
+		fadeDuration = transTime;
+		fadeStartTime =  bcm2835_st_read(); //This is microseconds
+		fadeType.assign(fadeType);
+	}
 	
 	
 }
@@ -117,6 +113,27 @@ void TouchableObject::updateVisuals(void)
 			}
 			
 		}
+	}
+	
+	if(alpha!=finalAlpha){
+		float totalAlphaDisp = (finalAlpha-fadeStartAlpha);
+			float omega = (M_PI/2)/(fadeDuration); //this is ang velocity, or omega
+			uint64_t currTime = bcm2835_st_read(); //This is in Microseconds (according to Mark)
+			
+			float deltaAlphaDisp = totalAlphaDisp*sin(omega/1000*(currTime-fadeStartTime)); //convert to int in here, also convert ms to s
+			
+			if(currTime > (fadeStartTime + fadeDuration*1000)){
+				alpha = finalAlpha;
+				
+			}
+			else{
+				
+				
+				alpha = fadeStartAlpha + deltaAlphaDisp;
+				
+			}
+		
+		
 	}
 
 	

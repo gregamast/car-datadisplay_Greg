@@ -17,7 +17,7 @@ using namespace std;
 #include <stdlib.h>			// OpenVG
 
 #include "math.h"
-
+ 
 #include "Gauge.h" // Access to our Gauge class and member functions!
 #include "serial.h"
 #include "DataStream.h"
@@ -186,9 +186,11 @@ int main(){
 	BoostGauge.setEngUnits(eu2, 2);
 
 	BoostGauge.setBorderColor(blue);
-	BoostGauge.setBackgroundColor(black);
+	float blackLowA1[] = {0 , 0 , 0 , 0.6};
+	BoostGauge.setBackgroundColor(blackLowA1);
 	BoostGauge.setNeedleColor(white);
 	
+	BoostGauge.touchEnable(); 	//Enable the touch functionaltiy  of this touchable object gauge object BoostGauge object
 	
 	
 	//Set up Boost Gauge Object Range 1
@@ -231,7 +233,7 @@ int main(){
 	BoostGauge.setLabelFont( avengeance,2);				// Set label font				(font)
 	
 
-	BoostGauge.touchEnable(); 	//Enable the touch functionaltiy  of this touchable object gauge object BoostGauge object
+	
 
 	/****************************************************************
 		Create BUTTON objects
@@ -345,23 +347,17 @@ int main(){
 	
 	Background(0, 0, 0); */
 	
-	Image(0, 0, width, height, "bgImage2.jpg");
+	//Image(0, 0, width, height, "bgImage2.jpg");
+	Image(0, 0, width, height, "carbon.jpg");
 	backgroundImage = vgCreateImage(VG_sABGR_8888, width, height, VG_IMAGE_QUALITY_BETTER);
 	vgGetPixels(backgroundImage , 0 , 0 , 0 , 0 , width , height);
 	
 	/****************************************************************
-		Draw Created Objects
+		Draw Created Objects (currently no draw for button, need to remove the whole "draw " idea in general. It is not draw but filling buffer space. End draws the buffer on the scren)
 	****************************************************************/
-
+	
 	BoostGauge.draw();
-	ScreenRRButton.draw();
-	ExitButton.draw();
-	ExitButton1.draw();
-	ExitButton2.draw();
-	ExitButton3.draw();
-	ExitButton4.draw();
-	ExitButton5.draw();
-	ExitButton6.draw();
+	
 	
 	
 	
@@ -480,29 +476,59 @@ int main(){
 		****************************************************************/
 
 		
-		if (ScreenRRButton.isTouched())
+		if (BoostGauge.isTouched())
 		{
-			std::cout << "screen RR Button was touched!!!" << endl;
+			//std::cout << "screen RR Button was touched!!!" << endl;
 			// void TouchableObject::move(int finalX, int finalY, int transTime, string motionType )
 			
 			if(ExitButton.getCurrentPosY() <0){
+				
 			ExitButton.move(width-50, 25,250,"emptyForNow");
-			ExitButton1.move(width-150-10, 25, 250+50,"emptyForNow");
-			ExitButton2.move(width-250-20,25, 250+100, "emptyForNow");
-			ExitButton3.move(width-350-30,25,250+150,"emptyForNow");
-			ExitButton4.move(width-450-40,25,250+200,"emptyForNow");
-			ExitButton5.move(width-550-50,25,250+250,"emptyForNow");
-			ExitButton6.move(width-650-60,25,250+300,"emptyForNow");
+			ExitButton.fade( 0.75,250,"emptyForNow");
+			
+			ExitButton1.move(width-150-10, 25, 250+60*1,"emptyForNow");
+			ExitButton1.fade( 0.75,250+60*1,"emptyForNow");
+			
+			ExitButton2.move(width-250-20,25, 250+60*2, "emptyForNow");
+			ExitButton2.fade( 0.75,250+60*2,"emptyForNow");
+			
+			ExitButton3.move(width-350-30,25,250+60*3,"emptyForNow");
+			ExitButton3.fade( 0.75,250+60*3,"emptyForNow");
+			
+			ExitButton4.move(width-450-40,25,250+60*4,"emptyForNow");
+			ExitButton4.fade( 0.75,250+60*4,"emptyForNow");
+			
+			ExitButton5.move(width-550-50,25,250+60*5,"emptyForNow");
+			ExitButton5.fade( 0.75,250+60*5,"emptyForNow");
+			
+			ExitButton6.move(width-650-60,25,250+60*6,"emptyForNow");
+			ExitButton6.fade( 0.75,250+60*6,"emptyForNow");
+			
 			}
 			
 			if(ExitButton.getCurrentPosY() >0){
+				
 			ExitButton.move(width-50, -20,250,"emptyForNow");
-			ExitButton1.move(width-150-10, -22, 250+50,"emptyForNow");
-			ExitButton2.move(width-250-20,-22, 250+100, "emptyForNow");
-			ExitButton3.move(width-350-30,-22,250+150,"emptyForNow");
-			ExitButton4.move(width-450-40,-22,250+200,"emptyForNow");
-			ExitButton5.move(width-550-50,-22,250+250,"emptyForNow");
-			ExitButton6.move(width-650-60,-22,250+300,"emptyForNow");
+			ExitButton.fade( 0.2,250,"emptyForNow");
+			
+			ExitButton1.move(width-150-10, -22, 250+60*1,"emptyForNow");
+			ExitButton1.fade( 0.2,250+60*1,"emptyForNow");
+			
+			ExitButton2.move(width-250-20,-22, 250+60*2, "emptyForNow");
+			ExitButton2.fade( 0.2,250+60*2,"emptyForNow");
+			
+			ExitButton3.move(width-350-30,-22,250+60*3,"emptyForNow");
+			ExitButton3.fade( 0.2,250+60*3,"emptyForNow");
+			
+			ExitButton4.move(width-450-40,-22,250+60*4,"emptyForNow");
+			ExitButton4.fade( 0.2,250+60*4,"emptyForNow");
+			
+			ExitButton5.move(width-550-50,-22,250+60*5,"emptyForNow");
+			ExitButton5.fade( 0.2,250+60*5,"emptyForNow");
+			
+			ExitButton6.move(width-650-60,-22,250+60*6,"emptyForNow");
+			ExitButton6.fade( 0.2,250+60*6,"emptyForNow");
+			
 			}
 			
 			

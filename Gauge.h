@@ -21,6 +21,7 @@ private: //This is an access_specifier.
 	float borderColor[4];
 	float backgroundColor[4];
 	float needleColor[4];
+	bool borderDesired;
 	
 	/****************************************************************
 		DISPLAY RANGE Member Properties

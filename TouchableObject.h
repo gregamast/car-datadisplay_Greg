@@ -29,16 +29,19 @@ private:
 	int rH;				// Rectangle height current
 	int rX;			// current Rectangle center x coordinate  
 	int rY;			// current Rectangle center y coordinate 
+	
+	
 	//When position is updated through updatePosition method, these "current" position properties are reassigned
 	
 	
 	//These properties capture the starting location and time when each move function is called
 
 	uint64_t moveStartTime;
+	uint64_t fadeStartTime;
 	
 	uint64_t loopTime;
 int moveDuration; //milliseconds, this is what is called into the move function
-
+int fadeDuration;
 
 
 
@@ -96,9 +99,9 @@ VGImage MovementBuffer;  //Image buffer containing background behind movement pa
 	int moveStartRY;
 	int moveStartCX;
 	int moveStartCY;
-	float moveStartAlpha;
-	float alpha; //This descrives the current alpha for the touchable object for any unique time stamp
-
+	float fadeStartAlpha;
+	
+float alpha; //This descrives the current alpha for the touchable object for any unique time stamp
 	
 	
 	/* Methods called by derived classes */
@@ -135,7 +138,7 @@ public:
 	
 	// take in final pos x, final pos y, the desired transition time [milliseconds],  motion type, 
 	void move(int, int, int, string);
-	void fade(float, int, string); //final alpha, transitionTime,  fadeType (sinusoidal, linear, etc...)
+	void fade(float, int, string); // final alpha, transitionTime,  fadeType (sinusoidal, linear, etc...)
 	
 	// Get the current position of the TOUCHABLEOBJECT
 	int getCurrentPosX(void);
