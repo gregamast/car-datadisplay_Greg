@@ -59,6 +59,8 @@ private: //This is an access_specifier.
 	float* labelColorBlue;
 	float* labelColorAlpha;
 	Fontinfo* labelFont;
+	
+	VGImage gaugeBuffer;
 
 	
 	

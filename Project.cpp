@@ -17,7 +17,7 @@ using namespace std;
 #include <stdlib.h>			// OpenVG
 
 #include "math.h"
- 
+
 #include "Gauge.h" // Access to our Gauge class and member functions!
 #include "serial.h"
 #include "DataStream.h"
@@ -96,6 +96,8 @@ int main(){
 	float green[] = {0,1,0,1};
 	float blue[]=	{0,0,1,1};
 	float white[]=	{1,1,1,1};
+	
+	float blackLowA1[] = {0 , 0 , 0 , 0.6};
 	
 	
 	
@@ -179,19 +181,17 @@ int main(){
 		Create BOOST GAUGE Object
 	****************************************************************/
 	// Gauge(int x, int y, int r, int ranges)
-	Gauge BoostGauge(width/2, height/2, height/2 , 2); // used the constructor of class Gauge to instantiate object BoostGauge
-	
+	Gauge BoostGauge(width/6, height/2, width/6 , 2); // used the constructor of class Gauge to instantiate object BoostGauge
 	
 	BoostGauge.setEngUnits(eu1, 1);
 	BoostGauge.setEngUnits(eu2, 2);
 
 	BoostGauge.setBorderColor(blue);
-	float blackLowA1[] = {0 , 0 , 0 , 0.6};
+	
 	BoostGauge.setBackgroundColor(blackLowA1);
 	BoostGauge.setNeedleColor(white);
 	
 	BoostGauge.touchEnable(); 	//Enable the touch functionaltiy  of this touchable object gauge object BoostGauge object
-	
 	
 	//Set up Boost Gauge Object Range 1
 	
@@ -212,17 +212,14 @@ int main(){
 	BoostGauge.setLabelDecPlaces(0, 1);			// Set label # of dec places 	(# of decimal places, range #)
 	BoostGauge.setLabelFont( avengeance,1);				// Set label font				(font)
 	
-	
 	//Set up Boost Gauge Object Range 2
 
-	
 	BoostGauge.setDataRange(0 , 30, 2); // Always provide in stern order: min value first, then max
 	BoostGauge.setDataAngleRange(0,90, 2); 
 	BoostGauge.setMajorInterval(10,2);
 	BoostGauge.setMinorInterval(2, 2);
 	BoostGauge.setMajorTickColor(red, 2);
 	BoostGauge.setMinorTickColor(red, 2);
-	
 	
 	BoostGauge.setLabelFont(avengeance, 2);
 	BoostGauge.setLabelColor(white, 2);			// Set label label color 		(rgba, range #)
@@ -232,9 +229,109 @@ int main(){
 	BoostGauge.setLabelDecPlaces(0, 2);			// Set label # of dec places 	(# of decimal places, range #)
 	BoostGauge.setLabelFont( avengeance,2);				// Set label font				(font)
 	
-
+	/****************************************************************
+		Create TEMPERATURE GAUGE Object
+	****************************************************************/
+	// Gauge(int x, int y, int r, int ranges)
+	Gauge TempGauge((width/6)*3, height/2, width/6 , 2); // used the constructor of class Gauge to instantiate object BoostGauge
 	
+	TempGauge.setEngUnits(eu1, 1);
+	TempGauge.setEngUnits(eu2, 2);
 
+	TempGauge.setBorderColor(blue);
+	
+	TempGauge.setBackgroundColor(blackLowA1);
+	TempGauge.setNeedleColor(red);
+	
+	TempGauge.touchEnable(); 	//Enable the touch functionaltiy  of this touchable object gauge object TempGauge object
+	
+	//Set up Boost Gauge Object Range 1
+	
+	
+	TempGauge.setDataRange(0 , 30, 1); // Always provide in stern order: min value first, then max
+	TempGauge.setDataAngleRange(0,-180, 1);
+	TempGauge.setMajorInterval(5,1);
+	TempGauge.setMinorInterval(1,1);
+	TempGauge.setMajorTickColor(red, 1);
+	TempGauge.setMinorTickColor(red, 1);
+	
+	
+	TempGauge.setLabelFont(avengeance, 1);
+	TempGauge.setLabelColor(white, 1);			// Set label label color 		(rgba, range #)
+	TempGauge.setLabelRange(0, 30, 1);		// Set label display range 		(min, max, range #)
+	TempGauge.setLabelAngleRange(0, 180, 1);	// Set label angle range 		(min, max, range #)
+	TempGauge.setLabelIncrement(5, 1);			// Set label increment 			(increment, range #)
+	TempGauge.setLabelDecPlaces(0, 1);			// Set label # of dec places 	(# of decimal places, range #)
+	TempGauge.setLabelFont( avengeance,1);				// Set label font				(font)
+	
+	//Set up Boost Gauge Object Range 2
+
+	TempGauge.setDataRange(0 , 30, 2); // Always provide in stern order: min value first, then max
+	TempGauge.setDataAngleRange(0,90, 2); 
+	TempGauge.setMajorInterval(10,2);
+	TempGauge.setMinorInterval(2, 2);
+	TempGauge.setMajorTickColor(blue, 2);
+	TempGauge.setMinorTickColor(blue, 2);
+	
+	TempGauge.setLabelFont(avengeance, 2);
+	TempGauge.setLabelColor(white, 2);			// Set label label color 		(rgba, range #)
+	TempGauge.setLabelRange(10, 30, 2);		// Set label display range 		(min, max, range #)
+	TempGauge.setLabelAngleRange(-30, -90, 2);	// Set label angle range 		(min, max, range #)
+	TempGauge.setLabelIncrement(10, 2);			// Set label increment 			(increment, range #)
+	TempGauge.setLabelDecPlaces(0, 2);			// Set label # of dec places 	(# of decimal places, range #)
+	TempGauge.setLabelFont( avengeance,2);				// Set label font				(font)
+	
+	/****************************************************************
+		Create BOOST GAUGE Object
+	****************************************************************/
+	// Gauge(int x, int y, int r, int ranges)
+	Gauge BoostGauge2((width/6)*5, height/2, width/6 , 2); // used the constructor of class Gauge to instantiate object BoostGauge2
+	
+	BoostGauge2.setEngUnits(eu1, 1);
+	BoostGauge2.setEngUnits(eu2, 2);
+
+	BoostGauge2.setBorderColor(blue);
+	
+	BoostGauge2.setBackgroundColor(blackLowA1);
+	BoostGauge2.setNeedleColor(white);
+	
+	BoostGauge2.touchEnable(); 	//Enable the touch functionaltiy  of this touchable object gauge object BoostGauge2 object
+	
+	//Set up Boost Gauge Object Range 1
+	
+	
+	BoostGauge2.setDataRange(0 , 30, 1); // Always provide in stern order: min value first, then max
+	BoostGauge2.setDataAngleRange(0,-180, 1);
+	BoostGauge2.setMajorInterval(5,1);
+	BoostGauge2.setMinorInterval(1,1);
+	BoostGauge2.setMajorTickColor(white, 1);
+	BoostGauge2.setMinorTickColor(white, 1);
+	
+	
+	BoostGauge2.setLabelFont(avengeance, 1);
+	BoostGauge2.setLabelColor(white, 1);			// Set label label color 		(rgba, range #)
+	BoostGauge2.setLabelRange(0, 30, 1);		// Set label display range 		(min, max, range #)
+	BoostGauge2.setLabelAngleRange(0, 180, 1);	// Set label angle range 		(min, max, range #)
+	BoostGauge2.setLabelIncrement(5, 1);			// Set label increment 			(increment, range #)
+	BoostGauge2.setLabelDecPlaces(0, 1);			// Set label # of dec places 	(# of decimal places, range #)
+	BoostGauge2.setLabelFont( avengeance,1);				// Set label font				(font)
+	
+	//Set up Boost Gauge Object Range 2
+
+	BoostGauge2.setDataRange(0 , 30, 2); // Always provide in stern order: min value first, then max
+	BoostGauge2.setDataAngleRange(0,90, 2); 
+	BoostGauge2.setMajorInterval(10,2);
+	BoostGauge2.setMinorInterval(2, 2);
+	BoostGauge2.setMajorTickColor(red, 2);
+	BoostGauge2.setMinorTickColor(red, 2);
+	
+	BoostGauge2.setLabelFont(avengeance, 2);
+	BoostGauge2.setLabelColor(white, 2);			// Set label label color 		(rgba, range #)
+	BoostGauge2.setLabelRange(10, 30, 2);		// Set label display range 		(min, max, range #)
+	BoostGauge2.setLabelAngleRange(-30, -90, 2);	// Set label angle range 		(min, max, range #)
+	BoostGauge2.setLabelIncrement(10, 2);			// Set label increment 			(increment, range #)
+	BoostGauge2.setLabelDecPlaces(0, 2);			// Set label # of dec places 	(# of decimal places, range #)
+	BoostGauge2.setLabelFont( avengeance,2);				// Set label font				(font)
 	/****************************************************************
 		Create BUTTON objects
 	****************************************************************/
@@ -247,6 +344,7 @@ int main(){
 	ScreenRRButton.setText(textString);
 	float blueLowA[]={0,0,1,0.75};
 	ScreenRRButton.setBackgroundColor(blackLowA);
+	
 	ScreenRRButton.enableValue('T');
 	ScreenRRButton.setValueDecPlaces(2);
 	ScreenRRButton.setValueRefreshRate(5);
@@ -323,6 +421,16 @@ int main(){
 	
 	
 	
+	 
+/* 	Button MeaghanButton(width/2, height-50,700,75);
+	MeaghanButton.setBackgroundColor(blackLowA);
+	MeaghanButton.setBorder(white,2);
+	
+	string MeaghanButtonText6 = "Happy Thanksgiving Keary :)";
+	MeaghanButton.setTextColor(white);
+	MeaghanButton.enableText('C');
+	MeaghanButton.setText(MeaghanButtonText6);
+	MeaghanButton.touchEnable(); */
 	
 	
 	
@@ -334,16 +442,20 @@ int main(){
 	
 	
 	// Image(VGfloat x, VGfloat y, int w, int h, char * filename)
-	/* 	for(float alpha=0;alpha<=1;alpha+=0.01){
-	Image(0, 0, width, height, "digitalsolutions.jpg");
+	
+	/* 		for(float alpha=1;alpha>=0;alpha-=0.01){
+			Image(-300, -100, width+400, height+400, "mickey.jpg");
+	
 	//Background(0, 0, 0,alpha);
 	Fill(0,0,0,alpha);
 	Rect(0,0,width,height);
 	End();//This ends the picture
 	
-	bcm2835_delay(10);
+	bcm2835_delay(1);
 
 	}
+	
+std::cin.ignore();
 	
 	Background(0, 0, 0); */
 	
@@ -357,7 +469,8 @@ int main(){
 	****************************************************************/
 	
 	BoostGauge.draw();
-	
+	TempGauge.draw();
+	BoostGauge2.draw();
 	
 	
 	
@@ -376,7 +489,7 @@ int main(){
 	End();//This ends the picture
 	
 	
-	
+	// std::cin.ignore();
 	
 	/****************************************************************
 		Execution Loop
@@ -391,7 +504,7 @@ int main(){
 		****************************************************************/
 		vgSetPixels(0, 0, backgroundImage, 0 , 0 , width , height);
 		
-		
+
 		
 		/****************************************************************
 			Time
@@ -402,8 +515,12 @@ int main(){
 		/****************************************************************
 			Update all Touchable Objects with new touch Data 
 		****************************************************************/
+		// std::cin.ignore();
 		
 		BoostGauge.updateTouch(touch);
+		BoostGauge2.updateTouch(touch);
+		TempGauge.updateTouch(touch);
+		
 		
 		if(BoostGauge.isTouched()){
 			std::cout<<"The Boost Gauge was Touched!!!!"<<'\n';
@@ -417,7 +534,9 @@ int main(){
 		ExitButton3.updateTouch(touch);
 		ExitButton4.updateTouch(touch);
 		ExitButton5.updateTouch(touch);
-		ExitButton6.updateTouch(touch);
+		ExitButton6.updateTouch(touch); 
+		
+		//MeaghanButton.updateTouch(touch);
 		
 		/****************************************************************
 			READ serial line input data 
@@ -435,6 +554,10 @@ int main(){
 			Update all Gauge Objects with New Data 
 		****************************************************************/
 		BoostGauge.update(BoostDataStream.getWeightedMADatum(), BoostDataStream.getEngUnits()); 
+		TempGauge.update(BoostDataStream.getWeightedMADatum(), BoostDataStream.getEngUnits()); 
+		BoostGauge2.update(BoostDataStream.getWeightedMADatum(), BoostDataStream.getEngUnits()); 
+		
+
 		
 		
 		
@@ -455,6 +578,8 @@ int main(){
 		ExitButton5.update();
 		ExitButton6.update();
 		
+		//MeaghanButton.update();
+		
 		
 		/****************************************************************
 			Update all Touchable Objects with new center location 
@@ -470,6 +595,8 @@ int main(){
 		ExitButton5.updateVisuals();
 		ExitButton6.updateVisuals();
 		
+		//MeaghanButton.updateVisuals();
+		
 		
 		/****************************************************************
 			MAIN MENU Logic to process touch
@@ -483,52 +610,52 @@ int main(){
 			
 			if(ExitButton.getCurrentPosY() <0){
 				
-			ExitButton.move(width-50, 25,250,"emptyForNow");
-			ExitButton.fade( 0.75,250,"emptyForNow");
-			
-			ExitButton1.move(width-150-10, 25, 250+60*1,"emptyForNow");
-			ExitButton1.fade( 0.75,250+60*1,"emptyForNow");
-			
-			ExitButton2.move(width-250-20,25, 250+60*2, "emptyForNow");
-			ExitButton2.fade( 0.75,250+60*2,"emptyForNow");
-			
-			ExitButton3.move(width-350-30,25,250+60*3,"emptyForNow");
-			ExitButton3.fade( 0.75,250+60*3,"emptyForNow");
-			
-			ExitButton4.move(width-450-40,25,250+60*4,"emptyForNow");
-			ExitButton4.fade( 0.75,250+60*4,"emptyForNow");
-			
-			ExitButton5.move(width-550-50,25,250+60*5,"emptyForNow");
-			ExitButton5.fade( 0.75,250+60*5,"emptyForNow");
-			
-			ExitButton6.move(width-650-60,25,250+60*6,"emptyForNow");
-			ExitButton6.fade( 0.75,250+60*6,"emptyForNow");
-			
+				ExitButton.move(width-50, 25,250,"emptyForNow");
+				ExitButton.fade( 0 ,250,"emptyForNow");
+				
+				ExitButton1.move(width-150-10, 25, 250+60*1,"emptyForNow");
+				ExitButton1.fade( 0,250+60*1,"emptyForNow");
+				
+				ExitButton2.move(width-250-20,25, 250+60*2, "emptyForNow");
+				ExitButton2.fade( 0,250+60*2,"emptyForNow");
+				
+				ExitButton3.move(width-350-30,25,250+60*3,"emptyForNow");
+				ExitButton3.fade( 0,250+60*3,"emptyForNow");
+				
+				ExitButton4.move(width-450-40,25,250+60*4,"emptyForNow");
+				ExitButton4.fade( 0,250+60*4,"emptyForNow");
+				
+				ExitButton5.move(width-550-50,25,250+60*5,"emptyForNow");
+				ExitButton5.fade( 0,250+60*5,"emptyForNow");
+				
+				ExitButton6.move(width-650-60,25,250+60*6,"emptyForNow");
+				ExitButton6.fade( 0,250+60*6,"emptyForNow");
+				
 			}
 			
 			if(ExitButton.getCurrentPosY() >0){
 				
-			ExitButton.move(width-50, -20,250,"emptyForNow");
-			ExitButton.fade( 0.2,250,"emptyForNow");
-			
-			ExitButton1.move(width-150-10, -22, 250+60*1,"emptyForNow");
-			ExitButton1.fade( 0.2,250+60*1,"emptyForNow");
-			
-			ExitButton2.move(width-250-20,-22, 250+60*2, "emptyForNow");
-			ExitButton2.fade( 0.2,250+60*2,"emptyForNow");
-			
-			ExitButton3.move(width-350-30,-22,250+60*3,"emptyForNow");
-			ExitButton3.fade( 0.2,250+60*3,"emptyForNow");
-			
-			ExitButton4.move(width-450-40,-22,250+60*4,"emptyForNow");
-			ExitButton4.fade( 0.2,250+60*4,"emptyForNow");
-			
-			ExitButton5.move(width-550-50,-22,250+60*5,"emptyForNow");
-			ExitButton5.fade( 0.2,250+60*5,"emptyForNow");
-			
-			ExitButton6.move(width-650-60,-22,250+60*6,"emptyForNow");
-			ExitButton6.fade( 0.2,250+60*6,"emptyForNow");
-			
+				ExitButton.move(width-50, -20,250,"emptyForNow");
+				ExitButton.fade( 100,250,"emptyForNow");
+				
+				ExitButton1.move(width-150-10, -22, 250+60*1,"emptyForNow");
+				ExitButton1.fade( 100,250+60*1,"emptyForNow");
+				
+				ExitButton2.move(width-250-20,-22, 250+60*2, "emptyForNow");
+				ExitButton2.fade( 100,250+60*2,"emptyForNow");
+				
+				ExitButton3.move(width-350-30,-22,250+60*3,"emptyForNow");
+				ExitButton3.fade( 100,250+60*3,"emptyForNow");
+				
+				ExitButton4.move(width-450-40,-22,250+60*4,"emptyForNow");
+				ExitButton4.fade( 100,250+60*4,"emptyForNow");
+				
+				ExitButton5.move(width-550-50,-22,250+60*5,"emptyForNow");
+				ExitButton5.fade( 100,250+60*5,"emptyForNow");
+				
+				ExitButton6.move(width-650-60,-22,250+60*6,"emptyForNow");
+				ExitButton6.fade( 100,250+60*6,"emptyForNow");
+				
 			}
 			
 			
@@ -544,7 +671,7 @@ int main(){
 	
 	
 
-	
+	  
 }
 
 

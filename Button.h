@@ -19,7 +19,7 @@ private:
 	int rectWidth, rectHeight;				// Size of rectangle to be drawn
 	int centerX, centerY;					// Location of readout center
 	int bottomLeftX, bottomLeftY;			// Location of rectangle bottom left corner
-	float ALPHA;
+	
 	
 	
 	// Timing related properties
@@ -29,23 +29,31 @@ private:
 	// Graphics related properties
 	
 	float* 	backgroundColor;
+	float 	backgroundColorAlpha; // This captures the starting/intial alpha (max magnitude alpha can achieve for this component)
+	
 	float* 	borderColor;
+	float 	borderColorAlpha; // This captures the starting/intial alpha (max magnitude alpha can achieve for this component)
+	
 	int 	borderWidth;
 	
 	string 	text;
 	string 	lastText;
 	int 	textFontSize;
 	float* 	textColor;
+	float 	textColorAlpha; // This captures the starting/intial alpha (max magnitude alpha can achieve for this component)
 	char 	textVertAlign;
 	bool 	containsText;
 	
 	float 	value;
 	int 	valueFontSize;
 	int 	valueDecPlaces;
-	float* 	valueColor; 
+	float* 	valueColor;  // This captures the starting/intial alpha (max magnitude alpha can achieve for this component)
+	float 	valueColorAlpha;
 	char 	valueVertAlign;
 	string formatSpecifierString;
 	bool 	containsValue;
+	
+	
 	
 	
 
@@ -70,6 +78,8 @@ public:
 	void enableText(char);			// Two characters: Horizontal alighment (L, R, C), and vertical alignment (T, B, C)
 	void setText(string);
 	void setTextColor(float*);
+	
+
 
 	
 	

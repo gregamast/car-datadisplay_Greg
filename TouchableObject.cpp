@@ -31,13 +31,17 @@ TouchableObject::TouchableObject( void ){
 	rH = 0;
 	rX = 0;
 	rY = 0;
-	alpha=0.2;
+	
+	
 	touchEnabled = false;
 	visible = false;
 	lpVisible = false;
 	touched = false;
 	
-
+	// Initialize the fade Percentage attributes
+	fadePercentage = 0;
+	finalFadePercentage = 0;
+	
 
 
 	
@@ -69,20 +73,16 @@ void TouchableObject::move(int finalX, int finalY, int transTime, string motionT
 	}
 }
 
-void TouchableObject::fade(float finalA, int transTime, string fadeType){
+void TouchableObject::fade(int finalPercentage, int duration, string type){
 	
-		if(finalA!=finalAlpha){
-			fadeStartAlpha = alpha;
+	if(finalPercentage!=finalFadePercentage){
+		initialFadePercentage = fadePercentage;
 			
-			finalAlpha = finalA;
-
-				
-
-		
+		finalFadePercentage = finalPercentage;
 			
-		fadeDuration = transTime;
+		fadeDuration = duration;
 		fadeStartTime =  bcm2835_st_read(); //This is microseconds
-		fadeType.assign(fadeType);
+		fadeType.assign(type);
 	}
 	
 	
@@ -115,21 +115,23 @@ void TouchableObject::updateVisuals(void)
 		}
 	}
 	
-	if(alpha!=finalAlpha){
-		float totalAlphaDisp = (finalAlpha-fadeStartAlpha);
+	if(fadePercentage!=finalFadePercentage){
+
+		
+		int totalFadePercentage = (finalFadePercentage-initialFadePercentage);
 			float omega = (M_PI/2)/(fadeDuration); //this is ang velocity, or omega
 			uint64_t currTime = bcm2835_st_read(); //This is in Microseconds (according to Mark)
 			
-			float deltaAlphaDisp = totalAlphaDisp*sin(omega/1000*(currTime-fadeStartTime)); //convert to int in here, also convert ms to s
+			int deltaFadePercentage = totalFadePercentage*sin(omega/1000*(currTime-fadeStartTime)); //convert to int in here, also convert ms to s
 			
 			if(currTime > (fadeStartTime + fadeDuration*1000)){
-				alpha = finalAlpha;
+				
+				fadePercentage = finalFadePercentage;
 				
 			}
 			else{
 				
-				
-				alpha = fadeStartAlpha + deltaAlphaDisp;
+				fadePercentage = initialFadePercentage + deltaFadePercentage;
 				
 			}
 		
@@ -220,7 +222,7 @@ void TouchableObject::touchDisable(void){
 void TouchableObject::setVisible(void){
 	lpVisible = visible;
 	visible = true;
-	alpha=1.0;
+
 
 }
 
@@ -302,10 +304,7 @@ int TouchableObject::getDesiredPosY(void){
 	else
 	return cY;
 }
-float TouchableObject::getDesiredAlpha(void){
-	
-	return alpha;
-}
+
 
 int TouchableObject::getCurrentPosX(void){
 	return rX;
@@ -315,6 +314,11 @@ int TouchableObject::getCurrentPosX(void){
 int TouchableObject::getCurrentPosY(void){
 	
 	return rY;
+}
+
+int TouchableObject::getDesiredFadePercentage(void){
+	
+	return fadePercentage;
 }
 
 

@@ -43,7 +43,10 @@ private:
 int moveDuration; //milliseconds, this is what is called into the move function
 int fadeDuration;
 
+int fadePercentage; //This is private since it is gievn to touchable object child objects via passed through a getter
 
+int finalFadePercentage;
+int initialFadePercentage;
 
 
 	
@@ -87,7 +90,7 @@ protected:
 //The final desired location for the move call.  These are in protected since we need these for image buffers
 int finalPosX;		
 int finalPosY;
-float finalAlpha;
+
 
 //These are for background screen capture to redraw any interrupted visuals
 VGImage BackgroundBuffer; // image buffer containing background behind object
@@ -99,9 +102,9 @@ VGImage MovementBuffer;  //Image buffer containing background behind movement pa
 	int moveStartRY;
 	int moveStartCX;
 	int moveStartCY;
-	float fadeStartAlpha;
 	
-float alpha; //This descrives the current alpha for the touchable object for any unique time stamp
+	
+
 	
 	
 	/* Methods called by derived classes */
@@ -110,7 +113,7 @@ float alpha; //This descrives the current alpha for the touchable object for any
 	
 	int getDesiredPosX(void);
 	int getDesiredPosY(void);
-	float getDesiredAlpha(void);		//callled by derived class to determin alpha for entier touchable object
+
 	
 	void setCircular(void);				// Called by derived class to set touch area as circular
 	void setCircleCenter(int, int);		// Called by derived class to set circular touch area center
@@ -122,6 +125,9 @@ float alpha; //This descrives the current alpha for the touchable object for any
 
 	/* Constructor */
 	TouchableObject(void);				// Sets up TouchableObject, sets properties to safe state
+	
+	int getDesiredFadePercentage(void);	//This returns the factor to scale the current alpha value for touchable objects (gauge, button, etc.). Protected since called by the child class only
+	
 
 public:
 	/* Control methods */
@@ -138,7 +144,7 @@ public:
 	
 	// take in final pos x, final pos y, the desired transition time [milliseconds],  motion type, 
 	void move(int, int, int, string);
-	void fade(float, int, string); // final alpha, transitionTime,  fadeType (sinusoidal, linear, etc...)
+	void fade(int, int, string); // final desired fade percentage, transitionTime,  fadeType (sinusoidal, linear, etc...)
 	
 	// Get the current position of the TOUCHABLEOBJECT
 	int getCurrentPosX(void);
@@ -159,6 +165,7 @@ public:
 	void moveOnBottom(void);
 	
 	void updateVisuals(void);
+	
 	
 	
 	

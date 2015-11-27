@@ -28,11 +28,19 @@ Button::Button(int cx, int cy, int w, int h)
 
 
 	valueColor = new float[4]{0,1,0,1};
+	valueColorAlpha = valueColor[3];
+	
 	textColor = new float[4]{0,1,0,1};
+	textColorAlpha = textColor[3];
+	
 	backgroundColor = new float[4]{0,0,0,1};
-	borderColor = new float[4]{0,1,0,1};;
+	backgroundColorAlpha = backgroundColor[3];
+	
+	borderColor = new float[4]{0,1,0,1};
+	borderColorAlpha = borderColor[3];
 
 	setRectangular();
+	
 
 	setRectWidthHeight(readoutWidth, readoutHeight);
 	setRectCenter(centerX, centerY);
@@ -80,18 +88,22 @@ void Button::update(void)
 
 	}
 	
-			if(ALPHA!=getDesiredAlpha()){
-		
-		ALPHA = getDesiredAlpha();
-		
+	// Handle fade
+	
+	if(getDesiredFadePercentage()!=0){//fadePerc 0 means we are using the full alpha orignally set, 100% means it is fully transparent (not visible)
+
+			float alphaScalar = (100.0-getDesiredFadePercentage())/100.0; // NEEDS TO BE ".0" !!!!!
+			
+			borderColor[3] = borderColorAlpha*alphaScalar;
+			backgroundColor[3]=backgroundColorAlpha*alphaScalar;
+			
+			textColor[3] = textColorAlpha*alphaScalar;
+			valueColor[3] = valueColorAlpha*alphaScalar;
 		
 	}
 	
-	//setfill(backgroundColor);
-	//cout<<alpha<<endl;
-	Fill(0,0,0,ALPHA);
+	setfill(backgroundColor);
 	StrokeWidth(borderWidth);
-	borderColor[3] = ALPHA;
 	setstroke(borderColor);
 	//void Roundrect(VGfloat x, VGfloat y, VGfloat w, VGfloat h, VGfloat rw, VGfloat rh)
 	Roundrect(bottomLeftX, bottomLeftY, rectWidth, rectHeight,10,10);
@@ -102,7 +114,6 @@ void Button::update(void)
 		if(text.compare(lastText)!=0){
 			
 			lastText.assign(text);
-			textColor[3] = ALPHA;
 			setfill(textColor);
 			StrokeWidth(0);
 			textFontSize = (rectHeight-borderWidth)/2;
@@ -138,7 +149,7 @@ void Button::update(void)
 
 	if(containsValue )
 	{
-		valueColor[3] = ALPHA;
+		
 		setfill(valueColor);
 		// need to imploement logic to accept no value color, then set it black with alpha 0
 		StrokeWidth(0);
@@ -201,6 +212,7 @@ void Button::setBackgroundColor(float color[4])
 	backgroundColor[1] = color[1];
 	backgroundColor[2] = color[2];
 	backgroundColor[3] = color[3];
+	backgroundColorAlpha = color[3];
 }
 
 void Button::setValueColor(float color[4])
@@ -209,6 +221,7 @@ void Button::setValueColor(float color[4])
 	valueColor[1] = color[1];
 	valueColor[2] = color[2];
 	valueColor[3] = color[3];
+	valueColorAlpha = color[3];
 }
 
 void Button::setTextColor(float color[4])
@@ -217,6 +230,8 @@ void Button::setTextColor(float color[4])
 	textColor[1] = color[1];
 	textColor[2] = color[2];
 	textColor[3] = color[3];
+	textColorAlpha = color[3];
+	
 }
 
 void Button::setBorder(float color[4], int width)		// Set border color, border width
@@ -226,6 +241,7 @@ void Button::setBorder(float color[4], int width)		// Set border color, border w
 	borderColor[1] = color[1];
 	borderColor[2] = color[2];
 	borderColor[3] = color[3];
+	borderColorAlpha = color[3];
 	
 	rectHeight = readoutHeight-borderWidth;
 	rectWidth = readoutWidth - borderWidth;
@@ -252,5 +268,8 @@ void Button::setText(string lbl)						// Set Button label
 {
 	text.assign(lbl); // assign is a string class function
 }
+
+
+
 
 
