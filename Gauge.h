@@ -68,8 +68,9 @@ private: //This is an access_specifier.
 
 public: //This is an access_specifier. 
 	
-	Gauge(int, int, int, int);				//Gauge CONSTRUCTOR	
+	Gauge(int, int, int);				//Gauge CONSTRUCTOR	
 	
+	void setNumRanges( int ); // this is actually private since we are only calling it in configure method, so eventually should make this private
 	void setEngUnits(string , int);
 	
 	// Draw function setters (tick marks & border)
@@ -110,7 +111,7 @@ public: //This is an access_specifier.
 	// Other gauge draw functions
 	void moveResize(float, float, float);		// Move and or resize gauge 	(centerX, centerY, radius)
 	void setVisible(bool);						// Set gauge visibility			(visibility)
-	void fade(float);							// Fade gauge (set all alphas)	(fade alpha)
+							
 	
 	
 	
@@ -118,6 +119,8 @@ public: //This is an access_specifier.
 
 	
 private:
+
+	void configure(string);
 	// Internally accessed methods (called within draw / update functions)
 	void drawTickSet(float, float, float, float, float*, bool);			// Draw tick set(s): 
 	//		(start angle

@@ -9,11 +9,11 @@ using namespace std;
 #include <stdio.h>
 
 #include <string>
-
+ 
 #include "VG/openvg.h"		// OpenVG
 #include "VG/vgu.h"			// OpenVG
 #include "fontinfo.h"		// OpenVG	
-#include "shapes.h"			// OpenVG
+#include "shapes.h"			// OpenVG 
 #include <stdlib.h>			// OpenVG
 
 #include "math.h"
@@ -31,7 +31,7 @@ using namespace std;
 
 // This is for the touchsceen stuff and NEEDS to occur before include touchScreen.h
 #include <linux/input.h>
-#include <fcntl.h>
+#include <fcntl.h> 
 #include <pthread.h>
 
 // Access to our touchscreen functions
@@ -248,8 +248,8 @@ int main(){
 	//Set up Boost Gauge Object Range 1
 	
 	
-	TempGauge.setDataRange(0 , 30, 1); // Always provide in stern order: min value first, then max
-	TempGauge.setDataAngleRange(0,-180, 1);
+	TempGauge.setDataRange(0 , 10, 1); // Always provide in stern order: min value first, then max
+	TempGauge.setDataAngleRange(0,-90-45, 1);
 	TempGauge.setMajorInterval(5,1);
 	TempGauge.setMinorInterval(1,1);
 	TempGauge.setMajorTickColor(red, 1);
@@ -258,15 +258,15 @@ int main(){
 	
 	TempGauge.setLabelFont(avengeance, 1);
 	TempGauge.setLabelColor(white, 1);			// Set label label color 		(rgba, range #)
-	TempGauge.setLabelRange(0, 30, 1);		// Set label display range 		(min, max, range #)
-	TempGauge.setLabelAngleRange(0, 180, 1);	// Set label angle range 		(min, max, range #)
+	TempGauge.setLabelRange(0, 10, 1);		// Set label display range 		(min, max, range #)
+	TempGauge.setLabelAngleRange(0, 90+45, 1);	// Set label angle range 		(min, max, range #)
 	TempGauge.setLabelIncrement(5, 1);			// Set label increment 			(increment, range #)
 	TempGauge.setLabelDecPlaces(0, 1);			// Set label # of dec places 	(# of decimal places, range #)
 	TempGauge.setLabelFont( avengeance,1);				// Set label font				(font)
 	
 	//Set up Boost Gauge Object Range 2
 
-	TempGauge.setDataRange(0 , 30, 2); // Always provide in stern order: min value first, then max
+	TempGauge.setDataRange(0 , 25, 2); // Always provide in stern order: min value first, then max
 	TempGauge.setDataAngleRange(0,90, 2); 
 	TempGauge.setMajorInterval(10,2);
 	TempGauge.setMinorInterval(2, 2);
@@ -275,8 +275,8 @@ int main(){
 	
 	TempGauge.setLabelFont(avengeance, 2);
 	TempGauge.setLabelColor(white, 2);			// Set label label color 		(rgba, range #)
-	TempGauge.setLabelRange(10, 30, 2);		// Set label display range 		(min, max, range #)
-	TempGauge.setLabelAngleRange(-30, -90, 2);	// Set label angle range 		(min, max, range #)
+	TempGauge.setLabelRange(10, 25, 2);		// Set label display range 		(min, max, range #)
+	TempGauge.setLabelAngleRange(-30, -90-45, 2);	// Set label angle range 		(min, max, range #)
 	TempGauge.setLabelIncrement(10, 2);			// Set label increment 			(increment, range #)
 	TempGauge.setLabelDecPlaces(0, 2);			// Set label # of dec places 	(# of decimal places, range #)
 	TempGauge.setLabelFont( avengeance,2);				// Set label font				(font)
@@ -359,7 +359,7 @@ int main(){
 	Button ExitButton(width-50, -22,100,50);
 	ExitButton.setBackgroundColor(blackLowA);
 	ExitButton.setBorder(red,2);
-	string ExitButtonText = "X";
+	string ExitButtonText = "1";
 	ExitButton.setTextColor(red);
 	ExitButton.enableText('C');
 	ExitButton.setText(ExitButtonText);
@@ -368,7 +368,7 @@ int main(){
 	Button ExitButton1(width-150-10, -22,100,50);
 	ExitButton1.setBackgroundColor(blackLowA);
 	ExitButton1.setBorder(white,2);
-	string ExitButtonText1 = "X";
+	string ExitButtonText1 = "2";
 	ExitButton1.setTextColor(white);
 	ExitButton1.enableText('C');
 	ExitButton1.setText(ExitButtonText1);
@@ -377,7 +377,7 @@ int main(){
 	Button ExitButton2(width-250-20, -22,100,50);
 	ExitButton2.setBackgroundColor(blackLowA);
 	ExitButton2.setBorder(white,2);
-	string ExitButtonText2 = "X";
+	string ExitButtonText2 = "3";
 	ExitButton2.setTextColor(white);
 	ExitButton2.enableText('C');
 	ExitButton2.setText(ExitButtonText2);
@@ -386,7 +386,7 @@ int main(){
 	Button ExitButton3(width-350-30, -22,100,50);
 	ExitButton3.setBackgroundColor(blackLowA);
 	ExitButton3.setBorder(white,2);
-	string ExitButtonText3 = "X";
+	string ExitButtonText3 = "4";
 	ExitButton3.setTextColor(white);
 	ExitButton3.enableText('C');
 	ExitButton3.setText(ExitButtonText3);
@@ -395,7 +395,7 @@ int main(){
 	Button ExitButton4(width-450-40, -22,100,50);
 	ExitButton4.setBackgroundColor(blackLowA);
 	ExitButton4.setBorder(white,2);
-	string ExitButtonText4 = "X";
+	string ExitButtonText4 = "5";
 	ExitButton4.setTextColor(white);
 	ExitButton4.enableText('C');
 	ExitButton4.setText(ExitButtonText4);
@@ -404,7 +404,7 @@ int main(){
 	Button ExitButton5(width-550-50, -22,100,50);
 	ExitButton5.setBackgroundColor(blackLowA);
 	ExitButton5.setBorder(white,2);
-	string ExitButtonText5 = "X";
+	string ExitButtonText5 = "6";
 	ExitButton5.setTextColor(white);
 	ExitButton5.enableText('C');
 	ExitButton5.setText(ExitButtonText5);
@@ -567,6 +567,8 @@ std::cin.ignore();
 				- Calls a draw
 		****************************************************************/
 		
+		
+		
 		ScreenRRButton.setValue(BoostDataStream.getRawUpdateRate());
 		ScreenRRButton.update();
 		
@@ -586,6 +588,10 @@ std::cin.ignore();
 				- Resets center location properties
 		****************************************************************/
 		ScreenRRButton.updateVisuals();
+		
+		BoostGauge.updateVisuals();
+		BoostGauge2.updateVisuals();
+		TempGauge.updateVisuals();
 		
 		ExitButton.updateVisuals();
 		ExitButton1.updateVisuals();
@@ -608,7 +614,13 @@ std::cin.ignore();
 			//std::cout << "screen RR Button was touched!!!" << endl;
 			// void TouchableObject::move(int finalX, int finalY, int transTime, string motionType )
 			
+			
+			
 			if(ExitButton.getCurrentPosY() <0){
+				
+				BoostGauge.fade(75 ,250+60*6,"emptyForNow");
+				TempGauge.fade(75 ,250+60*6,"emptyForNow");
+				BoostGauge2.fade(75 ,250+60*6,"emptyForNow");
 				
 				ExitButton.move(width-50, 25,250,"emptyForNow");
 				ExitButton.fade( 0 ,250,"emptyForNow");
@@ -635,26 +647,30 @@ std::cin.ignore();
 			
 			if(ExitButton.getCurrentPosY() >0){
 				
+				BoostGauge.fade(0 ,250+60*6,"emptyForNow");
+				TempGauge.fade(0 ,250+60*6,"emptyForNow");
+				BoostGauge2.fade(0 ,250+60*6,"emptyForNow");
+				
 				ExitButton.move(width-50, -20,250,"emptyForNow");
-				ExitButton.fade( 100,250,"emptyForNow");
+				ExitButton.fade( 75,250,"emptyForNow");
 				
 				ExitButton1.move(width-150-10, -22, 250+60*1,"emptyForNow");
-				ExitButton1.fade( 100,250+60*1,"emptyForNow");
+				ExitButton1.fade( 75,250+60*1,"emptyForNow");
 				
 				ExitButton2.move(width-250-20,-22, 250+60*2, "emptyForNow");
-				ExitButton2.fade( 100,250+60*2,"emptyForNow");
+				ExitButton2.fade( 75,250+60*2,"emptyForNow");
 				
 				ExitButton3.move(width-350-30,-22,250+60*3,"emptyForNow");
-				ExitButton3.fade( 100,250+60*3,"emptyForNow");
+				ExitButton3.fade( 75,250+60*3,"emptyForNow");
 				
 				ExitButton4.move(width-450-40,-22,250+60*4,"emptyForNow");
-				ExitButton4.fade( 100,250+60*4,"emptyForNow");
+				ExitButton4.fade( 75,250+60*4,"emptyForNow");
 				
 				ExitButton5.move(width-550-50,-22,250+60*5,"emptyForNow");
-				ExitButton5.fade( 100,250+60*5,"emptyForNow");
+				ExitButton5.fade( 75,250+60*5,"emptyForNow");
 				
 				ExitButton6.move(width-650-60,-22,250+60*6,"emptyForNow");
-				ExitButton6.fade( 100,250+60*6,"emptyForNow");
+				ExitButton6.fade( 75,250+60*6,"emptyForNow");
 				
 			}
 			

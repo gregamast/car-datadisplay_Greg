@@ -12,20 +12,22 @@ using namespace std;
 #include <cmath>
 #include "TouchableObject.h"
    
-  #include "Gauge.h"       
+  #include "Gauge.h"        
+  
+  #inclucde<fstream> //This is for reading the config file in
    
 
 /****************************************************************
 	CONSTRUCTOR
 ****************************************************************/
-Gauge::Gauge(int x, int y, int r, int ranges){
+Gauge::Gauge(int x, int y, int r){
 	centerX = x;
 	centerY = y;
 	radius = r;
-	numRanges = ranges;
+	
 	
 	borderDesired=false;
-	
+	 
 
 	/****************************************************************
 		Caling relevant setters from inherited Class Touchable Object
@@ -34,6 +36,19 @@ Gauge::Gauge(int x, int y, int r, int ranges){
 	setCircleCenter(x, y);		// Called by derived class to set circular touch area center
 	setCircleRadius(r);			// Called by derived class to set circular touch area radius
 	
+	
+
+	
+}
+
+
+
+/****************************************************************
+	Define SET METHODS
+****************************************************************/
+
+void Gauge::setNumRanges( int ranges ){
+	numRanges = ranges;
 	
 	/****************************************************************
 		Instatiating DISPLAY RANGE Member Properties
@@ -72,13 +87,62 @@ Gauge::Gauge(int x, int y, int r, int ranges){
 	labelFont			= new Fontinfo[numRanges];
 
 	
+	
+}
+
+void Gauge::configure(string gaugeType){
+	
+	//Autoconfigure
+	
+	
+	ifstream configFile; // configFile is an object of class type ifstream
+	configFile.open("configGauges"); // Open the wanted config file, enter name as string
+	
+	if(!configFile){
+		
+		cout<< "unable to open the gauge config file"<<endl
+		exit(1);
+	}
+	
+	string currentLine;
+	string searchString = "name";
+	size_t pos; //check what this size_t type is, does find return this?
+	
+	while(configFile.good() ){
+		
+		getline(configFile , currentLine);
+		cout<<currentLine<<endl;
+		pos = currentLine.find(searchString);
+		
+		if(pos!=string::npos){
+			
+			pos = currentLine.find(gaugeType);
+			cout<<pos<<endl;
+			cout<< currentLine <<endl;
+			break;
+		}
+		else{
+			cout<< currentLine <<endl;
+			cout<<"continuing search.."<<endl;
+		}
+	}
+	
+	
+	//////////////////////////////////////////
+	if configAttribute = 
+	
+	
+	
+	
+	
+	
+	setNumRanges
+	
+	
 }
 
 
 
-/****************************************************************
-	Define SET METHODS
-****************************************************************/
 void Gauge::setEngUnits(string EU, int range){
 	EngUnits[range-1]=EU;
 	//cout<<"this is the unit "<<EngUnits[range-1]<<endl;
@@ -239,9 +303,12 @@ void Gauge::draw(void){
 	Circle(centerX,centerY,gaugeRadius*2);	// Draw gauge border (on top of ticks)
 	}
 	
-	gaugeBuffer = vgCreateImage(VG_sABGR_8888, 2*radius, 2*radius, VG_IMAGE_QUALITY_BETTER);
+	//gaugeBuffer = vgCreateImage(VG_sABGR_8888, 2*radius, 2*radius, VG_IMAGE_QUALITY_BETTER);
+	//vgGetPixels(gaugeBuffer, 0 , 0 , centerX-radius, centerY-radius, 2*radius , 2*radius);
 	
-	vgGetPixels(gaugeBuffer, 0 , 0 , centerX-radius, centerY-radius, 2*radius , 2*radius);
+	gaugeBuffer = vgCreateImage(VG_sABGR_8888, 800	, 480, VG_IMAGE_QUALITY_BETTER);
+	
+	vgGetPixels(gaugeBuffer, centerX-radius , centerY-radius , centerX-radius, centerY-radius, 2*radius , 2*radius);
 	
 	
 }
@@ -275,9 +342,24 @@ void Gauge::update(float needleValue, string units){
 	if(unitsFound){
 		
 	/****************************************************************
-		Redrawing all static components of gauge from buffer
+		Redrawing all static components of gauge from buffer: CURRENTLY NOT BEING USED, 
 	****************************************************************/
-		vgSetPixels(centerX-radius, centerY-radius, gaugeBuffer, 0 , 0 , 2*radius , 2*radius);
+	
+	
+	
+		//vgSetPixels(centerX-radius, centerY-radius, gaugeBuffer, 0 , 0 , 2*radius , 2*radius);
+		
+	// get the pixels, save the pixels, then we apply new alpha to them and reset the pixels
+	/****************************************************************
+		Redrawing all static components of gauge from buffer: CURRENTLY NOT BEING USED, 
+	****************************************************************/
+	
+	vgSeti(VG_IMAGE_MODE, VG_DRAW_IMAGE_MULTIPLY);
+	float alphaScalar = (100.0-getDesiredFadePercentage())/100.0; // NEEDS TO BE ".0" !!!!!
+	Fill(255,255,255,alphaScalar);
+	vgDrawImage(gaugeBuffer);
+			
+			
 		
 
 	/****************************************************************
@@ -390,11 +472,15 @@ void Gauge::drawTickSet(float startAng, float stopAng, float angInt,float angRat
 }
 
 void Gauge::drawNeedle(float angle){
+	
+	float alphaScalar = (100.0-getDesiredFadePercentage())/100.0; // NEEDS TO BE ".0" !!!!!
+	
+	
 	// Center Glow
 	StrokeWidth(0);
 	int glowRadius = gaugeRadius*0.1875;
-	VGfloat glowStops[] = {	0.000,	needleColor[0],needleColor[1],needleColor[2],needleColor[3],
-		1.000,	0,0,0,1};
+	VGfloat glowStops[] = {	0.000,	needleColor[0],needleColor[1],needleColor[2],needleColor[3]*alphaScalar,
+		1.000,	0,0,0,1*alphaScalar};
 	
 	
 	FillRadialGradient(centerX, centerY, centerX, centerY, glowRadius+5, glowStops, 2);
@@ -404,17 +490,17 @@ void Gauge::drawNeedle(float angle){
 	float centerRadius = gaugeRadius*0.125;
 	float scaling = gaugeRadius*0.041;
 	StrokeWidth(0);
-	Fill(0,0,0,1);
+	Fill(0,0,0,1*alphaScalar);
 	Circle(centerX, centerY, centerRadius);
 	int focalX = centerX - 15;
 	int focalY = centerY + 0;
-	VGfloat stops[] = {	0.000,	5,5,5,.05,
-		1.000,	0,0,0,1};
+	VGfloat stops[] = {	0.000,	5,5,5,.05*alphaScalar,
+		1.000,	0,0,0,1*alphaScalar};
 	FillRadialGradient(centerX, centerY, focalX, focalY, centerRadius*scaling, stops,0);
 	Circle(centerX, centerY, centerRadius*2);
-	Fill(0,0,0,.7);
+	Fill(0,0,0,.7*alphaScalar);
 	Circle(centerX, centerY, centerRadius);
-	Fill(0,0,0,1);
+	Fill(0,0,0,1*alphaScalar);
 	Circle(centerX, centerY, centerRadius*2*.75);
 
 	// Gauge Needle
@@ -435,14 +521,14 @@ void Gauge::drawNeedle(float angle){
 	yVertices[3] = centerY + 0.92*needleLength*sin(degToRad(angle)) + (0.5*centerRadius)*sin(degToRad(angle-90));
 	xVertices[4] = centerX - centerRadius*cos(degToRad(angle-90));
 	yVertices[4] = centerY + centerRadius*sin(degToRad(angle-90));
-	VGfloat needleStops[] = {	0.000,	255,255,255,0.1,
-		0.250, 	needleColor[0],needleColor[1],needleColor[2],.8,
-		1.000, 	needleColor[0],needleColor[1],needleColor[2],.8};
+	VGfloat needleStops[] = {	0.000,	255,255,255,0.1*alphaScalar,
+		0.250, 	needleColor[0],needleColor[1],needleColor[2],.8*alphaScalar,
+		1.000, 	needleColor[0],needleColor[1],needleColor[2],.8*alphaScalar};
 	FillRadialGradient(centerX, centerY, centerX, centerY, needleLength, needleStops, 3);
 	Polygon(xVertices, yVertices, 5);
 
 	// Gauge Needle Cap
-	Stroke(0,0,0,1);
+	Stroke(0,0,0,1*alphaScalar);
 	StrokeWidth(2*centerRadius);
 	float needleCapLength = centerRadius*3.33;
 	float  needleCapX = centerX - needleCapLength*cos(degToRad(angle+180));

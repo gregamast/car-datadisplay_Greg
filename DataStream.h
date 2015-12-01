@@ -1,7 +1,7 @@
 // The DataStream header file: define DataStream class and headers
 
 #ifndef DATASTREAM_H
-#define DATASTREAM_H
+#define DATASTREAM_H 
 
 
 

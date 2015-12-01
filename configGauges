@@ -1,0 +1,49 @@
+name 				= "Boost Gauge";
+borderColor 		= {1.0 , 1.0 , 1.0 , 1.0};
+backgroundColor 	= {0.0 , 0.0 , 0.0 , 0.4};
+borderThickness 	= 5;
+needleColor 		= {1.0 , 1.0 , 1.0 , 1.0};
+touchEnable 		= "true";
+numRanges = 2
+
+RANGE 1:
+engUnits 			= "PSI";
+dataRangeMin 		= 0;
+dataRangeMax 		= 30;
+dataAngleRangeMin 	= 0;
+dataAngleRangeMax 	= -180;
+majorInterval 		= 5;
+minorInterval 		= 1;
+majorTickColor 		= {1.0 , 1.0 , 1.0 , 1.0};
+minorTickColor 		= {1.0 , 1.0 , 1.0 , 1.0};
+labelFont 			= "avengeance";
+labelColor 			= {1.0 , 1.0 , 1.0 , 1.0};
+labelRangeMin 		= 0;
+labelRangeMax 		= 30;
+labelAngleRangeMin 	= 0;
+labelAngleRangeMax 	= 180;
+labelIncrement 		= 5;
+labelDecPlaces 		= 0;
+
+RANGE 2:
+engUnits 			= "inHg";
+dataRangeMin 		= 0;
+dataRangeMax 		= 30;
+dataAngleRangeMin 	= 0;
+dataAngleRangeMax 	= 90;
+majorInterval 		= 10;
+minorInterval 		= 2;
+majorTickColor 		= {1.0 , 1.0 , 1.0 , 1.0};
+minorTickColor 		= {1.0 , 1.0 , 1.0 , 1.0};
+labelFont 			= "avengeance";
+labelColor 			= {1.0 , 1.0 , 1.0 , 1.0};
+labelRangeMin 		= 10;
+labelRangeMax 		= 30;
+labelAngleRangeMin 	= -30;
+labelAngleRangeMax 	= -90;
+labelIncrement 		= 10;
+labelDecPlaces 		= 0;
+
+END:
+
+
