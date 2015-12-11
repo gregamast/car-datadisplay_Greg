@@ -1,3 +1,6 @@
+#include <locale.h>	//For the parsing library
+#include </home/pi/openvg/client/config4cpp/include/config4cpp/Configuration.h> //For the parsing library
+using namespace config4cpp; //For the parsing library
 
 using namespace std;
 #include <stdio.h>
@@ -11,11 +14,107 @@ using namespace std;
 
 #include <cmath>
 #include "TouchableObject.h"
-   
-  #include "Gauge.h"        
-  
-  #inclucde<fstream> //This is for reading the config file in
-   
+
+#include "Gauge.h"        
+
+#include <fstream> //This is for reading the config file in
+#include <algorithm>
+
+/****************************************************************
+	Parsing funmctions - TEMPORARY LOCATION
+****************************************************************/
+
+/* Parsing Functions */
+
+/* Parse integer */
+int parseInt(Configuration * cfg, string scope, string attr){
+	try {
+		return cfg->lookupInt(scope.c_str(), attr.c_str());
+	}
+	catch(const ConfigurationException & ex) {
+		cout << ex.c_str() << endl;
+	}
+}
+/* Parse integer inside subscope */
+int parseInt(Configuration * cfg, string scope, string subscope, string attr){
+	try {
+		return cfg->lookupInt(scope.c_str(), subscope.append(attr).c_str());
+	}
+	catch(const ConfigurationException & ex) {
+		cout << ex.c_str() << endl;
+	}
+}
+/* Parse string */
+string parseString(Configuration * cfg, string scope, string attr){
+	try {
+		return cfg->lookupString(scope.c_str(), attr.c_str());
+	}
+	catch(const ConfigurationException & ex) {
+		cout << ex.c_str() << endl;
+	}
+}
+/* Parse string inside subscope */
+string parseString(Configuration * cfg, string scope, string subscope, string attr){
+	try {
+		return cfg->lookupString(scope.c_str(), subscope.append(attr).c_str());
+	}
+	catch(const ConfigurationException & ex) {
+		cout << ex.c_str() << endl;
+	}
+}
+/* Parse float */
+float parseFloat(Configuration * cfg, string scope, string attr){
+	try {
+		return cfg->lookupFloat(scope.c_str(), attr.c_str());
+	}
+	catch(const ConfigurationException & ex) {
+		cout << ex.c_str() << endl;
+	}
+}
+/* Parse float inside subscope */
+float parseFloat(Configuration * cfg, string scope, string subscope, string attr){
+	try {
+		return cfg->lookupFloat(scope.c_str(), subscope.append(attr).c_str());
+	}
+	catch(const ConfigurationException & ex) {
+		cout << ex.c_str() << endl;
+	}
+}
+
+/* Parse color inside subscope */
+void parseColor(Configuration * cfg, string scope, string subscope, float* output, string attr)
+{
+	try {
+		StringVector color;
+		int idx = 0;
+		cfg->lookupList(scope.c_str(), subscope.append(attr).c_str(), color);
+		for(;idx<4;idx++) {
+			output[idx] = stof(color[idx]);
+		}
+	}
+	catch(const ConfigurationException & ex) {
+		cout << ex.c_str() << endl;
+	}
+}
+
+/* Parse color */
+void parseColor(Configuration * cfg, string scope, float* output, string attr)
+{
+	try {
+		StringVector color;
+		int idx = 0;
+		cfg->lookupList(scope.c_str(), attr.c_str(), color);
+		for(;idx<4;idx++) {
+			output[idx] = stof(color[idx]);
+		}
+	}
+	catch(const ConfigurationException & ex) {
+		cout << ex.c_str() << endl;
+	}
+}
+
+
+
 
 /****************************************************************
 	CONSTRUCTOR
@@ -27,7 +126,7 @@ Gauge::Gauge(int x, int y, int r){
 	
 	
 	borderDesired=false;
-	 
+	
 
 	/****************************************************************
 		Caling relevant setters from inherited Class Touchable Object
@@ -42,111 +141,162 @@ Gauge::Gauge(int x, int y, int r){
 }
 
 
+void Gauge::configure(string configType) {
+	cout<<configType<<endl;
+	
+	setlocale(LC_ALL, "");
+	
+	string rangeScope = "range";
+	int currentRange = 1;
+	// StringVector color;
+	
+	//string scope = "BoostGauge";
+	string scope = configType;
+	
+	Configuration * cfg = Configuration::create();
+	
+	try{
+		
+		cfg->parse("GaugeConfigurations");
+		
+		numRanges = parseInt(cfg, scope, "numRanges");
+		
+
+		/****************************************************************
+		Instatiating DISPLAY RANGE Member Properties
+	****************************************************************/
+		EngUnits 			= new string[numRanges];
+		
+		startVal 			= new float[numRanges];
+		stopVal				= new float[numRanges];
+		startAng			= new float[numRanges];
+		stopAng				= new float[numRanges];
+		majorInt			= new float[numRanges];
+		minorInt			= new float[numRanges];
+		majorTickColor		= new float*[numRanges];
+		minorTickColor		= new float*[numRanges];
+
+		
+		/****************************************************************
+		Instatiating DISPLAY LABEL Member Properties
+	****************************************************************/
+		
+		labelStartVal		= new float[numRanges];
+		labelStopVal		= new float[numRanges];
+		labelIncrement		= new float[numRanges];
+		labelDecPlaces		= new int[numRanges];
+		labelStartAng		= new float[numRanges];
+		labelStopAng		= new float[numRanges];
+		labelColor			= new float*[numRanges];
+		labelFont			= new Fontinfo[numRanges];
+		
+		
+		for(;currentRange<=numRanges;currentRange++){
+			majorTickColor[currentRange-1] = new float[4];
+			minorTickColor[currentRange-1] = new float[4];
+			labelColor[currentRange-1] = new float[4];
+			
+			string currentRangeScope = rangeScope + to_string(currentRange);
+
+			parseColor(cfg , scope , currentRangeScope , majorTickColor[currentRange-1] , ".majorTickColor");
+			parseColor(cfg , scope , currentRangeScope , minorTickColor[currentRange-1] , ".minorTickColor");
+			parseColor(cfg , scope , currentRangeScope , labelColor[currentRange-1] , ".labelColor");
+			
+			EngUnits[currentRange-1] 		= parseString(cfg , scope , currentRangeScope , ".engUnits" );
+			majorInt[currentRange-1] 		= parseFloat(cfg , scope , currentRangeScope , ".majorInterval" );
+			minorInt[currentRange-1] 		= parseFloat(cfg , scope , currentRangeScope , ".minorInterval" );
+			startVal[currentRange-1] 		= parseFloat(cfg , scope , currentRangeScope , ".dataRangeMin" );
+			stopVal[currentRange-1] 		= parseFloat(cfg , scope , currentRangeScope , ".dataRangeMax");
+			startAng[currentRange-1] 		= parseFloat(cfg , scope , currentRangeScope , ".dataAngleRangeMin");
+			stopAng[currentRange-1] 		= parseFloat(cfg , scope , currentRangeScope , ".dataAngleRangeMax");
+			labelStartVal[currentRange-1] 	= parseFloat(cfg , scope , currentRangeScope , ".labelRangeMin");
+			labelStopVal[currentRange-1] 	= parseFloat(cfg , scope , currentRangeScope , ".labelRangeMax");
+			labelStartAng[currentRange-1] 	= parseFloat(cfg , scope , currentRangeScope , ".labelAngleRangeMin"); 
+			labelStopAng[currentRange-1] 	= parseFloat(cfg , scope , currentRangeScope , ".labelAngleRangeMax");
+			labelIncrement[currentRange-1] 	= parseFloat(cfg , scope , currentRangeScope , ".labelIncrement");
+			labelDecPlaces[currentRange-1] 	= parseFloat(cfg , scope , currentRangeScope , ".labelDecPlaces");
+			
+		}
+		
+		
+		parseColor(cfg, scope, borderColor, "borderColor");
+		parseColor(cfg, scope, backgroundColor, "backgroundColor");
+		parseColor(cfg, scope, needleColor, "needleColor");
+		//touchEnabled = parseString(cfg, scope, "touchEnabled");
+		
+	}
+	catch(const ConfigurationException & ex) {
+		cout << ex.c_str() << endl;
+	}
+	
+	cfg->destroy();
+	
+	
+}
+
+
+
+
+
+
+
+
 
 /****************************************************************
 	Define SET METHODS
 ****************************************************************/
 
-void Gauge::setNumRanges( int ranges ){
-	numRanges = ranges;
-	
-	/****************************************************************
-		Instatiating DISPLAY RANGE Member Properties
-	****************************************************************/
-	EngUnits 			= new string[numRanges];
-	
-	startVal 			= new float[numRanges];
-	stopVal				= new float[numRanges];
-	startAng			= new float[numRanges];
-	stopAng				= new float[numRanges];
-	majorInt			= new float[numRanges];
-	minorInt			= new float[numRanges];
-	majorTickColorRed	= new float[numRanges];
-	majorTickColorGreen	= new float[numRanges];
-	majorTickColorBlue	= new float[numRanges];
-	majorTickColorAlpha	= new float[numRanges];
-	minorTickColorRed	= new float[numRanges];
-	minorTickColorGreen	= new float[numRanges];
-	minorTickColorBlue	= new float[numRanges];
-	minorTickColorAlpha	= new float[numRanges];
-	
-	/****************************************************************
-		Instatiating DISPLAY LABEL Member Properties
-	****************************************************************/
-	
-	labelStartVal		= new float[numRanges];
-	labelStopVal		= new float[numRanges];
-	labelIncrement		= new float[numRanges];
-	labelDecPlaces		= new int[numRanges];
-	labelStartAng		= new float[numRanges];
-	labelStopAng		= new float[numRanges];
-	labelColorRed		= new float[numRanges];
-	labelColorGreen		= new float[numRanges];
-	labelColorBlue		= new float[numRanges];
-	labelColorAlpha		= new float[numRanges];
-	labelFont			= new Fontinfo[numRanges];
+// void Gauge::setNumRanges( int ranges ){
+// numRanges = ranges;
 
-	
-	
-}
+// /****************************************************************
+// Instatiating DISPLAY RANGE Member Properties
+// ****************************************************************/
+// EngUnits 			= new string[numRanges];
 
-void Gauge::configure(string gaugeType){
-	
-	//Autoconfigure
-	
-	
-	ifstream configFile; // configFile is an object of class type ifstream
-	configFile.open("configGauges"); // Open the wanted config file, enter name as string
-	
-	if(!configFile){
-		
-		cout<< "unable to open the gauge config file"<<endl
-		exit(1);
-	}
-	
-	string currentLine;
-	string searchString = "name";
-	size_t pos; //check what this size_t type is, does find return this?
-	
-	while(configFile.good() ){
-		
-		getline(configFile , currentLine);
-		cout<<currentLine<<endl;
-		pos = currentLine.find(searchString);
-		
-		if(pos!=string::npos){
-			
-			pos = currentLine.find(gaugeType);
-			cout<<pos<<endl;
-			cout<< currentLine <<endl;
-			break;
-		}
-		else{
-			cout<< currentLine <<endl;
-			cout<<"continuing search.."<<endl;
-		}
-	}
-	
-	
-	//////////////////////////////////////////
-	if configAttribute = 
-	
-	
-	
-	
-	
-	
-	setNumRanges
-	
-	
-}
+// startVal 			= new float[numRanges];
+// stopVal				= new float[numRanges];
+// startAng			= new float[numRanges];
+// stopAng				= new float[numRanges];
+// majorInt			= new float[numRanges];
+// minorInt			= new float[numRanges];
+// majorTickColorRed	= new float[numRanges];
+// majorTickColorGreen	= new float[numRanges];
+// majorTickColorBlue	= new float[numRanges];
+// majorTickColorAlpha	= new float[numRanges];
+// minorTickColorRed	= new float[numRanges];
+// minorTickColorGreen	= new float[numRanges];
+// minorTickColorBlue	= new float[numRanges];
+// minorTickColorAlpha	= new float[numRanges];
+
+// /****************************************************************
+// Instatiating DISPLAY LABEL Member Properties
+// ****************************************************************/
+
+// labelStartVal		= new float[numRanges];
+// labelStopVal		= new float[numRanges];
+// labelIncrement		= new float[numRanges];
+// labelDecPlaces		= new int[numRanges];
+// labelStartAng		= new float[numRanges];
+// labelStopAng		= new float[numRanges];
+// labelColorRed		= new float[numRanges];
+// labelColorGreen		= new float[numRanges];
+// labelColorBlue		= new float[numRanges];
+// labelColorAlpha		= new float[numRanges];
+// labelFont			= new Fontinfo[numRanges];
 
 
 
-void Gauge::setEngUnits(string EU, int range){
-	EngUnits[range-1]=EU;
-	//cout<<"this is the unit "<<EngUnits[range-1]<<endl;
-}
+// }
+
+
+
+
+
+// void Gauge::setEngUnits(string EU, int range){
+// EngUnits[range-1]=EU;
+//cout<<"this is the unit "<<EngUnits[range-1]<<endl;
+// }
 
 void Gauge::setBorderColor(float color[4]){
 	borderColor[0] = color[0];
@@ -169,19 +319,19 @@ void Gauge::setNeedleColor(float color[4]){
 	needleColor[3] = color[3];	
 }
 
-void Gauge::setMajorTickColor(float color[4], int range){
-	majorTickColorRed[range-1]		= color[0];
-	majorTickColorGreen[range-1]	= color[1];
-	majorTickColorBlue[range-1]		= color[2];
-	majorTickColorAlpha[range-1]	= color[3];	
-}
+// void Gauge::setMajorTickColor(float color[4], int range){
+// majorTickColorRed[range-1]		= color[0];
+// majorTickColorGreen[range-1]	= color[1];
+// majorTickColorBlue[range-1]		= color[2];
+// majorTickColorAlpha[range-1]	= color[3];	
+// }
 
-void Gauge::setMinorTickColor(float color[4], int range){
-	minorTickColorRed[range-1]		= color[0];
-	minorTickColorGreen[range-1]	= color[1];
-	minorTickColorBlue[range-1]		= color[2];
-	minorTickColorAlpha[range-1]	= color[3];
-}
+// void Gauge::setMinorTickColor(float color[4], int range){
+// minorTickColorRed[range-1]		= color[0];
+// minorTickColorGreen[range-1]	= color[1];
+// minorTickColorBlue[range-1]		= color[2];
+// minorTickColorAlpha[range-1]	= color[3];
+// }
 
 void Gauge::setDataRange(float start, float stop, int range){
 	startVal[range-1]	= start;
@@ -219,12 +369,12 @@ void Gauge::setLabelDecPlaces(int places, int range){
 	labelDecPlaces[range-1] = places;
 }
 
-void Gauge::setLabelColor(float color[4], int range){
-	labelColorRed[range-1]			= color[0];
-	labelColorGreen[range-1]		= color[1];
-	labelColorBlue[range-1]			= color[2];
-	labelColorAlpha[range-1]		= color[3];
-}
+// void Gauge::setLabelColor(float color[4], int range){
+// labelColorRed[range-1]			= color[0];
+// labelColorGreen[range-1]		= color[1];
+// labelColorBlue[range-1]			= color[2];
+// labelColorAlpha[range-1]		= color[3];
+// }
 
 void Gauge::setLabelFont(Fontinfo font, int range){
 	labelFont[range-1] = font;
@@ -267,40 +417,34 @@ void Gauge::draw(void){
 		float angMinorInt 	= minorInt[range] * angPerVal;
 		float angRatio 		= angMajorInt / angMinorInt;
 		
-		float majorTickColor[] =	{majorTickColorRed[range],
-			majorTickColorGreen[range],
-			majorTickColorBlue[range],
-			majorTickColorAlpha[range]};
-		float minorTickColor[] =	{minorTickColorRed[range],
-			minorTickColorGreen[range],
-			minorTickColorBlue[range],
-			minorTickColorAlpha[range]};
+		//majorTickColor is an array of pointers, each pointer pointing to an array of RGBA values (which decomposes to a pointer to the address of teh first value)
+		//the current major tick color is set to be the first pointer of attribute major tick color, and so it is decomposed as an array, hence float*
+		float* currentMajorTickColor = majorTickColor[range];
+
+		float* currentMinorTickColor = minorTickColor[range];
 		
 		
 		
-		drawTickSet(startAng[range], stopAng[range], angMajorInt, angRatio, majorTickColor, true);		// Draw major ticks
-		drawTickSet(startAng[range], stopAng[range], angMinorInt, angRatio, minorTickColor, false);		// Draw minor ticks
+		drawTickSet(startAng[range], stopAng[range], angMajorInt, angRatio, currentMajorTickColor, true);		// Draw major ticks
+		drawTickSet(startAng[range], stopAng[range], angMinorInt, angRatio, currentMinorTickColor, false);		// Draw minor ticks
 	}
 	
 	
 	range = 0;
-		
-		for(;range<numRanges;range++)
-		{
+	
+	for(;range<numRanges;range++){
 
-			float labelColor[] =		{labelColorRed[range],
-				labelColorGreen[range],
-				labelColorBlue[range],
-				labelColorAlpha[range]};
-			
-			drawLabelSet(labelStartVal[range], labelStopVal[range], labelIncrement[range], labelDecPlaces[range], labelStartAng[range], labelStopAng[range], labelColor, labelFont[range] ); // draw label set
-		}
+		float* currentLabelColor = labelColor[range];
 		
+		
+		drawLabelSet(labelStartVal[range], labelStopVal[range], labelIncrement[range], labelDecPlaces[range], labelStartAng[range], labelStopAng[range], currentLabelColor, labelFont[range] ); // draw label set
+	}
+	
 	if(borderDesired){
-	StrokeWidth(borderWidth);
-	Fill(0,0,0,0);
-	setstroke(borderColor);
-	Circle(centerX,centerY,gaugeRadius*2);	// Draw gauge border (on top of ticks)
+		StrokeWidth(borderWidth);
+		Fill(0,0,0,0);
+		setstroke(borderColor);
+		Circle(centerX,centerY,gaugeRadius*2);	// Draw gauge border (on top of ticks)
 	}
 	
 	//gaugeBuffer = vgCreateImage(VG_sABGR_8888, 2*radius, 2*radius, VG_IMAGE_QUALITY_BETTER);
@@ -315,7 +459,7 @@ void Gauge::draw(void){
 
 void Gauge::update(float needleValue, string units){
 	
-
+	updateVisuals();
 	
 	
 	/****************************************************************
@@ -341,28 +485,28 @@ void Gauge::update(float needleValue, string units){
 	
 	if(unitsFound){
 		
-	/****************************************************************
+		/****************************************************************
 		Redrawing all static components of gauge from buffer: CURRENTLY NOT BEING USED, 
 	****************************************************************/
-	
-	
-	
+		
+		
+		
 		//vgSetPixels(centerX-radius, centerY-radius, gaugeBuffer, 0 , 0 , 2*radius , 2*radius);
 		
-	// get the pixels, save the pixels, then we apply new alpha to them and reset the pixels
-	/****************************************************************
+		// get the pixels, save the pixels, then we apply new alpha to them and reset the pixels
+		/****************************************************************
 		Redrawing all static components of gauge from buffer: CURRENTLY NOT BEING USED, 
 	****************************************************************/
-	
-	vgSeti(VG_IMAGE_MODE, VG_DRAW_IMAGE_MULTIPLY);
-	float alphaScalar = (100.0-getDesiredFadePercentage())/100.0; // NEEDS TO BE ".0" !!!!!
-	Fill(255,255,255,alphaScalar);
-	vgDrawImage(gaugeBuffer);
-			
-			
+		
+		vgSeti(VG_IMAGE_MODE, VG_DRAW_IMAGE_MULTIPLY);
+		float alphaScalar = (100.0-getDesiredFadePercentage())/100.0; // NEEDS TO BE ".0" !!!!!
+		Fill(255,255,255,alphaScalar);
+		vgDrawImage(gaugeBuffer);
+		
+		
 		
 
-	/****************************************************************
+		/****************************************************************
 		Draw the Needle
 	****************************************************************/
 		

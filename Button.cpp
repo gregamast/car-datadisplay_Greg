@@ -67,8 +67,8 @@ void Button::update(void)
 {
 	
 	
-
-
+	
+	updateVisuals();
 	
 	// Handle movement
 

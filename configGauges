@@ -2,7 +2,7 @@ name 				= "Boost Gauge";
 borderColor 		= {1.0 , 1.0 , 1.0 , 1.0};
 backgroundColor 	= {0.0 , 0.0 , 0.0 , 0.4};
 borderThickness 	= 5;
-needleColor 		= {1.0 , 1.0 , 1.0 , 1.0};
+needleColor 		= {1.0 , 1.0 , 1.0 , 1.0}; 
 touchEnable 		= "true";
 numRanges = 2
 

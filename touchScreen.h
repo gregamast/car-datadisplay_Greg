@@ -6,13 +6,13 @@
 
 
 // Mouse state structure: We want this available to Project.cpp file but also available elsewhere (touchScreen.cpp), therefore put in header file to share
-typedef struct {
+typedef struct { 
 	int fd;
 	
 	struct input_event ev;
 	
 	int mt_tracking_id;
-	bool btn_touch;
+	bool btn_touch; 
 	int abs_x, abs_y;
 	
 } touch_t;

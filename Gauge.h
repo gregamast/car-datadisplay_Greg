@@ -34,15 +34,10 @@ private: //This is an access_specifier.
 	float* startAng;
 	float* stopAng;
 	float* majorInt;
-	float* minorInt;
-	float* majorTickColorRed;
-	float* majorTickColorGreen;
-	float* majorTickColorBlue;
-	float* majorTickColorAlpha;
-	float* minorTickColorRed;
-	float* minorTickColorGreen;
-	float* minorTickColorBlue;
-	float* minorTickColorAlpha;
+	float* minorInt; 
+	float** majorTickColor;
+	float** minorTickColor;
+
 	
 	/****************************************************************
 		DISPLAY LABEL Member Properties
@@ -54,10 +49,8 @@ private: //This is an access_specifier.
 	int* labelDecPlaces;
 	float* labelStartAng;
 	float* labelStopAng;
-	float* labelColorRed;
-	float* labelColorGreen;
-	float* labelColorBlue;
-	float* labelColorAlpha;
+	float** labelColor;
+
 	Fontinfo* labelFont;
 	
 	VGImage gaugeBuffer;
@@ -114,13 +107,14 @@ public: //This is an access_specifier.
 							
 	
 	
-	
+	void configure(string); // Takes in string "configType" which is the title of the section in the config file to which set the configuration parameters (for example, configureation type could be "boostGauge" or "tempGauge")
 	
 
 	
 private:
 
-	void configure(string);
+	
+	void processConfigLine(string , int );
 	// Internally accessed methods (called within draw / update functions)
 	void drawTickSet(float, float, float, float, float*, bool);			// Draw tick set(s): 
 	//		(start angle
