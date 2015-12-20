@@ -10,6 +10,8 @@
 #include "Button.h"
 #include <stdio.h>
 #include <bcm2835.h>
+
+#include "parsingUtils.h" // utilize parsing utilities for configuration file processing
  
 using namespace std;		// ??
 
@@ -49,6 +51,50 @@ Button::Button(int cx, int cy, int w, int h)
 
 	
 }
+
+void Button::configure(string configType) {
+	setlocale(LC_ALL, "");
+	Configuration * cfg = Configuration::create();
+	try {
+		cfg->parse("ButtonConf");
+		string buttonName = configType;
+		// string scope = configType;
+		radiusWidth = parseInt(cfg, buttonName, "radiusWidth");
+		radiusHeight = parseInt(cfg, buttonName, "radiusHeight");
+		
+		borderWidth = parseInt(cfg, buttonName, "borderWidth");
+		rectHeight = readoutHeight-borderWidth;
+		rectWidth = readoutWidth - borderWidth;
+		bottomLeftX = centerX - (rectWidth+borderWidth/2) / 2;
+		bottomLeftY = centerY - (rectHeight+borderWidth/2) / 2;
+		parseColor(cfg, buttonName, borderColor, "borderColor");
+		borderColorAlpha = borderColor[3];
+		containsText = parseBool(cfg, buttonName, "enableText");
+		if(containsText) {
+			string textAlign = parseString(cfg, buttonName, "textAlign");
+			textVertAlign = textAlign.at(0);
+			parseColor(cfg, buttonName, textColor, "textColor");
+			text = parseString(cfg, buttonName, "defaultText");			
+		}
+		containsValue = parseBool(cfg, buttonName, "enableValue");
+		if(containsValue) {
+			string valueAlign = parseString(cfg, buttonName, "valueAlign");
+			valueVertAlign = valueAlign.at(0);
+			parseColor(cfg, buttonName, valueColor, "valueColor");
+			desiredRefreshRate = parseInt(cfg, buttonName, "valueRefreshRate");
+			setValueDecPlaces(parseInt(cfg, buttonName, "valueDecPlaces"));
+		}
+		
+		
+		//need to implement this debounce!
+		//setPressDebounce(parseInt(cfg, buttonName, "pressDebounce"));
+	}catch(const ConfigurationException & ex) {
+		cout << ex.c_str() << endl;
+	}
+	cfg->destroy();
+}
+
+
 
 
 void Button::setValueDecPlaces(int dec){						// Set number of digits before & after decimal
@@ -106,7 +152,7 @@ void Button::update(void)
 	StrokeWidth(borderWidth);
 	setstroke(borderColor);
 	//void Roundrect(VGfloat x, VGfloat y, VGfloat w, VGfloat h, VGfloat rw, VGfloat rh)
-	Roundrect(bottomLeftX, bottomLeftY, rectWidth, rectHeight,10,10);
+	Roundrect(bottomLeftX, bottomLeftY, rectWidth, rectHeight , radiusWidth , radiusHeight);
 	
 
 
@@ -241,7 +287,7 @@ void Button::setBorder(float color[4], int width)		// Set border color, border w
 	borderColor[1] = color[1];
 	borderColor[2] = color[2];
 	borderColor[3] = color[3];
-	borderColorAlpha = color[3];
+	borderColorAlpha = color[3]; 
 	
 	rectHeight = readoutHeight-borderWidth;
 	rectWidth = readoutWidth - borderWidth;

@@ -20,6 +20,8 @@ private:
 	int centerX, centerY;					// Location of readout center
 	int bottomLeftX, bottomLeftY;			// Location of rectangle bottom left corner
 	
+	int radiusWidth; //Width of rounded rectangle corner radius in pixels
+	int radiusHeight; //Height of rounded rectangle corner radius in pixels
 	
 	
 	// Timing related properties
@@ -65,6 +67,10 @@ private:
 
 public:
 	Button(int, int, int, int);		// Readout constructor: center X, center Y, width, height
+	void configure(string); // Takes in string "configType" which is the title of the section in the config file to which set the configuration parameters (for example, configureation type could be "boostGauge" or "tempGauge")
+
+	
+	
 	void setBackgroundColor(float*);
 	void setBorder(float*, int);			// Set border color, border width
 	
@@ -80,7 +86,7 @@ public:
 	void setTextColor(float*);
 	
 
-
+	
 	
 	
 	

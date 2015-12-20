@@ -1,0 +1,111 @@
+FramerateButton {
+	radiusWidth = "5";
+	radiusHeight = "5";
+	borderWidth = "1";
+	borderColor = ["1.0", "1.0", "1.0", "1.0"];
+	backgroundColor = ["0.0","0.0","0.0","0.6"];
+	enableText = "true";
+	textAlign = "B";
+	textColor = ["1.0", "1.0", "1.0", "1.0"];
+	defaultText = "Hz update";
+	enableValue = "true";
+	valueAlign = "T";
+	valueColor = ["1.0", "1.0", "1.0", "1.0"];
+	valueRefreshRate = "5";
+	valueDecPlaces = "2";
+	
+}
+
+
+
+MenuButton1 {
+	radiusWidth = "5";
+	radiusHeight = "5";
+	borderWidth = "1";
+	borderColor = ["1.0", "1.0", "1.0", "1.0"];
+	backgroundColor = ["0.0","0.0","0.0","0.6"];
+	enableText = "true";
+	textAlign = "C";
+	textColor = ["1.0", "1.0", "1.0", "1.0"];
+	defaultText = "BUTTON 1";
+}
+
+MenuButton2 {
+	radiusWidth = "5";
+	radiusHeight = "5";
+	borderWidth = "1";
+	borderColor = ["1.0", "1.0", "1.0", "1.0"];
+	backgroundColor = ["0.0","0.0","0.0","0.6"];
+	enableText = "true";
+	textAlign = "C";
+	textColor = ["1.0", "1.0", "1.0", "1.0"];
+	defaultText = "BUTTON 2";
+}
+
+MenuButton3 {
+	radiusWidth = "5";
+	radiusHeight = "5";
+	borderWidth = "1";
+	borderColor = ["1.0", "1.0", "1.0", "1.0"];
+	backgroundColor = ["0.0","0.0","0.0","0.6"];
+	enableText = "true";
+	textAlign = "C";
+	textColor = ["1.0", "1.0", "1.0", "1.0"];
+	defaultText = "BUTTON 3";
+}
+
+MenuButton4 {
+	radiusWidth = "5";
+	radiusHeight = "5";
+	borderWidth = "1";
+	borderColor = ["1.0", "1.0", "1.0", "1.0"];
+	backgroundColor = ["0.0","0.0","0.0","0.6"];
+	enableText = "true";
+	textAlign = "C";
+	textColor = ["1.0", "1.0", "1.0", "1.0"];
+	defaultText = "BUTTON 4";
+}
+
+MenuButton5 {
+	radiusWidth = "5";
+	radiusHeight = "5";
+	borderWidth = "1";
+	borderColor = ["1.0", "1.0", "1.0", "1.0"];
+	backgroundColor = ["0.0","0.0","0.0","0.6"];
+	enableText = "true";
+	textAlign = "C";
+	textColor = ["1.0", "1.0", "1.0", "1.0"];
+	defaultText = "BUTTON 5";
+}
+
+MenuButton6 {
+	radiusWidth = "5";
+	radiusHeight = "5";
+	borderWidth = "1";
+	borderColor = ["1.0", "1.0", "1.0", "1.0"];
+	backgroundColor = ["0.0","0.0","0.0","0.6"];
+	enableText = "true";
+	textAlign = "C";
+	textColor = ["1.0", "1.0", "1.0", "1.0"];
+	defaultText = "BUTTON 6";
+}
+
+MenuButton7 {
+	radiusWidth = "5";
+	radiusHeight = "5";
+	borderWidth = "1";
+	borderColor = ["1.0", "1.0", "1.0", "1.0"];
+	backgroundColor = ["0.0","0.0","0.0","0.6"];
+	enableText = "true";
+	textAlign = "C";
+	textColor = ["1.0", "1.0", "1.0", "1.0"];
+	defaultText = "BUTTON 7";
+}
+
+
+
+
+
+
+
+

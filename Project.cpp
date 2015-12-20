@@ -6,13 +6,13 @@
 
 
 using namespace std;
-#include <iostream>
+#include <iostream> 
 #include <stdio.h>
 #include <array>
 
 #include <vector>
 
-#include <string>
+#include <string> 
 
 #include "VG/openvg.h"		// OpenVG
 #include "VG/vgu.h"			// OpenVG
@@ -191,120 +191,24 @@ int main(){
 	Gauge BoostGauge(width/6, height/2, width/6);
 	
 	string configType;
-	
-	
-	
 	configType = "BoostGauge";
 	BoostGauge.configure(configType);
-
-
-	// BoostGauge.setBorderColor(blue);
-	
-	// BoostGauge.setBackgroundColor(blackLowA1);
-	// BoostGauge.setNeedleColor(white);
-	
 	BoostGauge.touchEnable(); 	//Enable the touch functionaltiy  of this touchable object gauge object BoostGauge object
-	
-	//Set up Boost Gauge Object Range 1
-	
-	
-	// BoostGauge.setDataRange(0 , 30, 1); // Always provide in stern order: min value first, then max
-	// BoostGauge.setDataAngleRange(0,-180, 1);
-	// BoostGauge.setMajorInterval(5,1);
-	// BoostGauge.setMinorInterval(1,1);
-	//BoostGauge.setMajorTickColor(white, 1);
-	//BoostGauge.setMinorTickColor(white, 1);
-	
-	
 	BoostGauge.setLabelFont(avengeance, 1);
-	// BoostGauge.setLabelColor(white, 1);			// Set label label color 		(rgba, range #)
-	// BoostGauge.setLabelRange(0, 30, 1);		// Set label display range 		(min, max, range #)
-	// BoostGauge.setLabelAngleRange(0, 180, 1);	// Set label angle range 		(min, max, range #)
-	// BoostGauge.setLabelIncrement(5, 1);			// Set label increment 			(increment, range #)
-	// BoostGauge.setLabelDecPlaces(0, 1);			// Set label # of dec places 	(# of decimal places, range #)
-	// BoostGauge.setLabelFont( avengeance,1);				// Set label font				(font)
-	
-	//Set up Boost Gauge Object Range 2
-
-	// BoostGauge.setDataRange(0 , 30, 2); // Always provide in stern order: min value first, then max
-	// BoostGauge.setDataAngleRange(0,90, 2); 
-	// BoostGauge.setMajorInterval(10,2);
-	// BoostGauge.setMinorInterval(2, 2);
-	// BoostGauge.setMajorTickColor(red, 2);
-	// BoostGauge.setMinorTickColor(red, 2);
-	
 	BoostGauge.setLabelFont(avengeance, 2);
-	//BoostGauge.setLabelColor(white, 2);			// Set label label color 		(rgba, range #)
-	// BoostGauge.setLabelRange(10, 30, 2);		// Set label display range 		(min, max, range #)
-	// BoostGauge.setLabelAngleRange(-30, -90, 2);	// Set label angle range 		(min, max, range #)
-	// BoostGauge.setLabelIncrement(10, 2);			// Set label increment 			(increment, range #)
-	// BoostGauge.setLabelDecPlaces(0, 2);			// Set label # of dec places 	(# of decimal places, range #)
-	// BoostGauge.setLabelFont( avengeance,2);				// Set label font				(font)
-	
-	
-	
-	
-	
-	
-	// Gauge *myGauge;
-	// myGauge = &BoostGauge;
-	// myGauge->setLabelDecPlaces(0,2);
+
 	/****************************************************************
 		Create TEMPERATURE GAUGE Object
 	****************************************************************/
-	// Gauge(int x, int y, int r, int ranges)
+	
 	Gauge TempGauge((width/6)*3, height/2, width/6 ); // used the constructor of class Gauge to instantiate object BoostGauge
 	
 	configType = "TempGauge";
 	TempGauge.configure(configType);
-	
-	// TempGauge.setNumRanges(2);
-	// TempGauge.setEngUnits(eu1, 1);
-	// TempGauge.setEngUnits(eu2, 2);
-
-	TempGauge.setBorderColor(blue);
-	
-	TempGauge.setBackgroundColor(blackLowA1);
-	TempGauge.setNeedleColor(red);
-	
 	TempGauge.touchEnable(); 	//Enable the touch functionaltiy  of this touchable object gauge object TempGauge object
-	
-	//Set up Boost Gauge Object Range 1
-	
-	
-	TempGauge.setDataRange(0 , 10, 1); // Always provide in stern order: min value first, then max
-	TempGauge.setDataAngleRange(0,-90-45, 1);
-	TempGauge.setMajorInterval(5,1);
-	TempGauge.setMinorInterval(1,1);
-	//TempGauge.setMajorTickColor(red, 1);
-	//TempGauge.setMinorTickColor(red, 1);
-	
-	
 	TempGauge.setLabelFont(avengeance, 1);
-	//TempGauge.setLabelColor(white, 1);			// Set label label color 		(rgba, range #)
-	TempGauge.setLabelRange(0, 10, 1);		// Set label display range 		(min, max, range #)
-	TempGauge.setLabelAngleRange(0, 90+45, 1);	// Set label angle range 		(min, max, range #)
-	TempGauge.setLabelIncrement(5, 1);			// Set label increment 			(increment, range #)
-	TempGauge.setLabelDecPlaces(0, 1);			// Set label # of dec places 	(# of decimal places, range #)
-	TempGauge.setLabelFont( avengeance,1);				// Set label font				(font)
-	
-	//Set up Boost Gauge Object Range 2
-
-	TempGauge.setDataRange(0 , 25, 2); // Always provide in stern order: min value first, then max
-	TempGauge.setDataAngleRange(0,90, 2); 
-	TempGauge.setMajorInterval(10,2);
-	TempGauge.setMinorInterval(2, 2);
-	//TempGauge.setMajorTickColor(blue, 2);
-	//TempGauge.setMinorTickColor(blue, 2);
-	
 	TempGauge.setLabelFont(avengeance, 2);
-	//TempGauge.setLabelColor(white, 2);			// Set label label color 		(rgba, range #)
-	TempGauge.setLabelRange(10, 25, 2);		// Set label display range 		(min, max, range #)
-	TempGauge.setLabelAngleRange(-30, -90-45, 2);	// Set label angle range 		(min, max, range #)
-	TempGauge.setLabelIncrement(10, 2);			// Set label increment 			(increment, range #)
-	TempGauge.setLabelDecPlaces(0, 2);			// Set label # of dec places 	(# of decimal places, range #)
-	TempGauge.setLabelFont( avengeance,2);				// Set label font				(font)
-	
+		
 	/****************************************************************
 		Create BOOST GAUGE Object
 	****************************************************************/
@@ -313,141 +217,116 @@ int main(){
 	
 	configType = "BoostGauge2";
 	BoostGauge2.configure(configType);
-	
-	// BoostGauge2.setNumRanges(2);
-	// BoostGauge2.setEngUnits(eu1, 1);
-	// BoostGauge2.setEngUnits(eu2, 2);
 
-	BoostGauge2.setBorderColor(blue);
-	
-	BoostGauge2.setBackgroundColor(blackLowA1);
-	BoostGauge2.setNeedleColor(white);
-	
 	BoostGauge2.touchEnable(); 	//Enable the touch functionaltiy  of this touchable object gauge object BoostGauge2 object
-	
-	//Set up Boost Gauge Object Range 1
-	
-	
-	BoostGauge2.setDataRange(0 , 30, 1); // Always provide in stern order: min value first, then max
-	BoostGauge2.setDataAngleRange(0,-180, 1);
-	BoostGauge2.setMajorInterval(5,1);
-	BoostGauge2.setMinorInterval(1,1);
-	// BoostGauge2.setMajorTickColor(white, 1);
-	// BoostGauge2.setMinorTickColor(white, 1);
-	
-	
-	BoostGauge2.setLabelFont(avengeance, 1);
-	//BoostGauge2.setLabelColor(white, 1);			// Set label label color 		(rgba, range #)
-	BoostGauge2.setLabelRange(0, 30, 1);		// Set label display range 		(min, max, range #)
-	BoostGauge2.setLabelAngleRange(0, 180, 1);	// Set label angle range 		(min, max, range #)
-	BoostGauge2.setLabelIncrement(5, 1);			// Set label increment 			(increment, range #)
-	BoostGauge2.setLabelDecPlaces(0, 1);			// Set label # of dec places 	(# of decimal places, range #)
 	BoostGauge2.setLabelFont( avengeance,1);				// Set label font				(font)
-	
-	//Set up Boost Gauge Object Range 2
-
-	BoostGauge2.setDataRange(0 , 30, 2); // Always provide in stern order: min value first, then max
-	BoostGauge2.setDataAngleRange(0,90, 2); 
-	BoostGauge2.setMajorInterval(10,2);
-	BoostGauge2.setMinorInterval(2, 2);
-	// BoostGauge2.setMajorTickColor(red, 2);
-	// BoostGauge2.setMinorTickColor(red, 2);
-	
-	BoostGauge2.setLabelFont(avengeance, 2);
-	//BoostGauge2.setLabelColor(white, 2);			// Set label label color 		(rgba, range #)
-	BoostGauge2.setLabelRange(10, 30, 2);		// Set label display range 		(min, max, range #)
-	BoostGauge2.setLabelAngleRange(-30, -90, 2);	// Set label angle range 		(min, max, range #)
-	BoostGauge2.setLabelIncrement(10, 2);			// Set label increment 			(increment, range #)
-	BoostGauge2.setLabelDecPlaces(0, 2);			// Set label # of dec places 	(# of decimal places, range #)
 	BoostGauge2.setLabelFont( avengeance,2);				// Set label font				(font)
 	/****************************************************************
 		Create BUTTON objects
 	****************************************************************/
 	
-	// // std::cin.ignore();
-	// Screen Refresh Rate Button:
+
 	
 	Button ScreenRRButton(width-300, height/2, 100, 50);
-	ScreenRRButton.setBorder(white, 2); 
-	string textString = "Hz update";
-	ScreenRRButton.enableText('B'); 
-	ScreenRRButton.setText(textString);
-	float blueLowA[]={0,0,1,0.75};
-	ScreenRRButton.setBackgroundColor(blackLowA);
-	
-	ScreenRRButton.enableValue('T');
-	ScreenRRButton.setValueDecPlaces(2);
-	ScreenRRButton.setValueRefreshRate(5);
-	ScreenRRButton.setValueColor(white);
-	
+	configType = "FramerateButton";
+	ScreenRRButton.configure(configType);
 	ScreenRRButton.touchEnable();
+	//ScreenRRButton.setBorder(white, 2); 
+	//string textString = "Hz update";
+	//ScreenRRButton.enableText('B'); 
+	//ScreenRRButton.setText(textString);
+	//float blueLowA[]={0,0,1,0.75};
+	//ScreenRRButton.setBackgroundColor(blackLowA);
 	
-	// Exit Button:
+	//ScreenRRButton.enableValue('T');
+	//ScreenRRButton.setValueDecPlaces(2);
+	//ScreenRRButton.setValueRefreshRate(5);
+	//ScreenRRButton.setValueColor(white);
+
 	
-	// Button constructor: center X, center Y, width, height
-	// Button ExitButton(width-50, -50/2,100,50);
-	Button ExitButton(width-50, -22,100,50);
-	ExitButton.setBackgroundColor(blackLowA);
-	ExitButton.setBorder(red,2);
-	string ExitButtonText = "1";
-	ExitButton.setTextColor(red);
-	ExitButton.enableText('C');
-	ExitButton.setText(ExitButtonText);
-	ExitButton.touchEnable();
+	Button MenuButton7(width-50, -22,100,50);
+	configType = "MenuButton7";
+	MenuButton7.configure(configType);
+	MenuButton7.touchEnable();
+	//ExitButton.setBackgroundColor(blackLowA);
+	//ExitButton.setBorder(red,2);
+	//string ExitButtonText = "Menu 7";
+	//ExitButton.setTextColor(red);
+	//ExitButton.enableText('C');
+	//ExitButton.setText(ExitButtonText);
 	
-	Button ExitButton1(width-150-10, -22,100,50);
-	ExitButton1.setBackgroundColor(blackLowA);
-	ExitButton1.setBorder(white,2);
-	string ExitButtonText1 = "2";
-	ExitButton1.setTextColor(white);
-	ExitButton1.enableText('C');
-	ExitButton1.setText(ExitButtonText1);
-	ExitButton1.touchEnable();
 	
-	Button ExitButton2(width-250-20, -22,100,50);
-	ExitButton2.setBackgroundColor(blackLowA);
-	ExitButton2.setBorder(white,2);
-	string ExitButtonText2 = "3";
-	ExitButton2.setTextColor(white);
-	ExitButton2.enableText('C');
-	ExitButton2.setText(ExitButtonText2);
-	ExitButton2.touchEnable();
+	Button MenuButton6(width-150-10, -22,100,50);
+	configType = "MenuButton6";
+	MenuButton6.configure(configType);
+	MenuButton6.touchEnable();
+	// ExitButton1.setBackgroundColor(blackLowA);
+	// ExitButton1.setBorder(white,2);
+	// string ExitButtonText1 = "2";
+	// ExitButton1.setTextColor(white);
+	// ExitButton1.enableText('C');
+	// ExitButton1.setText(ExitButtonText1);
+
 	
-	Button ExitButton3(width-350-30, -22,100,50);
-	ExitButton3.setBackgroundColor(blackLowA);
-	ExitButton3.setBorder(white,2);
-	string ExitButtonText3 = "4";
-	ExitButton3.setTextColor(white);
-	ExitButton3.enableText('C');
-	ExitButton3.setText(ExitButtonText3);
-	ExitButton3.touchEnable();
+	Button MenuButton5(width-250-20, -22,100,50);
+	configType = "MenuButton5";
+	MenuButton5.configure(configType);
+	MenuButton5.touchEnable();
+	// ExitButton2.setBackgroundColor(blackLowA);
+	// ExitButton2.setBorder(white,2);
+	// string ExitButtonText2 = "3";
+	// ExitButton2.setTextColor(white);
+	// ExitButton2.enableText('C');
+	// ExitButton2.setText(ExitButtonText2);
+
 	
-	Button ExitButton4(width-450-40, -22,100,50);
-	ExitButton4.setBackgroundColor(blackLowA);
-	ExitButton4.setBorder(white,2);
-	string ExitButtonText4 = "5";
-	ExitButton4.setTextColor(white);
-	ExitButton4.enableText('C');
-	ExitButton4.setText(ExitButtonText4);
-	ExitButton4.touchEnable();
+	Button MenuButton4(width-350-30, -22,100,50);
+	configType = "MenuButton4";
+	MenuButton4.configure(configType);
+	MenuButton4.touchEnable();
+	// ExitButton3.setBackgroundColor(blackLowA);
+	// ExitButton3.setBorder(white,2);
+	// string ExitButtonText3 = "4";
+	// ExitButton3.setTextColor(white);
+	// ExitButton3.enableText('C');
+	// ExitButton3.setText(ExitButtonText3);
+
 	
-	Button ExitButton5(width-550-50, -22,100,50);
-	ExitButton5.setBackgroundColor(blackLowA);
-	ExitButton5.setBorder(white,2);
-	string ExitButtonText5 = "6";
-	ExitButton5.setTextColor(white);
-	ExitButton5.enableText('C');
-	ExitButton5.setText(ExitButtonText5);
-	ExitButton5.touchEnable();
+	Button MenuButton3(width-450-40, -22,100,50);
+	configType = "MenuButton3";
+	MenuButton3.configure(configType);
+	MenuButton3.touchEnable();
+	// ExitButton4.setBackgroundColor(blackLowA);
+	// ExitButton4.setBorder(white,2);
+	// string ExitButtonText4 = "5";
+	// ExitButton4.setTextColor(white);
+	// ExitButton4.enableText('C');
+	// ExitButton4.setText(ExitButtonText4);
+
 	
-	Button ExitButton6(width-650-60, -22,100,50);
-	ExitButton6.setBackgroundColor(blackLowA);
-	ExitButton6.setBorder(white,2);
-	string ExitButtonText6 = "Home :)";
-	ExitButton6.setTextColor(white);
-	ExitButton6.enableText('C');
-	ExitButton6.setText(ExitButtonText6);
-	ExitButton6.touchEnable();
+	Button MenuButton2(width-550-50, -22,100,50);
+	configType = "MenuButton2";
+	MenuButton2.configure(configType);
+	MenuButton2.touchEnable();
+	// ExitButton5.setBackgroundColor(blackLowA);
+	// ExitButton5.setBorder(white,2);
+	// string ExitButtonText5 = "6";
+	// ExitButton5.setTextColor(white);
+	// ExitButton5.enableText('C');
+	// ExitButton5.setText(ExitButtonText5);
+
+	
+	Button MenuButton1(width-650-60, -22,100,50);
+	configType = "MenuButton1";
+	MenuButton1.configure(configType);
+	MenuButton1.touchEnable();
+	// ExitButton6.setBackgroundColor(blackLowA);
+	// ExitButton6.setBorder(white,2);
+	// string ExitButtonText6 = "Home :)";
+	// ExitButton6.setTextColor(white);
+	// ExitButton6.enableText('C');
+	// ExitButton6.setText(ExitButtonText6);
+
 	
 	
 
@@ -493,7 +372,7 @@ int main(){
 	BoostGauge2.draw();
 	
 	Gauge *gaugeArray[]={&BoostGauge , &TempGauge, &BoostGauge2};
-	Button *buttonArray[]={&ScreenRRButton, &ExitButton, &ExitButton1 , &ExitButton2, &ExitButton3, &ExitButton4, &ExitButton5, &ExitButton6 };
+	Button *buttonArray[]={&ScreenRRButton, &MenuButton7, &MenuButton1 , &MenuButton2, &MenuButton3, &MenuButton4, &MenuButton5, &MenuButton6 };
 
 
 	
@@ -505,12 +384,8 @@ int main(){
 	End();//This ends the picture
 	
 	
-	//// // std::cin.ignore();
 	
-	/****************************************************************
-		Execution Loop
-	****************************************************************/
-	// currentTime1 = bcm2835_st_read();
+	//vector<Gauge> GObjects;
 	
 	
 	while(1){
@@ -573,14 +448,13 @@ int main(){
 		****************************************************************/
 
 		
-		if (BoostGauge.isTouched())
-		{
+		if ( BoostGauge.isTouched() ){
 			//std::cout << "screen RR Button was touched!!!" << endl;
 			// void TouchableObject::move(int finalX, int finalY, int transTime, string motionType )
 			
 			
 			
-			if(ExitButton.getCurrentPosY() <0){
+			if(MenuButton1.getCurrentPosY() <0){
 				
 				for(int i=0;i<=2;i++){
 					gaugeArray[i]->update(BoostDataStream.getWeightedMADatum(), BoostDataStream.getEngUnits());
@@ -591,56 +465,56 @@ int main(){
 				BoostGauge2.fade(75 ,250+60*6,"emptyForNow");
 				ScreenRRButton.fade(75, 250+60*6,"emptyForNow" );
 				
-				ExitButton.move(width-50, 25,250,"emptyForNow");
-				ExitButton.fade( 0 ,250,"emptyForNow");
+				MenuButton7.move(width-50, 25,250,"emptyForNow");
+				MenuButton7.fade( 0 ,250,"emptyForNow");
 				
-				ExitButton1.move(width-150-10, 25, 250+60*1,"emptyForNow");
-				ExitButton1.fade( 0,250+60*1,"emptyForNow");
+				MenuButton6.move(width-150-10, 25, 250+60*1,"emptyForNow");
+				MenuButton6.fade( 0,250+60*1,"emptyForNow");
 				
-				ExitButton2.move(width-250-20,25, 250+60*2, "emptyForNow");
-				ExitButton2.fade( 0,250+60*2,"emptyForNow");
+				MenuButton5.move(width-250-20,25, 250+60*2, "emptyForNow");
+				MenuButton5.fade( 0,250+60*2,"emptyForNow");
 				
-				ExitButton3.move(width-350-30,25,250+60*3,"emptyForNow");
-				ExitButton3.fade( 0,250+60*3,"emptyForNow");
+				MenuButton4.move(width-350-30,25,250+60*3,"emptyForNow");
+				MenuButton4.fade( 0,250+60*3,"emptyForNow");
 				
-				ExitButton4.move(width-450-40,25,250+60*4,"emptyForNow");
-				ExitButton4.fade( 0,250+60*4,"emptyForNow");
+				MenuButton3.move(width-450-40,25,250+60*4,"emptyForNow");
+				MenuButton3.fade( 0,250+60*4,"emptyForNow");
 				
-				ExitButton5.move(width-550-50,25,250+60*5,"emptyForNow");
-				ExitButton5.fade( 0,250+60*5,"emptyForNow");
+				MenuButton2.move(width-550-50,25,250+60*5,"emptyForNow");
+				MenuButton2.fade( 0,250+60*5,"emptyForNow");
 				
-				ExitButton6.move(width-650-60,25,250+60*6,"emptyForNow");
-				ExitButton6.fade( 0,250+60*6,"emptyForNow");
+				MenuButton1.move(width-650-60,25,250+60*6,"emptyForNow");
+				MenuButton1.fade( 0,250+60*6,"emptyForNow");
 				
 			}
 			
-			if(ExitButton.getCurrentPosY() >0){
+			if(MenuButton1.getCurrentPosY() >0){
 				
 				BoostGauge.fade(0 ,250+60*6,"emptyForNow");
 				TempGauge.fade(0 ,250+60*6,"emptyForNow");
 				BoostGauge2.fade(0 ,250+60*6,"emptyForNow");
 				ScreenRRButton.fade(0, 250+60*6,"emptyForNow" );
 				
-				ExitButton.move(width-50, -20,250,"emptyForNow");
-				ExitButton.fade( 75,250,"emptyForNow");
+				MenuButton7.move(width-50, -20,250,"emptyForNow");
+				MenuButton7.fade( 75,250,"emptyForNow");
 				
-				ExitButton1.move(width-150-10, -22, 250+60*1,"emptyForNow");
-				ExitButton1.fade( 75,250+60*1,"emptyForNow");
+				MenuButton6.move(width-150-10, -22, 250+60*1,"emptyForNow");
+				MenuButton6.fade( 75,250+60*1,"emptyForNow");
 				
-				ExitButton2.move(width-250-20,-22, 250+60*2, "emptyForNow");
-				ExitButton2.fade( 75,250+60*2,"emptyForNow");
+				MenuButton5.move(width-250-20,-22, 250+60*2, "emptyForNow");
+				MenuButton5.fade( 75,250+60*2,"emptyForNow");
 				
-				ExitButton3.move(width-350-30,-22,250+60*3,"emptyForNow");
-				ExitButton3.fade( 75,250+60*3,"emptyForNow");
+				MenuButton4.move(width-350-30,-22,250+60*3,"emptyForNow");
+				MenuButton4.fade( 75,250+60*3,"emptyForNow");
 				
-				ExitButton4.move(width-450-40,-22,250+60*4,"emptyForNow");
-				ExitButton4.fade( 75,250+60*4,"emptyForNow");
+				MenuButton3.move(width-450-40,-22,250+60*4,"emptyForNow");
+				MenuButton3.fade( 75,250+60*4,"emptyForNow");
 				
-				ExitButton5.move(width-550-50,-22,250+60*5,"emptyForNow");
-				ExitButton5.fade( 75,250+60*5,"emptyForNow");
+				MenuButton2.move(width-550-50,-22,250+60*5,"emptyForNow");
+				MenuButton2.fade( 75,250+60*5,"emptyForNow");
 				
-				ExitButton6.move(width-650-60,-22,250+60*6,"emptyForNow");
-				ExitButton6.fade( 75,250+60*6,"emptyForNow");
+				MenuButton1.move(width-650-60,-22,250+60*6,"emptyForNow");
+				MenuButton1.fade( 75,250+60*6,"emptyForNow");
 				
 			}
 			

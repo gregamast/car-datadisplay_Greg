@@ -15,103 +15,14 @@ using namespace std;
 #include <cmath>
 #include "TouchableObject.h"
 
+#include "parsingUtils.h" // utilize parsing utilities for configuration file processing
+
 #include "Gauge.h"        
 
 #include <fstream> //This is for reading the config file in
 #include <algorithm>
 
-/****************************************************************
-	Parsing funmctions - TEMPORARY LOCATION
-****************************************************************/
 
-/* Parsing Functions */
-
-/* Parse integer */
-int parseInt(Configuration * cfg, string scope, string attr){
-	try {
-		return cfg->lookupInt(scope.c_str(), attr.c_str());
-	}
-	catch(const ConfigurationException & ex) {
-		cout << ex.c_str() << endl;
-	}
-}
-/* Parse integer inside subscope */
-int parseInt(Configuration * cfg, string scope, string subscope, string attr){
-	try {
-		return cfg->lookupInt(scope.c_str(), subscope.append(attr).c_str());
-	}
-	catch(const ConfigurationException & ex) {
-		cout << ex.c_str() << endl;
-	}
-}
-/* Parse string */
-string parseString(Configuration * cfg, string scope, string attr){
-	try {
-		return cfg->lookupString(scope.c_str(), attr.c_str());
-	}
-	catch(const ConfigurationException & ex) {
-		cout << ex.c_str() << endl;
-	}
-}
-/* Parse string inside subscope */
-string parseString(Configuration * cfg, string scope, string subscope, string attr){
-	try {
-		return cfg->lookupString(scope.c_str(), subscope.append(attr).c_str());
-	}
-	catch(const ConfigurationException & ex) {
-		cout << ex.c_str() << endl;
-	}
-}
-/* Parse float */
-float parseFloat(Configuration * cfg, string scope, string attr){
-	try {
-		return cfg->lookupFloat(scope.c_str(), attr.c_str());
-	}
-	catch(const ConfigurationException & ex) {
-		cout << ex.c_str() << endl;
-	}
-}
-/* Parse float inside subscope */
-float parseFloat(Configuration * cfg, string scope, string subscope, string attr){
-	try {
-		return cfg->lookupFloat(scope.c_str(), subscope.append(attr).c_str());
-	}
-	catch(const ConfigurationException & ex) {
-		cout << ex.c_str() << endl;
-	}
-}
-
-/* Parse color inside subscope */
-void parseColor(Configuration * cfg, string scope, string subscope, float* output, string attr)
-{
-	try {
-		StringVector color;
-		int idx = 0;
-		cfg->lookupList(scope.c_str(), subscope.append(attr).c_str(), color);
-		for(;idx<4;idx++) {
-			output[idx] = stof(color[idx]);
-		}
-	}
-	catch(const ConfigurationException & ex) {
-		cout << ex.c_str() << endl;
-	}
-}
-
-/* Parse color */
-void parseColor(Configuration * cfg, string scope, float* output, string attr)
-{
-	try {
-		StringVector color;
-		int idx = 0;
-		cfg->lookupList(scope.c_str(), attr.c_str(), color);
-		for(;idx<4;idx++) {
-			output[idx] = stof(color[idx]);
-		}
-	}
-	catch(const ConfigurationException & ex) {
-		cout << ex.c_str() << endl;
-	}
-}
 
 
 
@@ -157,7 +68,7 @@ void Gauge::configure(string configType) {
 	
 	try{
 		
-		cfg->parse("GaugeConfigurations");
+		cfg->parse("GaugeConf");
 		
 		numRanges = parseInt(cfg, scope, "numRanges");
 		
@@ -222,7 +133,7 @@ void Gauge::configure(string configType) {
 		parseColor(cfg, scope, borderColor, "borderColor");
 		parseColor(cfg, scope, backgroundColor, "backgroundColor");
 		parseColor(cfg, scope, needleColor, "needleColor");
-		//touchEnabled = parseString(cfg, scope, "touchEnabled");
+		
 		
 	}
 	catch(const ConfigurationException & ex) {
@@ -639,7 +550,7 @@ void Gauge::drawNeedle(float angle){
 	int focalX = centerX - 15;
 	int focalY = centerY + 0;
 	VGfloat stops[] = {	0.000,	5,5,5,.05*alphaScalar,
-		1.000,	0,0,0,1*alphaScalar};
+						1.000,	0,0,0,1*alphaScalar};
 	FillRadialGradient(centerX, centerY, focalX, focalY, centerRadius*scaling, stops,0);
 	Circle(centerX, centerY, centerRadius*2);
 	Fill(0,0,0,.7*alphaScalar);
