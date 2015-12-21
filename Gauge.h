@@ -13,7 +13,7 @@ class Gauge: public TouchableObject{
 	
 private: //This is an access_specifier.  
 	
-	int centerX	; 
+	int centerX	;  
 	int centerY	; 
 	int radius;
 	float gaugeRadius;
@@ -22,6 +22,8 @@ private: //This is an access_specifier.
 	float backgroundColor[4];
 	float needleColor[4];
 	bool borderDesired;
+	
+	string identifier; //This is to identify the name or type of gauge object, as set in the configuration file
 	
 	/****************************************************************
 		DISPLAY RANGE Member Properties
@@ -61,8 +63,9 @@ private: //This is an access_specifier.
 
 public: //This is an access_specifier. 
 	
-	Gauge(int, int, int);				//Gauge CONSTRUCTOR	
+	Gauge(int, int, int , string);				//Gauge CONSTRUCTOR	
 	
+	string getIdentifier(void); //This is to be called in the main project logic to determine the id associated with a particular object at an index of the object vector
 	void setNumRanges( int ); // this is actually private since we are only calling it in configure method, so eventually should make this private
 	void setEngUnits(string , int);
 	

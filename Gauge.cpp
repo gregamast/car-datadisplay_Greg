@@ -23,6 +23,13 @@ using namespace std;
 #include <algorithm>
 
 
+// *** Label Fonts 
+#include "avengeance.inc"
+#include "digits.inc"
+
+// Label and readout fonts
+Fontinfo avengeance_G;
+Fontinfo digits_G; 
 
 
 
@@ -30,7 +37,7 @@ using namespace std;
 /****************************************************************
 	CONSTRUCTOR
 ****************************************************************/
-Gauge::Gauge(int x, int y, int r){
+Gauge::Gauge(int x, int y, int r , string configType){
 	centerX = x;
 	centerY = y;
 	radius = r;
@@ -46,22 +53,35 @@ Gauge::Gauge(int x, int y, int r){
 	setCircleCenter(x, y);		// Called by derived class to set circular touch area center
 	setCircleRadius(r);			// Called by derived class to set circular touch area radius
 	
-	
+	configure( configType);
 
+		// Below should be removed eventually and not hard coded here. needs to be implemented in configuration file
+		setLabelFont(avengeance_G, 1); 
+		setLabelFont(avengeance_G, 2);
 	
 }
 
 
 void Gauge::configure(string configType) {
-	cout<<configType<<endl;
+	
+	/****************************************************************
+		Load Fonts
+	****************************************************************/
+	avengeance_G = loadfont(avengeance_glyphPoints, 
+	avengeance_glyphPointIndices, 
+	avengeance_glyphInstructions,                
+	avengeance_glyphInstructionIndices, 
+	avengeance_glyphInstructionCounts, 
+	avengeance_glyphAdvances,
+	avengeance_characterMap, 
+	avengeance_glyphCount);
+	
 	
 	setlocale(LC_ALL, "");
 	
 	string rangeScope = "range";
 	int currentRange = 1;
-	// StringVector color;
 	
-	//string scope = "BoostGauge";
 	string scope = configType;
 	
 	Configuration * cfg = Configuration::create();
@@ -126,7 +146,7 @@ void Gauge::configure(string configType) {
 			labelStopAng[currentRange-1] 	= parseFloat(cfg , scope , currentRangeScope , ".labelAngleRangeMax");
 			labelIncrement[currentRange-1] 	= parseFloat(cfg , scope , currentRangeScope , ".labelIncrement");
 			labelDecPlaces[currentRange-1] 	= parseFloat(cfg , scope , currentRangeScope , ".labelDecPlaces");
-			
+			labelFont[currentRange-1] = avengeance_G;
 		}
 		
 		
@@ -208,7 +228,10 @@ void Gauge::configure(string configType) {
 // EngUnits[range-1]=EU;
 //cout<<"this is the unit "<<EngUnits[range-1]<<endl;
 // }
-
+string Gauge::getIdentifier(void){
+	return identifier;
+	
+}
 void Gauge::setBorderColor(float color[4]){
 	borderColor[0] = color[0];
 	borderColor[1] = color[1];

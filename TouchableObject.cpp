@@ -48,8 +48,36 @@ TouchableObject::TouchableObject( void ){
 	
 }
 
-void TouchableObject::move(int finalX, int finalY, int transTime, string motionType ){
+void TouchableObject::move(int deltaX, int deltaY, int transTime, string motionType ){
 	
+	// First check to make sure user is not attempting to recommand current move
+	if(moveStartRX+deltaX!=finalPosX || moveStartRY+deltaY !=finalPosY)
+	{
+		//set initial position
+		if(isRectangular){
+		
+			moveStartRX = rX;
+			moveStartRY = rY;
+			finalPosX = moveStartRX+deltaX;
+			finalPosY = moveStartRY+deltaY;
+		}
+		else{
+			moveStartCX = cX;
+			moveStartCY = cY;
+			finalPosX = moveStartCX+deltaX;
+			finalPosY = moveStartCY+deltaY;
+		}
+				
+	
+		
+			
+		moveDuration = transTime;
+		moveStartTime =  bcm2835_st_read(); //This is microseconds
+		motionType.assign(motionType);
+	}
+}
+
+void TouchableObject::moveTo(int finalX, int finalY, int transTime, string motionType ){
 	if(finalX!=finalPosX || finalY !=finalPosY)
 	{
 		//set initial position

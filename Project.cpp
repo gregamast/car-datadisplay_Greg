@@ -49,21 +49,17 @@ using namespace std;
 ***********************************************************************************************************************************/
 
 // Label and readout fonts
-Fontinfo avengeance;
-Fontinfo digits; 
 
-
-
-
-
+// Fontinfo avengeance;
+// Fontinfo digits; 
 
 touch_t touch;
 int quitState = 0;
 
 VGImage backgroundImage;
 
-
-
+vector<Gauge> GObjects;
+vector<Button> BObjects;
 
 /***********************************************************************************************************************************
 							PROTOTYPES
@@ -78,34 +74,11 @@ void setupGraphics(int*, int*);
 int main(){
 	
 	
-
-	
 	if(!bcm2835_init())
 	return 1;
 	
 	int width, height;
-	//float gaugeColor[] = {0 , 1, 0, 1};
-	float gaugeColor[] = {1 , 0, 127.0/255.0, 1};
-	//float majorTickColor[] = {0, 1, 0, 1};
-	float majorTickColor[] = {1 , 0, 127.0/255.0, 1};
-	float minorTickColor[] = {1, 1, 1, 1};
-	
-	float labelColor[] = {102.0/255.0 , 178.0/255.0, 1, 1};
-	//float majorTickColor2[] = {0, 1, 0, 1};
-	float majorTickColor2[] = {1 , 0, 127.0/255.0, 1};
-	float minorTickColor2[] = {1, 1, 1, 1};
-	
-	
-	float black[] = {0, 0, 0, 1};
-	float blackLowA[] = {0, 0, 0, 0.75};
-	float red[] = {1,0,0,1};
-	float green[] = {0,1,0,1};
-	float blue[]=	{0,0,1,1};
-	float white[]=	{1,1,1,1};
-	
-	float blackLowA1[] = {0 , 0 , 0 , 0.6};
-	
-	
+
 	
 	/****************************************************************
 		Initialize Screen Graphics
@@ -129,22 +102,22 @@ int main(){
 	/****************************************************************
 		Load Fonts
 	****************************************************************/
-	avengeance = loadfont(avengeance_glyphPoints, 
-	avengeance_glyphPointIndices, 
-	avengeance_glyphInstructions,                
-	avengeance_glyphInstructionIndices, 
-	avengeance_glyphInstructionCounts, 
-	avengeance_glyphAdvances,
-	avengeance_characterMap, 
-	avengeance_glyphCount);
-	digits = loadfont(digits_glyphPoints, 
-	digits_glyphPointIndices, 
-	digits_glyphInstructions,                
-	digits_glyphInstructionIndices, 
-	digits_glyphInstructionCounts, 
-	digits_glyphAdvances,
-	digits_characterMap, 
-	digits_glyphCount);
+	// avengeance = loadfont(avengeance_glyphPoints, 
+	// avengeance_glyphPointIndices, 
+	// avengeance_glyphInstructions,                
+	// avengeance_glyphInstructionIndices, 
+	// avengeance_glyphInstructionCounts, 
+	// avengeance_glyphAdvances,
+	// avengeance_characterMap, 
+	// avengeance_glyphCount);
+	// digits = loadfont(digits_glyphPoints, 
+	// digits_glyphPointIndices, 
+	// digits_glyphInstructions,                
+	// digits_glyphInstructionIndices, 
+	// digits_glyphInstructionCounts, 
+	// digits_glyphAdvances,
+	// digits_characterMap, 
+	// digits_glyphCount);
 	
 	
 	/****************************************************************
@@ -187,151 +160,100 @@ int main(){
 		Create BOOST GAUGE Object
 	****************************************************************/
 	
+	GObjects.push_back( Gauge(width/6, height/2, width/6 , "BoostGauge") );
 
-	Gauge BoostGauge(width/6, height/2, width/6);
-	
-	string configType;
-	configType = "BoostGauge";
-	BoostGauge.configure(configType);
-	BoostGauge.touchEnable(); 	//Enable the touch functionaltiy  of this touchable object gauge object BoostGauge object
-	BoostGauge.setLabelFont(avengeance, 1);
-	BoostGauge.setLabelFont(avengeance, 2);
+	//BoostGauge.touchEnable(); 	//Enable the touch functionaltiy  of this touchable object gauge object BoostGauge object
+	//BoostGauge.setLabelFont(avengeance, 1);
+	//BoostGauge.setLabelFont(avengeance, 2);
 
 	/****************************************************************
 		Create TEMPERATURE GAUGE Object
 	****************************************************************/
+	GObjects.push_back( Gauge( (width/6)*3, height/2, width/6 , "TempGauge" ) );
+	//Gauge TempGauge((width/6)*3, height/2, width/6 ); // used the constructor of class Gauge to instantiate object BoostGauge
 	
-	Gauge TempGauge((width/6)*3, height/2, width/6 ); // used the constructor of class Gauge to instantiate object BoostGauge
+	//configType = "TempGauge";
+	//TempGauge.configure(configType);
+	//TempGauge.touchEnable(); 	//Enable the touch functionaltiy  of this touchable object gauge object TempGauge object
+	//TempGauge.setLabelFont(avengeance, 1);
+	//TempGauge.setLabelFont(avengeance, 2);
 	
-	configType = "TempGauge";
-	TempGauge.configure(configType);
-	TempGauge.touchEnable(); 	//Enable the touch functionaltiy  of this touchable object gauge object TempGauge object
-	TempGauge.setLabelFont(avengeance, 1);
-	TempGauge.setLabelFont(avengeance, 2);
-		
 	/****************************************************************
 		Create BOOST GAUGE Object
 	****************************************************************/
 	// Gauge(int x, int y, int r, int ranges)
-	Gauge BoostGauge2((width/6)*5, height/2, width/6 ); // used the constructor of class Gauge to instantiate object BoostGauge2
+	//Gauge BoostGauge2((width/6)*5, height/2, width/6 ); // used the constructor of class Gauge to instantiate object BoostGauge2
 	
-	configType = "BoostGauge2";
-	BoostGauge2.configure(configType);
+	GObjects.push_back( Gauge( (width/6)*5, height/2, width/6 , "BoostGauge2" ) );
+	
+	//configType = "BoostGauge2";
+	//BoostGauge2.configure(configType);
 
-	BoostGauge2.touchEnable(); 	//Enable the touch functionaltiy  of this touchable object gauge object BoostGauge2 object
-	BoostGauge2.setLabelFont( avengeance,1);				// Set label font				(font)
-	BoostGauge2.setLabelFont( avengeance,2);				// Set label font				(font)
+	//BoostGauge2.touchEnable(); 	//Enable the touch functionaltiy  of this touchable object gauge object BoostGauge2 object
+	//BoostGauge2.setLabelFont( avengeance,1);				// Set label font				(font)
+	//BoostGauge2.setLabelFont( avengeance,2);				// Set label font				(font)
 	/****************************************************************
 		Create BUTTON objects
 	****************************************************************/
-	
+	BObjects.push_back( Button(width/2, height/2, width, height ,"BackgroundTouchButton") );
 
-	
-	Button ScreenRRButton(width-300, height/2, 100, 50);
-	configType = "FramerateButton";
-	ScreenRRButton.configure(configType);
-	ScreenRRButton.touchEnable();
-	//ScreenRRButton.setBorder(white, 2); 
-	//string textString = "Hz update";
-	//ScreenRRButton.enableText('B'); 
-	//ScreenRRButton.setText(textString);
-	//float blueLowA[]={0,0,1,0.75};
-	//ScreenRRButton.setBackgroundColor(blackLowA);
-	
-	//ScreenRRButton.enableValue('T');
-	//ScreenRRButton.setValueDecPlaces(2);
-	//ScreenRRButton.setValueRefreshRate(5);
-	//ScreenRRButton.setValueColor(white);
+	BObjects.push_back( Button( width-300, height/2, 100, 50 , "FramerateButton" ));
+	//Button ScreenRRButton(width-300, height/2, 100, 50);
+	//configType = "FramerateButton";
+	//ScreenRRButton.configure(configType);
+	//ScreenRRButton.touchEnable();
 
-	
-	Button MenuButton7(width-50, -22,100,50);
-	configType = "MenuButton7";
-	MenuButton7.configure(configType);
-	MenuButton7.touchEnable();
-	//ExitButton.setBackgroundColor(blackLowA);
-	//ExitButton.setBorder(red,2);
-	//string ExitButtonText = "Menu 7";
-	//ExitButton.setTextColor(red);
-	//ExitButton.enableText('C');
-	//ExitButton.setText(ExitButtonText);
-	
-	
-	Button MenuButton6(width-150-10, -22,100,50);
-	configType = "MenuButton6";
-	MenuButton6.configure(configType);
-	MenuButton6.touchEnable();
-	// ExitButton1.setBackgroundColor(blackLowA);
-	// ExitButton1.setBorder(white,2);
-	// string ExitButtonText1 = "2";
-	// ExitButton1.setTextColor(white);
-	// ExitButton1.enableText('C');
-	// ExitButton1.setText(ExitButtonText1);
 
+	BObjects.push_back( Button( width-50, -22,100,50 , "MenuButton7" ));
 	
-	Button MenuButton5(width-250-20, -22,100,50);
-	configType = "MenuButton5";
-	MenuButton5.configure(configType);
-	MenuButton5.touchEnable();
-	// ExitButton2.setBackgroundColor(blackLowA);
-	// ExitButton2.setBorder(white,2);
-	// string ExitButtonText2 = "3";
-	// ExitButton2.setTextColor(white);
-	// ExitButton2.enableText('C');
-	// ExitButton2.setText(ExitButtonText2);
+	// Button MenuButton7(width-50, -22,100,50);
+	// configType = "MenuButton7";
+	// MenuButton7.configure(configType);
+	//MenuButton7.touchEnable();
 
+	BObjects.push_back( Button( width-150-10, -22,100,50 , "MenuButton6" ));
 	
-	Button MenuButton4(width-350-30, -22,100,50);
-	configType = "MenuButton4";
-	MenuButton4.configure(configType);
-	MenuButton4.touchEnable();
-	// ExitButton3.setBackgroundColor(blackLowA);
-	// ExitButton3.setBorder(white,2);
-	// string ExitButtonText3 = "4";
-	// ExitButton3.setTextColor(white);
-	// ExitButton3.enableText('C');
-	// ExitButton3.setText(ExitButtonText3);
+	// Button MenuButton6(width-150-10, -22,100,50);
+	// configType = "MenuButton6";
+	// MenuButton6.configure(configType);
+	//MenuButton6.touchEnable();
+	
+	BObjects.push_back( Button( width-250-20, -22,100,50 , "MenuButton5" ));
 
+	// Button MenuButton5(width-250-20, -22,100,50);
+	// configType = "MenuButton5";
+	// MenuButton5.configure(configType);
+	//MenuButton5.touchEnable();
 	
-	Button MenuButton3(width-450-40, -22,100,50);
-	configType = "MenuButton3";
-	MenuButton3.configure(configType);
-	MenuButton3.touchEnable();
-	// ExitButton4.setBackgroundColor(blackLowA);
-	// ExitButton4.setBorder(white,2);
-	// string ExitButtonText4 = "5";
-	// ExitButton4.setTextColor(white);
-	// ExitButton4.enableText('C');
-	// ExitButton4.setText(ExitButtonText4);
+	BObjects.push_back( Button( width-350-30, -22,100,50, "MenuButton4" ));
 
-	
-	Button MenuButton2(width-550-50, -22,100,50);
-	configType = "MenuButton2";
-	MenuButton2.configure(configType);
-	MenuButton2.touchEnable();
-	// ExitButton5.setBackgroundColor(blackLowA);
-	// ExitButton5.setBorder(white,2);
-	// string ExitButtonText5 = "6";
-	// ExitButton5.setTextColor(white);
-	// ExitButton5.enableText('C');
-	// ExitButton5.setText(ExitButtonText5);
+	// Button MenuButton4(width-350-30, -22,100,50);
+	// configType = "MenuButton4";
+	// MenuButton4.configure(configType);
+	//MenuButton4.touchEnable();
 
+	BObjects.push_back( Button( width-450-40, -22,100,50, "MenuButton3" ));
 	
-	Button MenuButton1(width-650-60, -22,100,50);
-	configType = "MenuButton1";
-	MenuButton1.configure(configType);
-	MenuButton1.touchEnable();
-	// ExitButton6.setBackgroundColor(blackLowA);
-	// ExitButton6.setBorder(white,2);
-	// string ExitButtonText6 = "Home :)";
-	// ExitButton6.setTextColor(white);
-	// ExitButton6.enableText('C');
-	// ExitButton6.setText(ExitButtonText6);
+	// Button MenuButton3(width-450-40, -22,100,50);
+	// configType = "MenuButton3";
+	// MenuButton3.configure(configType);
+	//MenuButton3.touchEnable();
+	
+	BObjects.push_back( Button( width-550-50, -22,100,50, "MenuButton2" ));
 
-	
-	
+	// Button MenuButton2(width-550-50, -22,100,50);
+	// configType = "MenuButton2";
+	// MenuButton2.configure(configType);
+	//MenuButton2.touchEnable();
 
+	BObjects.push_back( Button( width-650-60, -22,100,50, "MenuButton1" ));
 	
-	
+	// Button MenuButton1(width-650-60, -22,100,50);
+	// configType = "MenuButton1";
+	// MenuButton1.configure(configType);
+	//MenuButton1.touchEnable();
+
+
 	/****************************************************************
 		Loop through program start sequence
 	****************************************************************/
@@ -357,22 +279,39 @@ int main(){
 	
 	Background(0, 0, 0); */
 	
-	//Image(0, 0, width, height, "bgImage2.jpg");
+	//Image(0, 0, width, height, "bgImage2.jpg"); 
 	Image(0, 0, width, height, "carbon.jpg");
 	backgroundImage = vgCreateImage(VG_sABGR_8888, width, height, VG_IMAGE_QUALITY_BETTER);
 	vgGetPixels(backgroundImage , 0 , 0 , 0 , 0 , width , height);
+	
+	
+	/****************************************************************
+		set all touchable objects to be touchable
+	****************************************************************/
+	
+	
+	for(int i=0; i<GObjects.size() ; i++){
+		GObjects[i].touchEnable();
+	}
+	
+	for(int i=0; i<BObjects.size() ; i++){
+		BObjects[i].touchEnable();
+	}
+	
 	
 	/****************************************************************
 		Draw Created Objects (currently no draw for button, need to remove the whole "draw " idea in general. It is not draw but filling buffer space. End draws the buffer on the scren)
 	****************************************************************/
 	// // std::cin.ignore();
+	for(int i=0; i<GObjects.size() ; i++){
+		GObjects[i].draw();
+	}
+	// BoostGauge.draw();
+	// TempGauge.draw();
+	// BoostGauge2.draw();
 	
-	BoostGauge.draw();
-	TempGauge.draw();
-	BoostGauge2.draw();
-	
-	Gauge *gaugeArray[]={&BoostGauge , &TempGauge, &BoostGauge2};
-	Button *buttonArray[]={&ScreenRRButton, &MenuButton7, &MenuButton1 , &MenuButton2, &MenuButton3, &MenuButton4, &MenuButton5, &MenuButton6 };
+	// Gauge *gaugeArray[]={&BoostGauge , &TempGauge, &BoostGauge2};
+	// Button *buttonArray[]={&ScreenRRButton, &MenuButton7, &MenuButton1 , &MenuButton2, &MenuButton3, &MenuButton4, &MenuButton5, &MenuButton6 };
 
 
 	
@@ -407,13 +346,28 @@ int main(){
 			Update all Touchable Objects with new touch Data 
 		****************************************************************/
 
+		for(int i=0; i<GObjects.size() ; i++){
+			GObjects[i].updateTouch(touch);
+		}
 		
-		for(int i=0;i<=2;i++){
-			gaugeArray[i]->updateTouch(touch);
+		for(int i=0; i<BObjects.size() ; i++){
+			BObjects[i].updateTouch(touch);
 		}
-		for(int i=0;i<=7;i++){
-			buttonArray[i]->updateTouch(touch);
-		}
+		
+		
+		// for(int i=0;i<=2;i++){
+		// gaugeArray[i]->updateTouch(touch);
+		// }
+		// for(int i=0;i<=7;i++){
+		// buttonArray[i]->updateTouch(touch);
+		// }
+		
+		/****************************************************************
+			Update current while loop TYPE vectors: type 1, 2, ... and is touched or not
+		****************************************************************/
+		
+		
+		
 		
 		/****************************************************************
 			READ serial line input data 
@@ -432,94 +386,173 @@ int main(){
 					- runs updateVisuals
 		****************************************************************/
 		
-		ScreenRRButton.setValue(BoostDataStream.getRawUpdateRate());
 		
-		for(int i=0;i<=2;i++){
-			gaugeArray[i]->update(BoostDataStream.getWeightedMADatum(), BoostDataStream.getEngUnits());
+		/****************************************************************
+			TEMPORARY COMMENT OUT, NEED TO INTEGRATE THIS
+			|
+			|
+			v
+		****************************************************************/
+		//ScreenRRButton.setValue(BoostDataStream.getRawUpdateRate());
+		/****************************************************************
+			^
+			|
+			|
+			TEMPORARY COMMENT OUT, NEED TO INTEGRATE THIS
+		****************************************************************/
+		
+		
+		for(int i=0; i<GObjects.size() ; i++){
+			GObjects[i].update(BoostDataStream.getWeightedMADatum(), BoostDataStream.getEngUnits());
 		}
-		for(int i=0;i<=7;i++){
-			buttonArray[i]->update();
+		
+		// for(int i=0;i<=2;i++){
+		// gaugeArray[i]->update(BoostDataStream.getWeightedMADatum(), BoostDataStream.getEngUnits());
+		// }
+		
+		for(int i=0; i<BObjects.size() ; i++){
+			BObjects[i].update();
 		}
+		// for(int i=0;i<=7;i++){
+		// buttonArray[i]->update();
+		// }
 		
 		
 		
 		/****************************************************************
 			MAIN MENU Logic to process touch
 		****************************************************************/
-
 		
-		if ( BoostGauge.isTouched() ){
-			//std::cout << "screen RR Button was touched!!!" << endl;
-			// void TouchableObject::move(int finalX, int finalY, int transTime, string motionType )
+		for(int idx=0; idx<BObjects.size();idx++){
+			bool OtherBObjTouched = false;
+			bool GObjTouched = false;
 			
+			//std::cout<<"Does Idenifier match that of bg button:"<<BObjects[idx].getIdentifier().compare("BackgroundTouchButton")==0<<std::endl;
+			std::cout<<"Is that button touched:"<<BObjects[idx].isTouched()<<std::endl;
 			
-			
-			if(MenuButton1.getCurrentPosY() <0){
-				
-				for(int i=0;i<=2;i++){
-					gaugeArray[i]->update(BoostDataStream.getWeightedMADatum(), BoostDataStream.getEngUnits());
+			if( BObjects[idx].getIdentifier().compare("BackgroundTouchButton")==0 && BObjects[idx].isTouched() ){
+				//cout<<"Background Touch Button is touched............"<<endl;
+				for(int idx2=0; idx2<GObjects.size();idx2++){
+					if(GObjects[idx2].isTouched()){
+						GObjTouched = true;
+						break;
+					}
+					
+				}
+				for(int idx3=0; idx3<BObjects.size(); idx3++){
+					if(BObjects[idx3].isTouched() && BObjects[idx3].getIdentifier().compare("BackgroundTouchButton")!=0 ){
+						OtherBObjTouched = true;
+						break;
+					}
+					
 				}
 				
-				BoostGauge.fade(75 ,250+60*6,"emptyForNow");
-				TempGauge.fade(75 ,250+60*6,"emptyForNow");
-				BoostGauge2.fade(75 ,250+60*6,"emptyForNow");
-				ScreenRRButton.fade(75, 250+60*6,"emptyForNow" );
+				// Then find the current state of the home menu, and move it accordingly
+				if( GObjTouched || OtherBObjTouched){
+					if(BObjects[3].getCurrentPosY() <0){
+						
+						for(int idx4=0; idx4<GObjects.size(); idx4++){
+							GObjects[idx4].fade(75 ,250+60*6,"emptyForNow");
+						}
+						for(int idx5=0; idx5<BObjects.size(); idx5++){
+							if(BObjects[idx5].getIdentifier().compare("BackgroundTouchButton")!=0){
+							BObjects[idx5].move(0,45,250,"emptyForNow");
+							BObjects[idx5].fade( 0,250,"emptyForNow");	
+							}
+						}
+					}
+					else{
+						for(int idx6=0; idx6<GObjects.size(); idx6++){
+							GObjects[idx6].fade(0 ,250+60*6,"emptyForNow");
+						}
+						
+						for(int idx7=0; idx7<BObjects.size(); idx7++){
+							if(BObjects[idx7].getIdentifier().compare("BackgroundTouchButton")!=0){
+							BObjects[idx7].move(0, -45,250,"emptyForNow");
+							BObjects[idx7].fade( 75,250,"emptyForNow");
+							}
+						}
+						
+					}
+					
+				}
 				
-				MenuButton7.move(width-50, 25,250,"emptyForNow");
-				MenuButton7.fade( 0 ,250,"emptyForNow");
-				
-				MenuButton6.move(width-150-10, 25, 250+60*1,"emptyForNow");
-				MenuButton6.fade( 0,250+60*1,"emptyForNow");
-				
-				MenuButton5.move(width-250-20,25, 250+60*2, "emptyForNow");
-				MenuButton5.fade( 0,250+60*2,"emptyForNow");
-				
-				MenuButton4.move(width-350-30,25,250+60*3,"emptyForNow");
-				MenuButton4.fade( 0,250+60*3,"emptyForNow");
-				
-				MenuButton3.move(width-450-40,25,250+60*4,"emptyForNow");
-				MenuButton3.fade( 0,250+60*4,"emptyForNow");
-				
-				MenuButton2.move(width-550-50,25,250+60*5,"emptyForNow");
-				MenuButton2.fade( 0,250+60*5,"emptyForNow");
-				
-				MenuButton1.move(width-650-60,25,250+60*6,"emptyForNow");
-				MenuButton1.fade( 0,250+60*6,"emptyForNow");
-				
-			}
+			}//END IF Identifier match
 			
-			if(MenuButton1.getCurrentPosY() >0){
-				
-				BoostGauge.fade(0 ,250+60*6,"emptyForNow");
-				TempGauge.fade(0 ,250+60*6,"emptyForNow");
-				BoostGauge2.fade(0 ,250+60*6,"emptyForNow");
-				ScreenRRButton.fade(0, 250+60*6,"emptyForNow" );
-				
-				MenuButton7.move(width-50, -20,250,"emptyForNow");
-				MenuButton7.fade( 75,250,"emptyForNow");
-				
-				MenuButton6.move(width-150-10, -22, 250+60*1,"emptyForNow");
-				MenuButton6.fade( 75,250+60*1,"emptyForNow");
-				
-				MenuButton5.move(width-250-20,-22, 250+60*2, "emptyForNow");
-				MenuButton5.fade( 75,250+60*2,"emptyForNow");
-				
-				MenuButton4.move(width-350-30,-22,250+60*3,"emptyForNow");
-				MenuButton4.fade( 75,250+60*3,"emptyForNow");
-				
-				MenuButton3.move(width-450-40,-22,250+60*4,"emptyForNow");
-				MenuButton3.fade( 75,250+60*4,"emptyForNow");
-				
-				MenuButton2.move(width-550-50,-22,250+60*5,"emptyForNow");
-				MenuButton2.fade( 75,250+60*5,"emptyForNow");
-				
-				MenuButton1.move(width-650-60,-22,250+60*6,"emptyForNow");
-				MenuButton1.fade( 75,250+60*6,"emptyForNow");
-				
-			}
-			
-			
-		}
+		}//End FOR Index Through BOBJECTS
+		
+		// if ( BoostGauge.isTouched() ){
+		//std::cout << "screen RR Button was touched!!!" << endl;
+		//void TouchableObject::move(int finalX, int finalY, int transTime, string motionType )
+		
+		
+		
+		// if(MenuButton1.getCurrentPosY() <0){
+		
+		// for(int i=0;i<=2;i++){
+		// gaugeArray[i]->update(BoostDataStream.getWeightedMADatum(), BoostDataStream.getEngUnits());
+		// }
+		
+		// BoostGauge.fade(75 ,250+60*6,"emptyForNow");
+		// TempGauge.fade(75 ,250+60*6,"emptyForNow");
+		// BoostGauge2.fade(75 ,250+60*6,"emptyForNow");
+		// ScreenRRButton.fade(75, 250+60*6,"emptyForNow" );
+		
+		// MenuButton7.move(width-50, 25,250,"emptyForNow");
+		// MenuButton7.fade( 0 ,250,"emptyForNow");
+		
+		// MenuButton6.move(width-150-10, 25, 250+60*1,"emptyForNow");
+		// MenuButton6.fade( 0,250+60*1,"emptyForNow");
+		
+		// MenuButton5.move(width-250-20,25, 250+60*2, "emptyForNow");
+		// MenuButton5.fade( 0,250+60*2,"emptyForNow");
+		
+		// MenuButton4.move(width-350-30,25,250+60*3,"emptyForNow");
+		// MenuButton4.fade( 0,250+60*3,"emptyForNow");
+		
+		// MenuButton3.move(width-450-40,25,250+60*4,"emptyForNow");
+		// MenuButton3.fade( 0,250+60*4,"emptyForNow");
+		
+		// MenuButton2.move(width-550-50,25,250+60*5,"emptyForNow");
+		// MenuButton2.fade( 0,250+60*5,"emptyForNow");
+		
+		// MenuButton1.move(width-650-60,25,250+60*6,"emptyForNow");
+		// MenuButton1.fade( 0,250+60*6,"emptyForNow");
+		
+		// }
+		
+		// if(MenuButton1.getCurrentPosY() >0){
+		
+		// BoostGauge.fade(0 ,250+60*6,"emptyForNow");
+		// TempGauge.fade(0 ,250+60*6,"emptyForNow");
+		// BoostGauge2.fade(0 ,250+60*6,"emptyForNow");
+		// ScreenRRButton.fade(0, 250+60*6,"emptyForNow" );
+		
+		// MenuButton7.move(width-50, -20,250,"emptyForNow");
+		// MenuButton7.fade( 75,250,"emptyForNow");
+		
+		// MenuButton6.move(width-150-10, -22, 250+60*1,"emptyForNow");
+		// MenuButton6.fade( 75,250+60*1,"emptyForNow");
+		
+		// MenuButton5.move(width-250-20,-22, 250+60*2, "emptyForNow");
+		// MenuButton5.fade( 75,250+60*2,"emptyForNow");
+		
+		// MenuButton4.move(width-350-30,-22,250+60*3,"emptyForNow");
+		// MenuButton4.fade( 75,250+60*3,"emptyForNow");
+		
+		// MenuButton3.move(width-450-40,-22,250+60*4,"emptyForNow");
+		// MenuButton3.fade( 75,250+60*4,"emptyForNow");
+		
+		// MenuButton2.move(width-550-50,-22,250+60*5,"emptyForNow");
+		// MenuButton2.fade( 75,250+60*5,"emptyForNow");
+		
+		// MenuButton1.move(width-650-60,-22,250+60*6,"emptyForNow");
+		// MenuButton1.fade( 75,250+60*6,"emptyForNow");
+		
+		// }
+		
+		
+		// }
 		
 
 		/****************************************************************

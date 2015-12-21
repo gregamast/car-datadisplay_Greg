@@ -24,6 +24,9 @@ private:
 	int radiusHeight; //Height of rounded rectangle corner radius in pixels
 	
 	
+	string identifier; //This is to identify the name or type of gauge object, as set in the configuration file
+	
+	
 	// Timing related properties
 	int desiredRefreshRate; 
 	uint64_t lastUpdateTime;
@@ -66,10 +69,10 @@ private:
 
 
 public:
-	Button(int, int, int, int);		// Readout constructor: center X, center Y, width, height
+	Button(int, int, int, int , string);		// Readout constructor: center X, center Y, width, height
 	void configure(string); // Takes in string "configType" which is the title of the section in the config file to which set the configuration parameters (for example, configureation type could be "boostGauge" or "tempGauge")
 
-	
+	string getIdentifier(void); //This is to be called in the main project logic to determine the id associated with a particular object at an index of the object vector
 	
 	void setBackgroundColor(float*);
 	void setBorder(float*, int);			// Set border color, border width

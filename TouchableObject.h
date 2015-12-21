@@ -62,15 +62,7 @@ int initialFadePercentage;
 	
 	
 	
-	
-/* 	bool movingOffRight;
-	bool movingOnRight;
-	bool movingOffLeft;
-	bool movingOnLeft;
-	bool movingOffTop;
-	bool movingOnTop;
-	bool movingOffBottom;
-	bool movingOnTop; */
+
 	
 	
 	bool isRectangular;	// Rectangle or circle? You decide.
@@ -144,6 +136,10 @@ public:
 	
 	// take in final pos x, final pos y, the desired transition time [milliseconds],  motion type, 
 	void move(int, int, int, string);
+	
+	void moveTo(int, int, int, string);
+	
+	
 	void fade(int, int, string); // final desired fade percentage, transitionTime,  fadeType (sinusoidal, linear, etc...)
 	
 	// Get the current position of the TOUCHABLEOBJECT

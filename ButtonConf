@@ -16,6 +16,27 @@ FramerateButton {
 	
 }
 
+BackgroundTouchButton{
+	identifier = "BackgroundTouchButton";
+	radiusWidth = "5";
+	radiusHeight = "5";
+	borderWidth = "1";
+	borderColor = ["1.0", "1.0", "1.0", "0.0"];
+	backgroundColor = ["0.0","0.0","0.0","0.0"];
+	enableText = "false";
+	textAlign = "B";
+	textColor = ["1.0", "1.0", "1.0", "1.0"];
+	defaultText = "Hz update";
+	enableValue = "false";
+	valueAlign = "T";
+	valueColor = ["1.0", "1.0", "1.0", "1.0"];
+	valueRefreshRate = "5";
+	valueDecPlaces = "2";
+
+
+
+}
+
 
 
 MenuButton1 {

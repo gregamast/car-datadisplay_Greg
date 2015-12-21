@@ -15,9 +15,17 @@
  
 using namespace std;		// ??
 
+// *** Label Fonts 
+#include "avengeance.inc"
+#include "digits.inc"
+
+// Label and readout fonts
+Fontinfo avengeance;
+Fontinfo digits; 
+
+
 /* Button Constructor */
-Button::Button(int cx, int cy, int w, int h)
-{
+Button::Button(int cx, int cy, int w, int h , string configType){
 	lastUpdateTime = 0;
 	centerX = cx;
 	centerY = cy;
@@ -47,18 +55,37 @@ Button::Button(int cx, int cy, int w, int h)
 	setRectWidthHeight(readoutWidth, readoutHeight);
 	setRectCenter(centerX, centerY);
 	
+	configure(configType);
 
 
 	
 }
 
 void Button::configure(string configType) {
+	
+	
+	/****************************************************************
+		Load Fonts
+	****************************************************************/
+	avengeance = loadfont(avengeance_glyphPoints, 
+	avengeance_glyphPointIndices, 
+	avengeance_glyphInstructions,                
+	avengeance_glyphInstructionIndices, 
+	avengeance_glyphInstructionCounts, 
+	avengeance_glyphAdvances,
+	avengeance_characterMap, 
+	avengeance_glyphCount);
+	
+	
+	
 	setlocale(LC_ALL, "");
 	Configuration * cfg = Configuration::create();
 	try {
 		cfg->parse("ButtonConf");
 		string buttonName = configType;
 		// string scope = configType;
+		
+		identifier = parseString(cfg, buttonName, "identifier");
 		radiusWidth = parseInt(cfg, buttonName, "radiusWidth");
 		radiusHeight = parseInt(cfg, buttonName, "radiusHeight");
 		
@@ -69,6 +96,8 @@ void Button::configure(string configType) {
 		bottomLeftY = centerY - (rectHeight+borderWidth/2) / 2;
 		parseColor(cfg, buttonName, borderColor, "borderColor");
 		borderColorAlpha = borderColor[3];
+		parseColor(cfg, buttonName, backgroundColor, "backgroundColor");
+		backgroundColorAlpha = backgroundColor[3];
 		containsText = parseBool(cfg, buttonName, "enableText");
 		if(containsText) {
 			string textAlign = parseString(cfg, buttonName, "textAlign");
@@ -95,7 +124,10 @@ void Button::configure(string configType) {
 }
 
 
-
+string Button::getIdentifier(void){
+	return identifier;
+	
+}
 
 void Button::setValueDecPlaces(int dec){						// Set number of digits before & after decimal
 	
