@@ -89,9 +89,11 @@ void Gauge::configure(string configType) {
 	try{
 		
 		cfg->parse("GaugeConf");
+		group = parseString(cfg, scope, "gaugeGroup");
 		
 		numRanges = parseInt(cfg, scope, "numRanges");
 		
+		setPressDebounce( parseInt(cfg, scope, "pressDebounce") );
 
 		/****************************************************************
 		Instatiating DISPLAY RANGE Member Properties
@@ -232,6 +234,11 @@ string Gauge::getIdentifier(void){
 	return identifier;
 	
 }
+
+string Gauge::getGroup(void){
+	return group;
+}
+
 void Gauge::setBorderColor(float color[4]){
 	borderColor[0] = color[0];
 	borderColor[1] = color[1];

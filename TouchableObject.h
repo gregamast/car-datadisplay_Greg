@@ -49,6 +49,8 @@ int finalFadePercentage;
 int initialFadePercentage;
 
 
+/* Movement Properties */
+	bool moving;
 	
 	/* Touch properties set by update function */
 
@@ -59,6 +61,26 @@ int initialFadePercentage;
 	bool lpVisible;	// Last pass boolean of visibility
 	
 	bool touched;
+	bool touchedOutside; //This shows when the sceen WAS toucehd byut NOT on this object
+	
+	
+	
+	uint64_t pressStartTime;
+	uint64_t pressDebounceFinishTime;
+	uint64_t pressOutsideStartTime;
+	uint64_t pressOutsideDebounceFinishTime;
+	bool pressed; // This shows the object was pressed
+	bool pressedOutside;
+	bool pressRead;
+	bool pressOutsideRead;
+	
+	bool inPressDebounce; //SHows that debounce buffer period still live
+	bool inPressOutsideDebounce;
+	
+	
+	
+	
+	int debounceDuration;
 	
 	
 	
@@ -119,9 +141,16 @@ VGImage MovementBuffer;  //Image buffer containing background behind movement pa
 	TouchableObject(void);				// Sets up TouchableObject, sets properties to safe state
 	
 	int getDesiredFadePercentage(void);	//This returns the factor to scale the current alpha value for touchable objects (gauge, button, etc.). Protected since called by the child class only
-	
+
+private:
+
+void pressProcessing(void); //This is for touch debounce.  A debounce touch is a press
 
 public:
+
+bool isMoving(void);				// Called to determine if an object is in motion
+
+
 	/* Control methods */
 	void touchEnable(void);				// Enables touch functionality
 	void touchDisable(void);			// Disables touch functionality
@@ -133,6 +162,7 @@ public:
 
 	/* All that for this.. */
 	bool isTouched(void);
+	bool isTouchedOutside(void);
 	
 	// take in final pos x, final pos y, the desired transition time [milliseconds],  motion type, 
 	void move(int, int, int, string);
@@ -162,6 +192,10 @@ public:
 	
 	void updateVisuals(void);
 	
+	void setPressDebounce(int);
+bool isPressed(void) ;
+
+bool isPressedOutside(void) ;
 	
 	
 	

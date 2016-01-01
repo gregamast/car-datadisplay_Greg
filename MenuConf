@@ -1,0 +1,47 @@
+Mode1Menu {
+
+    button1 {
+		identifier 		= "MenuButton_DD1";
+		radiusWidth 	= "5";
+		radiusHeight 	= "5";
+		borderWidth 	= "1";
+		borderColor 	= ["1.0", "1.0", "1.0", "1.0"];
+		backgroundColor = ["0.0","0.0","0.0","0.6"];
+		enableText 		= "true";
+		textAlign 		= "C";
+		textColor 		= ["1.0", "1.0", "1.0", "1.0"];
+		defaultText 	= "1";
+		pressDebounce 	= "500";
+
+    };
+    button2 {
+		identifier 		= "MenuButton_DD1";
+		radiusWidth 	= "5";
+		radiusHeight 	= "5";
+		borderWidth 	= "1";
+		borderColor 	= ["1.0", "1.0", "1.0", "1.0"];
+		backgroundColor = ["0.0","0.0","0.0","0.6"];
+		enableText 		= "true";
+		textAlign 		= "C";
+		textColor 		= ["1.0", "1.0", "1.0", "1.0"];
+		defaultText 	= "1";
+		pressDebounce 	= "500";
+
+    };
+	button3 {
+		identifier 		= "MenuButton_DD1";
+		radiusWidth 	= "5";
+		radiusHeight 	= "5";
+		borderWidth 	= "1";
+		borderColor 	= ["1.0", "1.0", "1.0", "1.0"];
+		backgroundColor = ["0.0","0.0","0.0","0.6"];
+		enableText 		= "true";
+		textAlign 		= "C";
+		textColor 		= ["1.0", "1.0", "1.0", "1.0"];
+		defaultText 	= "1";
+		pressDebounce 	= "500";
+
+    };
+	 
+};
+

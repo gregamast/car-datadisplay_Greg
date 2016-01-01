@@ -1,4 +1,6 @@
 FramerateButton {
+	identifier = "FramerateButton";
+	buttonGroup = "NONE";
 	radiusWidth = "5";
 	radiusHeight = "5";
 	borderWidth = "1";
@@ -13,11 +15,13 @@ FramerateButton {
 	valueColor = ["1.0", "1.0", "1.0", "1.0"];
 	valueRefreshRate = "5";
 	valueDecPlaces = "2";
+	pressDebounce = "500";
 	
 }
 
 BackgroundTouchButton{
 	identifier = "BackgroundTouchButton";
+	buttonGroup = "NONE";
 	radiusWidth = "5";
 	radiusHeight = "5";
 	borderWidth = "1";
@@ -32,7 +36,7 @@ BackgroundTouchButton{
 	valueColor = ["1.0", "1.0", "1.0", "1.0"];
 	valueRefreshRate = "5";
 	valueDecPlaces = "2";
-
+	pressDebounce = "500";
 
 
 }
@@ -40,6 +44,8 @@ BackgroundTouchButton{
 
 
 MenuButton1 {
+	identifier = "MenuButton1";
+	buttonGroup = "NONE";
 	radiusWidth = "5";
 	radiusHeight = "5";
 	borderWidth = "1";
@@ -49,9 +55,12 @@ MenuButton1 {
 	textAlign = "C";
 	textColor = ["1.0", "1.0", "1.0", "1.0"];
 	defaultText = "BUTTON 1";
+	pressDebounce = "500";
 }
 
 MenuButton2 {
+	identifier = "MenuButton2";
+	buttonGroup = "NONE";
 	radiusWidth = "5";
 	radiusHeight = "5";
 	borderWidth = "1";
@@ -61,9 +70,12 @@ MenuButton2 {
 	textAlign = "C";
 	textColor = ["1.0", "1.0", "1.0", "1.0"];
 	defaultText = "BUTTON 2";
+	pressDebounce = "500";
 }
 
 MenuButton3 {
+	identifier = "MenuButton3";
+	buttonGroup = "NONE";
 	radiusWidth = "5";
 	radiusHeight = "5";
 	borderWidth = "1";
@@ -73,9 +85,12 @@ MenuButton3 {
 	textAlign = "C";
 	textColor = ["1.0", "1.0", "1.0", "1.0"];
 	defaultText = "BUTTON 3";
+	pressDebounce = "500";
 }
 
 MenuButton4 {
+	identifier = "MenuButton4";
+	buttonGroup = "NONE";
 	radiusWidth = "5";
 	radiusHeight = "5";
 	borderWidth = "1";
@@ -85,9 +100,12 @@ MenuButton4 {
 	textAlign = "C";
 	textColor = ["1.0", "1.0", "1.0", "1.0"];
 	defaultText = "BUTTON 4";
+	pressDebounce = "500";
 }
 
 MenuButton5 {
+	identifier = "MenuButton5";
+	buttonGroup = "NONE";
 	radiusWidth = "5";
 	radiusHeight = "5";
 	borderWidth = "1";
@@ -97,9 +115,12 @@ MenuButton5 {
 	textAlign = "C";
 	textColor = ["1.0", "1.0", "1.0", "1.0"];
 	defaultText = "BUTTON 5";
+	pressDebounce = "500";
 }
 
 MenuButton6 {
+	identifier = "MenuButton6";
+	buttonGroup = "NONE";
 	radiusWidth = "5";
 	radiusHeight = "5";
 	borderWidth = "1";
@@ -109,9 +130,12 @@ MenuButton6 {
 	textAlign = "C";
 	textColor = ["1.0", "1.0", "1.0", "1.0"];
 	defaultText = "BUTTON 6";
+	pressDebounce = "500";
 }
 
 MenuButton7 {
+	identifier = "MenuButton7";
+	buttonGroup = "NONE";
 	radiusWidth = "5";
 	radiusHeight = "5";
 	borderWidth = "1";
@@ -121,9 +145,56 @@ MenuButton7 {
 	textAlign = "C";
 	textColor = ["1.0", "1.0", "1.0", "1.0"];
 	defaultText = "BUTTON 7";
+	pressDebounce = "500";
 }
 
+# A test setup for a bottom menu collection: DD = data display
 
+
+MenuButton_DD1 {
+	identifier = "MenuButton_DD1";
+	buttonGroup = "DataDisplayHM";
+	radiusWidth = "5";
+	radiusHeight = "5";
+	borderWidth = "1";
+	borderColor = ["1.0", "1.0", "1.0", "1.0"];
+	backgroundColor = ["0.0","0.0","0.0","0.6"];
+	enableText = "true";
+	textAlign = "C";
+	textColor = ["1.0", "1.0", "1.0", "1.0"];
+	defaultText = "1";
+	pressDebounce = "500";
+}
+
+MenuButton_DD2 {
+	identifier = "MenuButton_DD2";
+	buttonGroup = "DataDisplayHM";
+	radiusWidth = "5";
+	radiusHeight = "5";
+	borderWidth = "1";
+	borderColor = ["1.0", "1.0", "1.0", "1.0"];
+	backgroundColor = ["0.0","0.0","0.0","0.6"];
+	enableText = "true";
+	textAlign = "C";
+	textColor = ["1.0", "1.0", "1.0", "1.0"];
+	defaultText = "2";
+	pressDebounce = "500";
+}
+
+MenuButton_DD3 {
+	identifier = "MenuButton_DD3";
+	buttonGroup = "DataDisplayHM";
+	radiusWidth = "5";
+	radiusHeight = "5";
+	borderWidth = "1";
+	borderColor = ["1.0", "1.0", "1.0", "1.0"];
+	backgroundColor = ["0.0","0.0","0.0","0.6"];
+	enableText = "true";
+	textAlign = "C";
+	textColor = ["1.0", "1.0", "1.0", "1.0"];
+	defaultText = "3";
+	pressDebounce = "500";
+}
 
 
 

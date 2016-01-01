@@ -24,6 +24,7 @@ private: //This is an access_specifier.
 	bool borderDesired;
 	
 	string identifier; //This is to identify the name or type of gauge object, as set in the configuration file
+	string group;// THis is to identify if the particular gauge belongs to a greater gruop  This is private because we are calling it with a getter 
 	
 	/****************************************************************
 		DISPLAY RANGE Member Properties
@@ -66,6 +67,9 @@ public: //This is an access_specifier.
 	Gauge(int, int, int , string);				//Gauge CONSTRUCTOR	
 	
 	string getIdentifier(void); //This is to be called in the main project logic to determine the id associated with a particular object at an index of the object vector
+	string getGroup(void);//This is to be called in the main project logic to determine the main group the button fits into
+	
+	
 	void setNumRanges( int ); // this is actually private since we are only calling it in configure method, so eventually should make this private
 	void setEngUnits(string , int);
 	

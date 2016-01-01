@@ -7,7 +7,7 @@ using namespace std;
 #include "shapes.h"
 #include <stdlib.h>
 #include <math.h>
-#include <iostream>
+#include <iostream> 
 #include "Gauge.h"
 #include <cmath>
 
@@ -37,6 +37,8 @@ TouchableObject::TouchableObject( void ){
 	visible = false;
 	lpVisible = false;
 	touched = false;
+	touchedOutside = false;
+	
 	
 	// Initialize the fade Percentage attributes
 	fadePercentage = 0;
@@ -74,6 +76,7 @@ void TouchableObject::move(int deltaX, int deltaY, int transTime, string motionT
 		moveDuration = transTime;
 		moveStartTime =  bcm2835_st_read(); //This is microseconds
 		motionType.assign(motionType);
+		moving = false;
 	}
 }
 
@@ -98,6 +101,7 @@ void TouchableObject::moveTo(int finalX, int finalY, int transTime, string motio
 		moveDuration = transTime;
 		moveStartTime =  bcm2835_st_read(); //This is microseconds
 		motionType.assign(motionType);
+		moving = false;
 	}
 }
 
@@ -121,6 +125,8 @@ void TouchableObject::updateVisuals(void)
 	if(isRectangular){
 		if(rX!=finalPosX || rY !=finalPosY){
 			
+			moving = true;
+			
 			int totalPixDisp = sqrt(pow(finalPosX-moveStartRX,2) + pow(finalPosY-moveStartRY,2) );
 			float omega = (M_PI/2)/(moveDuration); //this is ang velocity, or omega
 			uint64_t currTime = bcm2835_st_read(); //This is in Microseconds (according to Mark)
@@ -135,13 +141,14 @@ void TouchableObject::updateVisuals(void)
 			}
 			else{
 				
-				
+				 
 				rX = moveStartRX + deltaPixDisp*cos(angle);
 				rY = moveStartRY + deltaPixDisp*sin(angle);
 			}
 			
 		}
 	}
+	else moving = false;
 	
 	if(fadePercentage!=finalFadePercentage){
 
@@ -277,10 +284,12 @@ void TouchableObject::updateTouch(touch_t touchStruct){
 				
 				if(touchStruct.abs_x>= xMin && touchStruct.abs_x<= xMax && touchStruct.abs_y>= yMin && touchStruct.abs_y<= yMax){
 					touched = true;
+					touchedOutside = false;
 					//std::cout<<"Touched is TRUE"<<endl;
 				}
 				else{
 					touched = false;
+					touchedOutside = true;
 					//std::cout<<"Touched is FALSE"<<endl;
 				}
 			}
@@ -292,26 +301,92 @@ void TouchableObject::updateTouch(touch_t touchStruct){
 				
 				if(sqrt(pow(dx,2)+pow(dy,2))<=cRad){
 					touched = true;
+					touchedOutside = false;
 					//std::cout<<"Touched is TRUE"<<endl;
 				}
 				else{
 					touched = false;
+					touchedOutside = true;
 					//std::cout<<"Touched is FALSE"<<endl;
 				}
 			}
 		} // End IF button touch
-		else touched=false;
+		else {
+			touched=false;
+			touchedOutside = false;
+		}
+		
 	} // End IF touch enabled
 	
-	
+	pressProcessing();
 }// End TouchableObject::updateTouch
 
 
+void TouchableObject::pressProcessing(void) {
+	uint64_t currentTime = bcm2835_st_read();
+	// Start a press if the button is touched and not being maintained for debounce duration
+	if(!pressed && isTouched() && !inPressDebounce) {
+		inPressDebounce = true;
+		pressed = true;
+		pressRead = false;
+		pressStartTime = bcm2835_st_read();
+		pressDebounceFinishTime = pressStartTime + 1000*debounceDuration;
+	}
+	// Finish a press if debounce duration is reached
+	if(inPressDebounce && (currentTime >= pressDebounceFinishTime)) {
+		pressed = false;
+		inPressDebounce = false;
+	}
+	// Finish a press once the press has been read
+	if(pressed && pressRead) {
+		pressed = false;
+	}
+
+	// Press outside processing
+	if(!pressedOutside && isTouchedOutside() && !inPressOutsideDebounce) {
+		inPressOutsideDebounce = true;
+		pressedOutside = true;
+		pressOutsideRead = false;
+		pressOutsideStartTime = bcm2835_st_read();
+		pressOutsideDebounceFinishTime = pressOutsideStartTime + 1000*debounceDuration;
+	}
+	// Finish a press outside if debounce duration is reached
+	if(inPressOutsideDebounce && (currentTime >= pressOutsideDebounceFinishTime)) {
+		pressedOutside = false;
+		inPressOutsideDebounce = false;
+	}
+
+	// Finish a press once the press has been read
+	if(pressedOutside && pressOutsideRead) {
+		pressedOutside = false;
+	}
+
+}
+
+void TouchableObject::setPressDebounce(int duration) {
+	debounceDuration = duration;
+}
+bool TouchableObject::isPressed(void) {
+	if(pressed) pressRead = true;
+	return pressed;
+}
+
+bool TouchableObject::isMoving(void) {
+	return moving;
+}
+
+bool TouchableObject::isPressedOutside(void) {
+	if(pressedOutside) pressOutsideRead = true;
+	return pressedOutside;
+}
 
 bool TouchableObject::isTouched(void){
 	return touched;
 }
 
+bool TouchableObject::isTouchedOutside(void){
+	return touchedOutside;
+}
 
 
 

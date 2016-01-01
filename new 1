@@ -1,0 +1,128 @@
+menu logic fun
+
+
+
+//Determine if menustatechange requested based on Gauge objects
+		// for(int idx=0; idx<GObjects.size();idx++){
+		
+		// if(!DDMenuActive && GObjects[idx].isPressedOutside()){
+		// MenuStateChangeRq = true;
+		// }
+		// else{
+		// MenuStateChangeRq = false;
+		// break;
+		// }
+		
+		// }
+		
+		//Determine if menustatechange requested based on Button objects
+		// if(!MenuStateChangeRq){
+		// for(int idx=0; idx<BObjects.size();idx++){
+		
+		// if(BObjects[idx].getGroup().compare("DataDisplayHM")!=0 &&GObjects[idx].isPressedOutside()){
+		// MenuStateChangeRq = true;
+		// }
+		// else{
+		// MenuStateChangeRq = false;
+		// break;
+		// }
+		
+		// }
+		
+		// }
+		
+		
+		
+					for(int idx=0; idx<BObjects.size();idx++){
+				
+				if(BObjects[idx].getGroup().compare("DataDisplayHM")==0 && BObjects[idx].getCurrentPosY() <0 ){
+					// Data Display Home menu buttons are currently inactive (hidden state), bring them up!
+					BObjects[idx].move(0,45,250,"emptyForNow");
+					BObjects[idx].fade( 0,250,"emptyForNow");
+					
+				}
+				else if(BObjects[idx].getGroup().compare("DataDisplayHM")==0 && BObjects[idx].getCurrentPosY() >0 ){
+					// Data Display Home menu buttons are currently active (up state), bring them down!
+					BObjects[idx].move(0,-45,250,"emptyForNow");
+					BObjects[idx].fade( 75,250,"emptyForNow");
+					
+					
+				}
+				
+			}
+		}
+		
+
+// initial put: loop through gauge objects and if press occured but gauge objects not touched, want to a) show the menu if hidden b)hide the menu if shown
+		bool DDMenuActive;
+		
+		for(int idx=0; idx<BObjects.size();idx++){
+			if(BObjects[idx].getGroup().compare("DataDisplayHM")==0 && BObjects[idx].getCurrentPosY() >0 ){
+				DDMenuActive = true;
+				break;
+			}
+			else if(BObjects[idx].getGroup().compare("DataDisplayHM")==0 && BObjects[idx].getCurrentPosY() <0 ){
+				
+				DDMenuActive = false;
+				break;
+			}	
+		}
+		
+		
+		bool MenuStateChangeRq = false;
+		// If ddmenu active, just check the ddmenu buttons: ifPressedoutside, changeStaterq, if pressed, chagestateRQ=false
+		if(DDMenuActive){
+			for(int idx=0; idx<BObjects.size();idx++){
+				if(BObjects[idx].getGroup().compare("DataDisplayHM")==0 && GObjects[idx].isPressed()){
+					MenuStateChangeRq = false;
+					break;
+				}
+				else if(BObjects[idx].getGroup().compare("DataDisplayHM")==0 && BObjects[idx].isPressedOutside()){
+					MenuStateChangeRq = true;
+					
+				}
+			}
+			
+			
+		}
+		
+		if(!DDMenuActive){
+			for(int idx=0; idx<BObjects.size();idx++){
+				if(BObjects[idx].isPressedOutside()){
+					MenuStateChangeRq = true;
+				}
+				else if(BObjects[idx].isPressed()){
+					MenuStateChangeRq = false;
+					break;
+					
+				}
+			}
+			
+			//if menustatechangeRQ is still true... check if any of the gauges throw it off
+			if(MenuStateChangeRq){
+				for(int idx=0; idx<GObjects.size();idx++){
+					if(BObjects[idx].isPressedOutside()){
+						MenuStateChangeRq = true;
+					}
+					else if(BObjects[idx].isPressed()){
+						MenuStateChangeRq = false;
+						break;
+						
+					}
+					
+				}
+				
+				
+				
+				
+			}
+		}
+		
+		
+		
+		
+		
+		
+		
+		
+		////////////////////////////////

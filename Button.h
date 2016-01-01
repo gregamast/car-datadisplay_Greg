@@ -1,107 +1,117 @@
+#ifndef BUTTON_H
+#define BUTTON_H
+
+#include "TouchableObject.h"
 
 /********************************/
 /*		Button Class			*/
 /********************************/
-
-// This is start of the header guard.  ADD_H can be any unique name.  By convention, we use the name of the header file.
-#ifndef BUTTON_H
-#define BUTTON_H
-
 using namespace std;
-#include "TouchableObject.h"
 
-class Button: public TouchableObject{
-
+class Button : public TouchableObject
+{
 private:
+
+	string buttonIdentifier;				// Button identifier string
+	string buttonName;
+	string name;
+	bool givenSizeAndLocation;
 
 	// Size & location related properties
 	int readoutWidth, readoutHeight;		// Size of entire readout, including border stroke
 	int rectWidth, rectHeight;				// Size of rectangle to be drawn
 	int centerX, centerY;					// Location of readout center
 	int bottomLeftX, bottomLeftY;			// Location of rectangle bottom left corner
-	
-	int radiusWidth; //Width of rounded rectangle corner radius in pixels
-	int radiusHeight; //Height of rounded rectangle corner radius in pixels
-	
-	
-	string identifier; //This is to identify the name or type of gauge object, as set in the configuration file
-	
-	
+	int cornerRadius;
+
 	// Timing related properties
-	int desiredRefreshRate; 
+	int desiredRefreshRate;
 	uint64_t lastUpdateTime;
 
-	// Graphics related properties
-	
-	float* 	backgroundColor;
-	float 	backgroundColorAlpha; // This captures the starting/intial alpha (max magnitude alpha can achieve for this component)
-	
-	float* 	borderColor;
-	float 	borderColorAlpha; // This captures the starting/intial alpha (max magnitude alpha can achieve for this component)
-	
-	int 	borderWidth;
-	
-	string 	text;
-	string 	lastText;
-	int 	textFontSize;
-	float* 	textColor;
-	float 	textColorAlpha; // This captures the starting/intial alpha (max magnitude alpha can achieve for this component)
-	char 	textVertAlign;
-	bool 	containsText;
-	
-	float 	value;
-	int 	valueFontSize;
-	int 	valueDecPlaces;
-	float* 	valueColor;  // This captures the starting/intial alpha (max magnitude alpha can achieve for this component)
-	float 	valueColorAlpha;
-	char 	valueVertAlign;
+	// Button visual properties
+	float backgroundColor[4];
+	float backgroundColorAlpha;
+	float selectedBackgroundColor[4];
+	float selectedBackgroundColorAlpha;
+	float borderColor[4];
+	float borderColorAlpha;
+	int borderWidth;
+	float selectedBorderColor[4];
+	float selectedBorderColorAlpha;
+	int selectedBorderWidth;
+
+	// Button text visual properties
+	float* textColor;
+	float textColorAlpha;
+	float selectedTextColor[4];
+	float selectedTextColorAlpha;
+	int textFontSize;
+	char textVertAlign;
+	string text;
+	bool containsText;
+
+	// Value properties
+	float* valueColor;
+	float valueColorAlpha;
+	float* selectedValueColor;
+	float selectedValueColorAlpha;
+	int valueFontSize;	
+	char valueVertAlign;
 	string formatSpecifierString;
-	bool 	containsValue;
-	
-	
-	
-	
+	int valueDecPlaces;
+	float value;
+	bool containsValue;
 
-	
-	
-	
+	// Button selection properties
+	bool selectable;
+	bool selected;
 
 
+
+	
+
+	void configure(string);
 
 public:
-	Button(int, int, int, int , string);		// Readout constructor: center X, center Y, width, height
-	void configure(string); // Takes in string "configType" which is the title of the section in the config file to which set the configuration parameters (for example, configureation type could be "boostGauge" or "tempGauge")
-
-	string getIdentifier(void); //This is to be called in the main project logic to determine the id associated with a particular object at an index of the object vector
-	
-	void setBackgroundColor(float*);
+	Button(string);							// Button constructor: load size and location from config file
+	Button(int, int, int, int, string);		// Button constructor: takes size and location, config string
+	Button(int, int, int, int);				// Button constructor: takes size and location, requires setter calls
+	void setBackgroundColor(float*);		// Set background color
+	void setSelectedBackgroundColor(float*);// Set selected background color
 	void setBorder(float*, int);			// Set border color, border width
-	
-	
-	void enableValue(char);			// Two characters: Horizontal alighment (L, R, C), and vertical alignment (T, B, C)
-	void setValueDecPlaces(int);					// Set number of digits after decimal
-	void setValue(float);
-	void setValueRefreshRate(int);				// Set desired refresh frequency (Hz) 
-	void setValueColor(float*);
-	
-	void enableText(char);			// Two characters: Horizontal alighment (L, R, C), and vertical alignment (T, B, C)
-	void setText(string);
-	void setTextColor(float*);
-	
+	void setSelectedBorder(float*, int);	// Set selected border color, border width
+	void setCornerRadius(int);				// Set corner radius if rounded 
+					
+	void update(void); 						// Button update & draw function
 
-	
-	
-	
-	
-	////////////////////////////////////////////////////////////////
+	// Text methods
+	void enableText(char);					// Enable text, vertical alignment (T,C.B)
+	void setTextColor(float*);				// Set text color
+	void setSelectedTextColor(float*);		// Set selected text color
+	void setText(string);					// Set text 
 
+	// Value methods
+	void enableValue(char);					// Enable value (vertical alignment (T,C.B)
+	void setValueColor(float*);				// Set value color
+	void setSelectedValueColor(float*);		// Set selected value color
+	void setValueDecPlaces(int);			// Set value number of decimal places
+	void setValue(float); 
+	void setValueRefreshRate(int);			// Set desired refresh frequency (Hz)
 
-	
+	// Name and Identifier methods 
+	string getIdentifier(void);				// Get button identifier
+	string getName(void);					// Get button name
+	void setName(string);					// Set button name
 
-
-	void update();
-	
+	// Selection methods
+	void select(void);
+	void deselect(void);
+	bool isSelected(void);
+	void setSelectable(void);
 };
 
-// This is the end of the header guard
 #endif
+
+
+
+

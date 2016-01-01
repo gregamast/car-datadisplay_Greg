@@ -24,7 +24,6 @@ using namespace std;
 
 #include "Gauge.h" // Access to our Gauge class and member functions!
 #include "Serial.h"
-#include "serial2.h"
 #include "DataStream.h"
 
 #include<bcm2835.h>
@@ -44,10 +43,6 @@ using namespace std;
 
 #include "Project.h"
 #include "Button.h"
-#include "Menu.h"
-#include "TextView.h"
-
-
 
 /***********************************************************************************************************************************
 							VARIABLE DECLARATIONS
@@ -55,8 +50,8 @@ using namespace std;
 
 // Label and readout fonts
 
-Fontinfo avengeance;
-Fontinfo digits; 
+// Fontinfo avengeance;
+// Fontinfo digits; 
 
 touch_t touch;
 int quitState = 0;
@@ -68,9 +63,41 @@ VGImage backgroundImage;
 
 vector<TouchableObject> TObjects;
 
-uint64_t loopTime;
+int findGObject_identifier(string ident) {
+	int idx = 0;
+	for(int i = 0; i<GObjects.size(); i++) {
+		if(ident.compare(GObjects[i].getIdentifier()) == 0)
+		idx =i;
+	}
+	return idx;
+}
 
-float sendcolor[] = {1.0, 0.4, 0.4, 1.0};
+int findBObject_identifier(string ident) {
+	int idx = 0;
+	for(int i = 0; i<BObjects.size(); i++) {
+		if(ident.compare(BObjects[i].getIdentifier()) == 0)
+		idx =i;
+	}
+	return idx;
+}
+
+int findGObject_group(string ident) {
+	int idx = 0;
+	for(int i = 0; i<GObjects.size(); i++) {
+		if(ident.compare(GObjects[i].getGroup()) == 0)
+		idx =i;
+	}
+	return idx;
+}
+
+int findBObject_group(string ident) {
+	int idx = 0;
+	for(int i = 0; i<BObjects.size(); i++) {
+		if(ident.compare(BObjects[i].getGroup()) == 0)
+		idx =i;
+	}
+	return idx;
+}
 
 /***********************************************************************************************************************************
 							PROTOTYPES
@@ -112,26 +139,6 @@ int main(){
 	
 	
 	
-	// Label and readout fonts
-	avengeance = loadfont(avengeance_glyphPoints, 
-		avengeance_glyphPointIndices, 
-		avengeance_glyphInstructions,                
-		avengeance_glyphInstructionIndices, 
-		avengeance_glyphInstructionCounts, 
-		avengeance_glyphAdvances,
-		avengeance_characterMap, 
-		avengeance_glyphCount);
-	digits = loadfont(digits_glyphPoints, 
-		digits_glyphPointIndices, 
-		digits_glyphInstructions,                
-		digits_glyphInstructionIndices, 
-		digits_glyphInstructionCounts, 
-		digits_glyphAdvances,
-		digits_characterMap, 
-		digits_glyphCount);
-	
-	
-	
 	
 	/****************************************************************
 		Create DATA STREAM Object
@@ -160,46 +167,21 @@ int main(){
 	BoostDataStream.setSimpleMALag(3,2);
 	
 
-	// Color definitions (float r, float g, float b, float alpha)
-	float black[] = {0,0,0,1};
-	float green[] = {0,1,0,1};
-	float red[] = {1,0,0,1};
-	float blue[] = {0,0,1,1};
-	float white[] = {1,1,1,1};
-	float translucentBlack[] = {0,0,0,0.5};
-	float gray[] = {0.43,0.43,0.43,1};
-
-	TextView textView1(width/6, height/2, width/3-15, width/3-15, "TextView1");
-	textView1.update();
-
-	bool menuActive = false;
-
-	Menu Mode1Menu(width/2, height-40, width-20, 60, "Mode1Menu");
-	Mode1Menu.touchEnable();
-	//Mode1Menu.selectButton("m1");
-
-	Menu TestCommandMenu(width-width/4, height/2-40, width/2-20, height-80, "TestCommandMenu");
-	TestCommandMenu.touchEnable();
-
-	Serial ELMSerial("/dev/ELM327", 5);
-	ELMSerial.serialWrite("ATZ");
-
-	TextView SerialViewer(width/4, height/2-40, width/2-20, height-80, "SerialViewer");
-
+	
 	/****************************************************************
 		Create GAUGE OBJECTS
 	****************************************************************/
 	
-	// GObjects.push_back( Gauge(width/6, height/2, width/6 , "BoostGauge") );
-	// GObjects.push_back( Gauge( (width/6)*3, height/2, width/6 , "TempGauge" ) );
-	// GObjects.push_back( Gauge( (width/6)*5, height/2, width/6 , "BoostGauge2" ) );
+	GObjects.push_back( Gauge(width/6, height/2, width/6 , "BoostGauge") );
+	GObjects.push_back( Gauge( (width/6)*3, height/2, width/6 , "TempGauge" ) );
+	GObjects.push_back( Gauge( (width/6)*5, height/2, width/6 , "BoostGauge2" ) );
 	
 
 	/****************************************************************
 		Create BUTTON objects
 	****************************************************************/
 	// BObjects.push_back( Button(width/2, height/2, width, height ,"BackgroundTouchButton") );
-	// BObjects.push_back( Button( width-300, height/2, 100, 50 , "FramerateButton" ));
+	BObjects.push_back( Button( width-300, height/2, 100, 50 , "FramerateButton" ));
 	// BObjects.push_back( Button( width-50, -22,100,50 , "MenuButton7" ));
 	// BObjects.push_back( Button( width-150-10, -22,100,50 , "MenuButton6" ));
 	// BObjects.push_back( Button( width-250-20, -22,100,50 , "MenuButton5" ));
@@ -208,9 +190,9 @@ int main(){
 	// BObjects.push_back( Button( width-550-50, -22,100,50, "MenuButton2" ));
 	// BObjects.push_back( Button( width-650-60, -22,100,50, "MenuButton1" ));
 
-	// BObjects.push_back( Button( width-650-60, -22,100,50 ,"MenuButton_DD1") );
-	// BObjects.push_back( Button( width-550-50, -22,100,50 ,"MenuButton_DD2") );
-	// BObjects.push_back( Button( width-450-40, -22,100,50 ,"MenuButton_DD3") );
+	BObjects.push_back( Button( width-650-60, -22,100,50 ,"MenuButton_DD1") );
+	BObjects.push_back( Button( width-550-50, -22,100,50 ,"MenuButton_DD2") );
+	BObjects.push_back( Button( width-450-40, -22,100,50 ,"MenuButton_DD3") );
 
 	/****************************************************************
 		Loop through program start sequence
@@ -248,22 +230,22 @@ int main(){
 	****************************************************************/
 	
 	
-	// for(int i=0; i<GObjects.size() ; i++){
-		// GObjects[i].touchEnable();
-	// }
+	for(int i=0; i<GObjects.size() ; i++){
+		GObjects[i].touchEnable();
+	}
 	
-	// for(int i=0; i<BObjects.size() ; i++){
-		// BObjects[i].touchEnable();
-	// }
+	for(int i=0; i<BObjects.size() ; i++){
+		BObjects[i].touchEnable();
+	}
 	
 	
 	/****************************************************************
 		Fill display buffer (currently no draw for button, need to remove the whole "draw " idea in general. It is not draw but filling buffer space. End draws the buffer on the scren)
 	****************************************************************/
 	// // std::cin.ignore();
-	// for(int i=0; i<GObjects.size() ; i++){
-		// GObjects[i].draw();
-	// }
+	for(int i=0; i<GObjects.size() ; i++){
+		GObjects[i].draw();
+	}
 
 
 	/****************************************************************
@@ -271,91 +253,110 @@ int main(){
 	****************************************************************/
 	End();//This ends the picture
 	
-	while(1) {
-		loopTime = bcm2835_st_read();
-		char serialData[256];
-		readSerial(uart0_filestream, serialData);			// Capture serial data
-		BoostDataStream.update(serialData, loopTime);		// Update datastream with serial data
-
-		// Grab touch data at the begining of each loop and 
-		//loopTouch = touch;
-		// Draw background image
-		vgSetPixels(0, 0, backgroundImage, 0, 0, 800, 480);
-
-		Mode1Menu.update(touch);
-		TestCommandMenu.update(touch);
-
-		string testCommand = TestCommandMenu.getPressedButtonName();
-		if(!testCommand.empty()){
-			SerialViewer.addNewLine(testCommand, sendcolor);
-			ELMSerial.serialWrite(testCommand);
-			TestCommandMenu.selectButton(testCommand);
-		}
-
-
-		SerialViewer.update();
+	while(1){
+		
+		/****************************************************************
+			Set background image into buffer - for every loop 
+		****************************************************************/
+		vgSetPixels(0, 0, backgroundImage, 0 , 0 , width , height);
 		
 
-		string data = ELMSerial.serialRead();
+		
+		/****************************************************************
+			Time
+		****************************************************************/
+		// Read the current time
+		uint64_t loopTime = bcm2835_st_read();
+		
+		/****************************************************************
+			Update all Touchable Objects with new touch Data 
+		****************************************************************/
 
-		float receivecolor[] = {0.4, 0.69, 1.0, 1.0};
-		if(!data.empty()) {
-			cout << "Data: " << endl << data << endl;
-			cout << "Data characters: " << endl;
-			for(int idx=0; idx<data.size(); idx++)
-				cout << (int)data[idx] << " ";
-			cout << endl;
-			SerialViewer.addNewLine(data, receivecolor);
+		for(int i=0; i<GObjects.size() ; i++){
+			GObjects[i].updateTouch(touch);
+		}
+		
+		for(int i=0; i<BObjects.size() ; i++){
+			BObjects[i].updateTouch(touch);
+		}
+		
+		
+		/****************************************************************
+			READ serial line input data 
+		****************************************************************/
+		char serialData[256];
+		readSerial(uart0_filestream , serialData);
+		
+		/****************************************************************
+			Update all Data Stream Objects with New Data 
+		****************************************************************/
+		
+		BoostDataStream.update( serialData, loopTime );
+		
+		/****************************************************************
+			Update all Gauge Objects with New Data 
+					- runs updateVisuals
+		****************************************************************/
+		
+
+		BObjects[findBObject_identifier("FramerateButton")].setValue(BoostDataStream.getRawUpdateRate());
+
+		
+		for(int i=0; i<GObjects.size() ; i++){
+			GObjects[i].update(BoostDataStream.getWeightedMADatum(), BoostDataStream.getEngUnits());
+		}
+		
+
+		for(int i=0; i<BObjects.size() ; i++){
+			BObjects[i].update();
 		}
 
-		if(Mode1Menu.isButtonPressed("m1")) {
-			Mode1Menu.selectButton("m1");
-			SerialViewer.addNewLine("ATZ", sendcolor);
-			ELMSerial.serialWrite("ATZ");
+		
+		
+		/****************************************************************
+			MAIN MENU Logic to process touch
+		****************************************************************/
+		
 
-		}
-		if(Mode1Menu.isButtonPressed("m2")) {
-			Mode1Menu.selectButton("m2");
-			SerialViewer.addNewLine("ATE0", sendcolor);
-			ELMSerial.serialWrite("ATE0");
+		
+		/****************************************************************
+			Data Display MAIN MENU Logic to process touch
+		****************************************************************/
+		
+		
+	
+			
 
-		}
-		if(Mode1Menu.isButtonPressed("m3")) {
-			Mode1Menu.selectButton("m3");
-			SerialViewer.addNewLine("", sendcolor);
-			ELMSerial.serialWrite("\n");
+		
 
-		}
-		if(Mode1Menu.isButtonPressed("m4")) {
-			Mode1Menu.selectButton("m4");
-			SerialViewer.clear();
-		}
-		if(Mode1Menu.isButtonPressed("m5")) Mode1Menu.selectButton("m5");
-		if(Mode1Menu.isButtonPressed("m6")) Mode1Menu.selectButton("m6");
+		/****************************************************************
+			DRAW all updated objects/visuals 
+		****************************************************************/
+		// Call the End at the end of each while loop
+		End();//This ends the picture
+		
+	} // End inf while loop
+	
+	
 
-		if(!Mode1Menu.isHidden() && Mode1Menu.isPressedOutside())
-			{
-				Mode1Menu.hide();
-				cout << "trying to hide menu" << endl;
-			}
-		else if(Mode1Menu.isHidden() && Mode1Menu.isPressedOutside())
-			{
-				Mode1Menu.unhide();
-				cout << "trying to hide menu" << endl;
-			}
+	
+} //End of MAIN function
 
 
+/***********************************************************************************************************************************
+							DEFINE SETUPGRAPHICS FUNCTION
+***********************************************************************************************************************************/
 
-		End();
-	}
+void setupGraphics(int* widthPtr, int* heightPtr){
+	init(widthPtr, heightPtr); //INIT Graphics
+
+	Start(*widthPtr, *heightPtr);	//this should go in setup			   // Start the picture
+	Background(0, 0, 0);	//this should go in setup	
+	
 }
 
-// setupGraphics()
-void setupGraphics(int* widthPtr, int* heightPtr) {	
-	init(widthPtr,heightPtr);
-	Start(*widthPtr, *heightPtr);		//Set up graphics, start picture
-	Background(0,0,0);
-}
+
+
 
 
 

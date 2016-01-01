@@ -1,5 +1,6 @@
 BoostGauge {
-    
+	gaugeGroup = "NONE";
+    pressDebounce = "500";
     numRanges = "2";
     range1 {
         engUnits = "PSI";
@@ -46,7 +47,8 @@ BoostGauge {
 };
 
 TempGauge {
-    
+	gaugeGroup = "NONE";
+    pressDebounce = "500";
     numRanges = "2";
     range1 {
         engUnits = "PSI";
@@ -92,7 +94,8 @@ TempGauge {
 };
 
 BoostGauge2 {
-    
+	gaugeGroup = "NONE";
+    pressDebounce = "500";
     numRanges = "2";
     range1 {
         engUnits = "PSI";
