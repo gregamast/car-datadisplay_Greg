@@ -18,7 +18,7 @@ typedef struct {
 } touch_t;
 
 //extern: everyone that includes this header file to be aware of the variables and structure, but they are not defined in this header file
-extern touch_t touch; // create structure of structure type mouse_t and call it mouse
+extern touch_t threadTouch; // create structure of structure type mouse_t and call it mouse
 
 
 extern int quitState; // This is for use in the eventThread "function"

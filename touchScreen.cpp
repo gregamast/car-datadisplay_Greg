@@ -32,8 +32,8 @@ int touchinit(int w, int h) {
 void *eventThread(void *arg) {
 
 	// Open touch driver
-	if ((touch.fd = open("/dev/input/event0", O_RDONLY)) < 0) {
-		fprintf(stderr, "Error opening touch!\n");
+	if ((threadTouch.fd = open("/dev/input/event0", O_RDONLY)) < 0) {
+		fprintf(stderr, "Error opening threadTouch!\n");
 		quitState = 1;
 		return &quitState;
 	}
@@ -51,49 +51,49 @@ void *eventThread(void *arg) {
 				__u16 code;
 				__s32 value;
 				}; */
-		// We read, we sort the value (if its x type store it in touch.x, if y..., then start loop again and read next value
-		read(touch.fd, &touch.ev, sizeof(struct input_event));
+		// We read, we sort the value (if its x type store it in threadTouch.x, if y..., then start loop again and read next value
+		read(threadTouch.fd, &threadTouch.ev, sizeof(struct input_event));
 
 		
 		// Parsing Touch Logic
 		
 		
 		
-		//std::cout<<"event type is: "<<touch.ev.type<<endl;
-		//std::cout<<"event code is: "<<touch.ev.code<<endl;
-		if(touch.ev.type==EV_SYN){
+		//std::cout<<"event type is: "<<threadTouch.ev.type<<endl;
+		//std::cout<<"event code is: "<<threadTouch.ev.code<<endl;
+		if(threadTouch.ev.type==EV_SYN){
 			
-			// std::cout<<"event type is: "<<touch.ev.type<<endl;
-			if(touch.ev.code == SYN_REPORT){
+			// std::cout<<"event type is: "<<threadTouch.ev.type<<endl;
+			if(threadTouch.ev.code == SYN_REPORT){
 				
-				// std::cout<<"event code enum is: "<<touch.ev.code<<" which is: SYN_REPORT "<<endl;
-				// std::cout<<"The attributes of struct touch are being populated... ... "<<endl;
-				touch.mt_tracking_id = mt_tracking_id;
-				touch.btn_touch = btn_touch;
-				touch.abs_x  = abs_x;
-				touch.abs_y = abs_y;
+				// std::cout<<"event code enum is: "<<threadTouch.ev.code<<" which is: SYN_REPORT "<<endl;
+				// std::cout<<"The attributes of struct threadTouch are being populated... ... "<<endl;
+				threadTouch.mt_tracking_id = mt_tracking_id;
+				threadTouch.btn_touch = btn_touch;
+				threadTouch.abs_x  = abs_x;
+				threadTouch.abs_y = abs_y;
 			}
 		}
-		else if(touch.ev.type==EV_ABS){
-			// std::cout<<"event type is: "<<touch.ev.type<<endl;
-			if(touch.ev.code == ABS_X){
-				abs_x = touch.ev.value;
+		else if(threadTouch.ev.type==EV_ABS){
+			// std::cout<<"event type is: "<<threadTouch.ev.type<<endl;
+			if(threadTouch.ev.code == ABS_X){
+				abs_x = threadTouch.ev.value;
 				// std::cout<<"absX: "<<abs_x<<endl;
 			}
-			if(touch.ev.code == ABS_Y){
-				abs_y =  480 - touch.ev.value; //the touch 0,0 origin is defined on the upper left (the way we are using the screen) so need to flip the y value so that we convert the origin to bottom left
+			if(threadTouch.ev.code == ABS_Y){
+				abs_y =  480 - threadTouch.ev.value; //the threadTouch 0,0 origin is defined on the upper left (the way we are using the screen) so need to flip the y value so that we convert the origin to bottom left
 				// std::cout<<"absY: "<<abs_y<<endl;
 			}
-			if(touch.ev.code==ABS_MT_TRACKING_ID){
-				mt_tracking_id = touch.ev.value;
+			if(threadTouch.ev.code==ABS_MT_TRACKING_ID){
+				mt_tracking_id = threadTouch.ev.value;
 				// std::cout<<"mt_tracking_id: "<<mt_tracking_id<<endl;
 			}
 		}
 		
-		else if(touch.ev.type==EV_KEY){
-			//std::cout<<"event type is: "<<touch.ev.type<<endl;
-			if(touch.ev.code == BTN_TOUCH){
-				btn_touch = touch.ev.value;
+		else if(threadTouch.ev.type==EV_KEY){
+			//std::cout<<"event type is: "<<threadTouch.ev.type<<endl;
+			if(threadTouch.ev.code == BTN_TOUCH){
+				btn_touch = threadTouch.ev.value;
 				//std::cout<<"btn_touch: "<<btn_touch<<endl;
 			}
 			

@@ -1,0 +1,42 @@
+# THis is the PID configuration file
+
+
+0105 {
+	fullName 		= "Engine Coolant Temperature";
+	shortName 		= "ECT";
+	numDataBytes	= "1";
+	
+	AGain			= "1";
+	BGain			= "0";
+	CGain			= "0";
+	DGain			= "0";
+	
+	AOffset			= "-40";
+	BOffset			= "0";
+	COffset			= "0";
+	DOffset			= "0";
+	
+	totalGain		= "1";
+	totalOffset 	= "0";
+	
+	
+	supportedMinVal = "-40"; # THe supported Min and Max vals are set by the SAE J1979 
+	supportedMaxVal = "215"; # THe supported Min and Max vals are set by the SAE J1979 
+	
+	
+	numRanges 		= "1";
+	
+	range1 {
+	
+		scaling	= "1";
+		rangeStart		= "-40";
+		rangeStop		= "215";
+		engUnits	= "degC";
+		
+		simpleMALag	= "1";
+		weightedMALag	= "5";
+		weightedMACoeffs = [ "0.2" , "0.2" , "0.2" , "0.2" , "0.2" ];
+	
+	}
+
+}

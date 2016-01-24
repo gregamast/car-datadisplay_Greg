@@ -1,0 +1,276 @@
+TextView1 {
+	cornerRadius = "20";
+	borderWidth = "2";
+	borderColor = ["1.0", "1.0", "1.0", "1.0"];
+	backgroundColor = ["0.0", "0.0", "0.0", "0.6"];
+	textColor = ["1.0", "1.0", "1.0", "1.0"];
+	numLines = "15";
+	pressDebounce = "500";
+}
+
+SerialViewer {
+	cornerRadius = "10";
+	borderWidth = "2";
+	borderColor = ["0.43", "0.43", "0.43", "1.0"];
+	backgroundColor = ["0.0", "0.0", "0.0", "0.6"];
+	textColor = ["1.0", "1.0", "1.0", "1.0"];
+	numLines = "25";
+	pressDebounce = "500";
+}
+
+
+FramerateButton {
+	buttonGroup = "development";
+	width = "100";
+	height = "50";
+	centerX = "630";
+	centerY = "35";
+	cornerRadius = "20";
+	borderWidth = "1";
+	borderColor = ["1.0", "1.0", "1.0", "1.0"];
+	backgroundColor = ["0.0", "0.0", "0.0", "0.6"];
+	enableText = "true";
+	textAlign = "B";
+	textColor = ["1.0", "1.0", "1.0", "1.0"];
+	defaultText = "Hz";
+	enableValue = "true";
+	valueAlign = "T";
+	valueColor = ["1.0", "1.0", "1.0", "1.0"];
+	valueRefreshRate = "5";
+	valueDecPlaces = "2";
+	pressDebounce = "500";
+}
+
+BoostGauge {
+	gaugeGroup = "gauges";
+	numRanges = "2";
+	borderColor = ["1.0", "1.0", "1.0", "1.0"];
+	backgroundColor = ["0.0", "0.0", "0.0", "0.5"];
+	needleColor = ["1.0", "0.0", "0.0", "1.0"];
+	pressDebounce = "500";
+	range1 {
+		engUnits = "PSI";
+		dataRangeStart	=	"0";
+		dataRangeStop	= "30";
+		angleRangeStart = "0";
+		angleRangeStop = "-180";
+		majorTickInterval = "5";
+		minorTickInterval = "1";
+		labelValueStart = "0";
+		labelValueStop = "30";
+		labelAngleStart = "0";
+		labelAngleStop = "180";
+		labelIncrement = "5";
+		labelDecPlaces = "0";
+		majorTickColor = ["1.0", "0.0", "0.0", "1.0"];
+		minorTickColor = ["1.0", "1.0", "1.0", "1.0"];
+		labelColor = ["1.0", "0.0", "0.0", "1.0"];
+	};
+	range2 {
+		engUnits ="inHg";
+		dataRangeStart = "0";
+		dataRangeStop = "30";
+		angleRangeStart = "0";
+		angleRangeStop = "90";
+		majorTickInterval = "10";
+		minorTickInterval = "2";
+		labelValueStart = "10";
+		labelValueStop = "30";
+		labelAngleStart = "-30";
+		labelAngleStop = "-90";
+		labelIncrement = "10";
+		labelDecPlaces = "0";
+		majorTickColor = ["1.0", "0.0", "0.0", "1.0"];
+		minorTickColor = ["1.0", "1.0", "1.0", "1.0"];
+		labelColor = ["1.0", "0.0", "0.0", "1.0"];
+	};
+};
+
+
+Mode1Menu {
+	titled = "false";
+	scrollable = "false";
+	numButtons = "6";
+	buttonPadding = "7";
+	cornerRadius = "10";
+	borderWidth = "1";
+	borderColor = ["0.43", "0.43", "0.43", "0.0"];
+	backgroundColor = ["0.0", "0.0", "0.0", "0.6"];
+	pressDebounce = "500";
+	isHorizontal = "true";
+	selectMode = "radio";
+	#selectMode = "timed";
+	#timedSelectDuration = "100";
+	hideable = "false";
+	hideDuration = "500";
+	hideDeltaX = "0";
+	hideDeltaY = "50";
+	hideFade = "60";
+
+	configureButtons = "true";
+
+	buttonCornerRadius = "10";
+	buttonBorderWidth = "2";
+	buttonBorderColor = ["0.43", "0.43", "0.43", "1.0"];
+	buttonBackgroundColor = ["0.0", "0.0", "0.0", "0.6"];
+	buttonTextColor = ["1.0", "1.0", "1.0", "1.0"];
+	buttonSelectedBackgroundColor = ["0.43", "0.43", "0.43", "0.4"];
+	buttonSelectedBorderColor = ["1.0", "1.0", "1.0", "1.0"];
+	buttonSelectedBorderWidth = "2";
+	buttonSelectedTextColor = ["1.0", "0.0", "0.0", "1.0"];
+	buttonName1 = "m1";
+	buttonText1 = "Display";
+	buttonName2 = "m2";
+	buttonText2 = "Mode 2";
+	buttonName3 = "m3";
+	buttonText3 = "Mode 3";
+	buttonName4 = "m4";
+	buttonText4 = "Log";
+	buttonName5 = "m5";
+	buttonText5 = "DTC";
+	buttonName6 = "m6";
+	buttonText6 = "Comm";
+};
+
+
+SerialViewerMenu {
+	titled = "false";
+	scrollable = "false";
+	numButtons = "4";
+	buttonPadding = "7";
+	cornerRadius = "10";
+	borderWidth = "1";
+	borderColor = ["0.43", "0.43", "0.43", "1.0"];
+	backgroundColor = ["0.0", "0.0", "0.0", "0.6"];
+	pressDebounce = "500";
+	isHorizontal = "true";
+	selectMode = "timed";
+	timedSelectDuration = "200";
+	hideable = "false";
+	configureButtons = "true";
+	buttonCornerRadius = "10";
+	buttonBorderWidth = "2";
+	buttonBorderColor = ["0.43", "0.43", "0.43", "1.0"];
+	buttonBackgroundColor = ["0.0", "0.0", "0.0", "0.6"];
+	buttonTextColor = ["1.0", "1.0", "1.0", "1.0"];
+	buttonSelectedBackgroundColor = ["0.43", "0.43", "0.43", "0.4"];
+	buttonSelectedBorderColor = ["1.0", "1.0", "1.0", "1.0"];
+	buttonSelectedBorderWidth = "2";
+	buttonSelectedTextColor = ["1.0", "0.0", "0.0", "1.0"];
+	buttonName1 = "Reset";
+	buttonText1 = "Reset";
+	buttonName2 = "Auto";
+	buttonText2 = "Auto";
+	buttonName3 = "Disp";
+	buttonText3 = "Disp";
+	buttonName4 = "Clear";
+	buttonText4 = "Clear";
+};
+
+PIDPageMenu {
+	scrollable = "false";
+	titled = "false";
+	numButtons = "2";
+	buttonPadding = "7";
+	cornerRadius = "10";
+	borderWidth = "1";
+	borderColor = ["0.43", "0.43", "0.43", "1.0"];
+	backgroundColor = ["0.0", "0.0", "0.0", "0.6"];
+	pressDebounce = "500";
+	isHorizontal = "true";
+	#selectMode = "radio";
+	selectMode = "timed";
+	timedSelectDuration = "150";
+	hideable = "false";
+	hideDuration = "500";
+	hideDeltaX = "0";
+	hideDeltaY = "50";
+	hideFade = "60";
+	configureButtons = "true";
+	buttonCornerRadius = "10";
+	buttonBorderWidth = "2";
+	buttonBorderColor = ["0.43", "0.43", "0.43", "1.0"];
+	buttonBackgroundColor = ["0.0", "0.0", "0.0", "0.6"];
+	buttonTextColor = ["1.0", "1.0", "1.0", "1.0"];
+	buttonSelectedBackgroundColor = ["0.43", "0.43", "0.43", "0.4"];
+	buttonSelectedBorderColor = ["1.0", "1.0", "1.0", "1.0"];
+	buttonSelectedBorderWidth = "2";
+	buttonSelectedTextColor = ["1.0", "0.0", "0.0", "1.0"];
+	buttonName1 = "Prev";
+	buttonText1 = "< PREV";
+	buttonName2 = "Next";
+	buttonText2 = "NEXT >";
+};
+
+PIDMenu1 {
+	titled = "true";
+	titlePercentHeight = "9";
+	titleText = "Parameters";
+	titleFontSize = "20";
+	titleColor = ["1.0", "0.0", "0.0", "1.0"];
+	scrollable = "true";
+	totalItems = "16";
+	scrollItems = "8";
+	scrollButtonPercentHeight = "9";
+	prevButton = "true";
+	prevButtonText = "PREV";
+	nextButton = "true";
+	nextButtonText = "NEXT";
+
+
+	numButtons = "8";
+	buttonPadding = "7";
+	cornerRadius = "10";
+	borderWidth = "1";
+	borderColor = ["0.43", "0.43", "0.43", "1.0"];
+	backgroundColor = ["0.0", "0.0", "0.0", "0.6"];
+	pressDebounce = "500";
+	isHorizontal = "false";
+	selectMode = "timed";
+	timedSelectDuration = "250";
+	hideable = "false";
+	configureButtons = "true";
+	buttonCornerRadius = "10";
+	buttonBorderWidth = "2";
+	buttonBorderColor = ["0.43", "0.43", "0.43", "1.0"];
+	buttonBackgroundColor = ["0.0", "0.0", "0.0", "0.6"];
+	buttonTextColor = ["1.0", "1.0", "1.0", "1.0"];
+	buttonSelectedBackgroundColor = ["0.43", "0.43", "0.43", "0.4"];
+	buttonSelectedBorderColor = ["1.0", "1.0", "1.0", "1.0"];
+	buttonSelectedBorderWidth = "2";
+	buttonSelectedTextColor = ["1.0", "0.0", "0.0", "1.0"];
+	buttonName1 = "0100";
+	buttonText1 = "0100 Supp. PIDs 1-20";
+	buttonName2 = "0101";
+	buttonText2 = "0101 Monitor Sts";
+	buttonName3 = "0102";
+	buttonText3 = "0102 Freeze DTC";
+	buttonName4 = "0103";
+	buttonText4 = "0103 Fuel Sts";
+	buttonName5 = "0104";
+	buttonText5 = "0104 Calc Load";
+	buttonName6 = "0105";
+	buttonText6 = "0105 Eng Cool Temp";
+	buttonName7 = "0106";
+	buttonText7 = "0106 Bank1 STFT";
+	buttonName8 = "0107";
+	buttonText8 = "0107 Bank1 LTFT";
+	buttonName9 = "0108";
+	buttonText9 = "0108 Bank2 STFT";
+	buttonName10 = "0109";
+	buttonText10 = "0109 Bank2 LTFT";
+	buttonName11 = "100A";
+	buttonText11 = "010A Fuel Press";
+	buttonName12 = "010B";
+	buttonText12 = "010B Man Abs Press";
+	buttonName13 = "010C";
+	buttonText13 = "010C Eng RPM";
+	buttonName14 = "010D";
+	buttonText14 = "010D Veh Speed";
+	buttonName15 = "010E";
+	buttonText15 = "010E Timing Adv";
+	buttonName16 = "010F";
+	buttonText16 = "010F Int Air Temp";
+};
+
+

@@ -55,9 +55,9 @@ Gauge::Gauge(int x, int y, int r , string configType){
 	
 	configure( configType);
 
-		// Below should be removed eventually and not hard coded here. needs to be implemented in configuration file
-		setLabelFont(avengeance_G, 1); 
-		setLabelFont(avengeance_G, 2);
+	// Below should be removed eventually and not hard coded here. needs to be implemented in configuration file
+	setLabelFont(avengeance_G, 1); 
+	setLabelFont(avengeance_G, 2);
 	
 }
 
@@ -97,7 +97,7 @@ void Gauge::configure(string configType) {
 
 		/****************************************************************
 		Instatiating DISPLAY RANGE Member Properties
-	****************************************************************/
+		****************************************************************/
 		EngUnits 			= new string[numRanges];
 		
 		startVal 			= new float[numRanges];
@@ -112,7 +112,7 @@ void Gauge::configure(string configType) {
 		
 		/****************************************************************
 		Instatiating DISPLAY LABEL Member Properties
-	****************************************************************/
+		****************************************************************/
 		
 		labelStartVal		= new float[numRanges];
 		labelStopVal		= new float[numRanges];
@@ -580,7 +580,7 @@ void Gauge::drawNeedle(float angle){
 	int focalX = centerX - 15;
 	int focalY = centerY + 0;
 	VGfloat stops[] = {	0.000,	5,5,5,.05*alphaScalar,
-						1.000,	0,0,0,1*alphaScalar};
+		1.000,	0,0,0,1*alphaScalar};
 	FillRadialGradient(centerX, centerY, focalX, focalY, centerRadius*scaling, stops,0);
 	Circle(centerX, centerY, centerRadius*2);
 	Fill(0,0,0,.7*alphaScalar);

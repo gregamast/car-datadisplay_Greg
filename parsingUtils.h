@@ -41,7 +41,10 @@ void parseColor(Configuration * , string , float* , string );
 
 /* Parse boolean inside subscope */
 bool parseBool(Configuration * , string , string , string );
-bool parseBool(Configuration * cfg, string scope, string attr);
+bool parseBool(Configuration * , string , string );
+
+void parseFloatArray(Configuration *  , string , int , float* , string);
+void parseFloatArray(Configuration *  , string , string ,  int , float* , string);
 
 
 

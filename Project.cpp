@@ -24,8 +24,7 @@ using namespace std;
 
 #include "Gauge.h" // Access to our Gauge class and member functions!
 #include "Serial.h"
-#include "serial2.h"
-#include "DataStream.h"
+#include "PID.h"
 
 #include<bcm2835.h>
 
@@ -53,24 +52,26 @@ using namespace std;
 							VARIABLE DECLARATIONS
 ***********************************************************************************************************************************/
 
-// Label and readout fonts
+// Color definitions (float r, float g, float b, float alpha)
+float black[] = {0,0,0,1};
+float green[] = {0,1,0,1};
+float red[] = {1,0,0,1};
+float blue[] = {0,0,1,1};
+float white[] = {1,1,1,1};
+float translucentBlack[] = {0,0,0,0.5};
+float gray[] = {0.43,0.43,0.43,1};
 
-Fontinfo avengeance;
-Fontinfo digits; 
-
-touch_t touch;
+touch_t threadTouch, loopTouch; //loopTouch is a copy to allow each loop iteration to operate on same data.  touch is constantly updated in a seperate thread (consider renaming this to threadTouch)
 int quitState = 0;
 
 VGImage backgroundImage;
-
-// vector<Gauge> GObjects;
-// vector<Button> BObjects;
 
 vector<TouchableObject> TObjects;
 
 uint64_t loopTime;
 
 float sendcolor[] = {1.0, 0.4, 0.4, 1.0};
+float receivecolor[] = {0.4, 0.69, 1.0, 1.0};
 
 /***********************************************************************************************************************************
 							PROTOTYPES
@@ -93,15 +94,15 @@ int main(){
 	
 	/****************************************************************
 		Initialize Screen Graphics
+			- This is a comment
 	****************************************************************/
 	setupGraphics(&width,&height);	
 	
 	/****************************************************************
 		Serial Communication
 	****************************************************************/
-	int uart0_filestream = openSerial(); // opens the serial communication
-	
-	
+	//Serial ELMSerial( "/dev/cp210x" , B9600 ); // The persisnet name has been assigned to the UART to serial bridge device i plug into my pi: cp210x
+	Serial ELMSerial( "/dev/ttyUSB1" , B38400 );
 	/****************************************************************
 		touch Thread Creation: THis is for reading touch data from touchscreen actions
 	****************************************************************/
@@ -109,109 +110,23 @@ int main(){
 		fprintf(stderr, "Unable to initialize the touch\n");
 		exit(1);
 	}
-	
-	
-	
-	// Label and readout fonts
-	avengeance = loadfont(avengeance_glyphPoints, 
-		avengeance_glyphPointIndices, 
-		avengeance_glyphInstructions,                
-		avengeance_glyphInstructionIndices, 
-		avengeance_glyphInstructionCounts, 
-		avengeance_glyphAdvances,
-		avengeance_characterMap, 
-		avengeance_glyphCount);
-	digits = loadfont(digits_glyphPoints, 
-		digits_glyphPointIndices, 
-		digits_glyphInstructions,                
-		digits_glyphInstructionIndices, 
-		digits_glyphInstructionCounts, 
-		digits_glyphAdvances,
-		digits_characterMap, 
-		digits_glyphCount);
-	
-	
-	
-	
-	/****************************************************************
-		Create DATA STREAM Object
-	****************************************************************/
-	DataStream BoostDataStream(2);
-	
-	BoostDataStream.setCharTags('A' , 'B');
-	BoostDataStream.setStreamScaling(100.0);
-	BoostDataStream.setRangeScaling(1.0,1); //for the PSI positive data values. data comes in from arduino for boost gauge as PSI*streamscaling factor
-	BoostDataStream.setRangeLimits(0,30,1);
-	string eu1="PSI";
-	BoostDataStream.setEngUnits(eu1,1);
-	BoostDataStream.setWeightedMALag(3,1);
-	float coefficients[]={0.25,0.25,0.5};
-	BoostDataStream.setWeightedMACoeffs(coefficients,1);
-	BoostDataStream.setSimpleMALag(3,1);
-	
-	// Configure the second range
-	
-	BoostDataStream.setRangeScaling(-2.036,2); //for the PSI positive data values. data comes in from arduino for boost gauge as PSI*streamscaling factor
-	BoostDataStream.setRangeLimits(-14.734,0,2); // this is PSI equivlanet of 30 inHG, we are rejecting larger magnitude values
-	string eu2="inHG";
-	BoostDataStream.setEngUnits(eu2,2);
-	BoostDataStream.setWeightedMALag(3,2);
-	BoostDataStream.setWeightedMACoeffs(coefficients,2);
-	BoostDataStream.setSimpleMALag(3,2);
-	
 
-	// Color definitions (float r, float g, float b, float alpha)
-	float black[] = {0,0,0,1};
-	float green[] = {0,1,0,1};
-	float red[] = {1,0,0,1};
-	float blue[] = {0,0,1,1};
-	float white[] = {1,1,1,1};
-	float translucentBlack[] = {0,0,0,0.5};
-	float gray[] = {0.43,0.43,0.43,1};
-
-	TextView textView1(width/6, height/2, width/3-15, width/3-15, "TextView1");
-	textView1.update();
-
-	bool menuActive = false;
 
 	Menu Mode1Menu(width/2, height-40, width-20, 60, "Mode1Menu");
 	Mode1Menu.touchEnable();
-	//Mode1Menu.selectButton("m1");
+	
+	Menu PIDMenu(width-width/4, height/2, width/2-20, 360, "PIDMenu1");
+	PIDMenu.touchEnable();
 
-	Menu TestCommandMenu(width-width/4, height/2-40, width/2-20, height-80, "TestCommandMenu");
-	TestCommandMenu.touchEnable();
 
-	Serial ELMSerial("/dev/ELM327", 5);
 	ELMSerial.serialWrite("ATZ");
+	ELMSerial.setEndChar('>');
+	ELMSerial.setReadTimeout(5000);
 
-	TextView SerialViewer(width/4, height/2-40, width/2-20, height-80, "SerialViewer");
-
-	/****************************************************************
-		Create GAUGE OBJECTS
-	****************************************************************/
 	
-	// GObjects.push_back( Gauge(width/6, height/2, width/6 , "BoostGauge") );
-	// GObjects.push_back( Gauge( (width/6)*3, height/2, width/6 , "TempGauge" ) );
-	// GObjects.push_back( Gauge( (width/6)*5, height/2, width/6 , "BoostGauge2" ) );
-	
-
-	/****************************************************************
-		Create BUTTON objects
-	****************************************************************/
-	// BObjects.push_back( Button(width/2, height/2, width, height ,"BackgroundTouchButton") );
-	// BObjects.push_back( Button( width-300, height/2, 100, 50 , "FramerateButton" ));
-	// BObjects.push_back( Button( width-50, -22,100,50 , "MenuButton7" ));
-	// BObjects.push_back( Button( width-150-10, -22,100,50 , "MenuButton6" ));
-	// BObjects.push_back( Button( width-250-20, -22,100,50 , "MenuButton5" ));
-	// BObjects.push_back( Button( width-350-30, -22,100,50, "MenuButton4" ));
-	// BObjects.push_back( Button( width-450-40, -22,100,50, "MenuButton3" ));
-	// BObjects.push_back( Button( width-550-50, -22,100,50, "MenuButton2" ));
-	// BObjects.push_back( Button( width-650-60, -22,100,50, "MenuButton1" ));
-
-	// BObjects.push_back( Button( width-650-60, -22,100,50 ,"MenuButton_DD1") );
-	// BObjects.push_back( Button( width-550-50, -22,100,50 ,"MenuButton_DD2") );
-	// BObjects.push_back( Button( width-450-40, -22,100,50 ,"MenuButton_DD3") );
-
+	PID PID1("0105");
+	PID1.update( "010541 05 26" , loopTime );
+	cout<<PID1.getRawDatum() <<endl;
 	/****************************************************************
 		Loop through program start sequence
 	****************************************************************/
@@ -247,106 +162,121 @@ int main(){
 		set all touchable objects to be touchable
 	****************************************************************/
 	
-	
-	// for(int i=0; i<GObjects.size() ; i++){
-		// GObjects[i].touchEnable();
-	// }
-	
-	// for(int i=0; i<BObjects.size() ; i++){
-		// BObjects[i].touchEnable();
-	// }
-	
-	
-	/****************************************************************
-		Fill display buffer (currently no draw for button, need to remove the whole "draw " idea in general. It is not draw but filling buffer space. End draws the buffer on the scren)
-	****************************************************************/
-	// // std::cin.ignore();
-	// for(int i=0; i<GObjects.size() ; i++){
-		// GObjects[i].draw();
-	// }
 
 
-	/****************************************************************
-		DRAW all created objects
-	****************************************************************/
-	End();//This ends the picture
+
 	
 	while(1) {
 		loopTime = bcm2835_st_read();
-		char serialData[256];
-		readSerial(uart0_filestream, serialData);			// Capture serial data
-		BoostDataStream.update(serialData, loopTime);		// Update datastream with serial data
-
+		
 		// Grab touch data at the begining of each loop and 
-		//loopTouch = touch;
+		loopTouch = threadTouch;
 		// Draw background image
 		vgSetPixels(0, 0, backgroundImage, 0, 0, 800, 480);
 
-		Mode1Menu.update(touch);
-		TestCommandMenu.update(touch);
-
-		string testCommand = TestCommandMenu.getPressedButtonName();
-		if(!testCommand.empty()){
-			SerialViewer.addNewLine(testCommand, sendcolor);
-			ELMSerial.serialWrite(testCommand);
-			TestCommandMenu.selectButton(testCommand);
-		}
+		// Update menus
+		Mode1Menu.update(loopTouch);
 
 
-		SerialViewer.update();
-		
-
-		string data = ELMSerial.serialRead();
-
-		float receivecolor[] = {0.4, 0.69, 1.0, 1.0};
-		if(!data.empty()) {
-			cout << "Data: " << endl << data << endl;
-			cout << "Data characters: " << endl;
-			for(int idx=0; idx<data.size(); idx++)
-				cout << (int)data[idx] << " ";
-			cout << endl;
-			SerialViewer.addNewLine(data, receivecolor);
-		}
-
-		if(Mode1Menu.isButtonPressed("m1")) {
-			Mode1Menu.selectButton("m1");
-			SerialViewer.addNewLine("ATZ", sendcolor);
-			ELMSerial.serialWrite("ATZ");
-
-		}
-		if(Mode1Menu.isButtonPressed("m2")) {
-			Mode1Menu.selectButton("m2");
-			SerialViewer.addNewLine("ATE0", sendcolor);
-			ELMSerial.serialWrite("ATE0");
-
-		}
-		if(Mode1Menu.isButtonPressed("m3")) {
-			Mode1Menu.selectButton("m3");
-			SerialViewer.addNewLine("", sendcolor);
-			ELMSerial.serialWrite("\n");
-
-		}
-		if(Mode1Menu.isButtonPressed("m4")) {
-			Mode1Menu.selectButton("m4");
-			SerialViewer.clear();
-		}
+		if(Mode1Menu.isButtonPressed("m1")) Mode1Menu.selectButton("m1");
+		if(Mode1Menu.isButtonPressed("m2")) Mode1Menu.selectButton("m2");
+		if(Mode1Menu.isButtonPressed("m3")) Mode1Menu.selectButton("m3");
+		if(Mode1Menu.isButtonPressed("m4")) Mode1Menu.selectButton("m4");
 		if(Mode1Menu.isButtonPressed("m5")) Mode1Menu.selectButton("m5");
 		if(Mode1Menu.isButtonPressed("m6")) Mode1Menu.selectButton("m6");
 
-		if(!Mode1Menu.isHidden() && Mode1Menu.isPressedOutside())
-			{
-				Mode1Menu.hide();
-				cout << "trying to hide menu" << endl;
+
+		
+		if(Mode1Menu.isButtonSelected("m6")) {
+			TextView SerialViewer(width/4, height/2, width/2-20, 360, "SerialViewer");
+			Menu SerialViewerMenu(width/4, 30, width/2-20, 50, "SerialViewerMenu");
+			SerialViewerMenu.touchEnable();
+			
+		
+			while(1) {
+				loopTime = bcm2835_st_read();
+				loopTouch = threadTouch;
+				
+				
+				vgSetPixels(0, 0, backgroundImage, 0, 0, 800, 480);
+				//vgSeti(VG_IMAGE_MODE, VG_DRAW_IMAGE_MULTIPLY);
+				
+				
+				Mode1Menu.update(loopTouch);
+				SerialViewerMenu.update(loopTouch);
+				PIDMenu.update(loopTouch);
+				
+			
+				string serialViewerCommand = SerialViewerMenu.getPressedButtonName();
+				if(!serialViewerCommand.empty()) {
+					SerialViewerMenu.selectButton(serialViewerCommand);
+					if(serialViewerCommand.compare("Reset") == 0) {
+						SerialViewer.addNewLine("ATZ", sendcolor);
+						ELMSerial.serialWrite("ATZ");
+					}
+					if(serialViewerCommand.compare("Auto") == 0) {
+						SerialViewer.addNewLine("ATSP0", sendcolor);
+						ELMSerial.serialWrite("ATSP0");
+					}
+					if(serialViewerCommand.compare("Disp") == 0) {
+						SerialViewer.addNewLine("ATDP", sendcolor);
+						ELMSerial.serialWrite("ATDP");
+					}
+					if(serialViewerCommand.compare("Clear") == 0) {
+						SerialViewer.clear();
+					}
+				}
+
+
+				
+				string commandString = PIDMenu.getPressedButtonName();
+				if(!commandString.empty()) {
+					PIDMenu.selectButton(commandString);
+					SerialViewer.addNewLine(commandString, sendcolor);
+					ELMSerial.serialWrite(commandString);
+				}
+
+
+				
+
+				
+				SerialViewer.update();
+				string data = ELMSerial.serialReadUntil();
+
+		
+				if(!data.empty()) {
+					cout << "Data: " << endl << data << endl;
+					cout << "Data characters: " << endl;
+					for(int idx=0; idx<data.size(); idx++)
+						cout << (int)data[idx] << " ";
+					cout << endl;
+					SerialViewer.addNewLine(data, receivecolor);
+				}
+				if(Mode1Menu.isButtonPressed("m1")) {
+					Mode1Menu.selectButton("m1");
+					break;
+				}
+				if(Mode1Menu.isButtonPressed("m2")) {
+					Mode1Menu.selectButton("m2");
+					break;
+				}
+				if(Mode1Menu.isButtonPressed("m3")) {
+					Mode1Menu.selectButton("m3");
+					break;
+				}
+				if(Mode1Menu.isButtonPressed("m4")) {
+					Mode1Menu.selectButton("m4");
+					break;
+				}
+				if(Mode1Menu.isButtonPressed("m5")) {
+					Mode1Menu.selectButton("m5");
+					break;
+				}
+				End();
 			}
-		else if(Mode1Menu.isHidden() && Mode1Menu.isPressedOutside())
-			{
-				Mode1Menu.unhide();
-				cout << "trying to hide menu" << endl;
-			}
 
-
-
-		End();
+		}
+		End(); //called after every itereation of the loop
 	}
 }
 
@@ -432,3 +362,32 @@ void setupGraphics(int* widthPtr, int* heightPtr) {
 
 // }
 
+
+
+
+
+// /****************************************************************
+// Create DATA STREAM Object
+// ****************************************************************/
+// DataStream BoostDataStream(2);
+
+// BoostDataStream.setCharTags('A' , 'B');
+// BoostDataStream.setStreamScaling(100.0);
+// BoostDataStream.setRangeScaling(1.0,1); //for the PSI positive data values. data comes in from arduino for boost gauge as PSI*streamscaling factor
+// BoostDataStream.setRangeLimits(0,30,1);
+// string eu1="PSI";
+// BoostDataStream.setEngUnits(eu1,1);
+// BoostDataStream.setWeightedMALag(3,1);
+// float coefficients[]={0.25,0.25,0.5};
+// BoostDataStream.setWeightedMACoeffs(coefficients,1);
+// BoostDataStream.setSimpleMALag(3,1);
+
+// Configure the second range
+
+// BoostDataStream.setRangeScaling(-2.036,2); //for the PSI positive data values. data comes in from arduino for boost gauge as PSI*streamscaling factor
+// BoostDataStream.setRangeLimits(-14.734,0,2); // this is PSI equivlanet of 30 inHG, we are rejecting larger magnitude values
+// string eu2="inHG";
+// BoostDataStream.setEngUnits(eu2,2);
+// BoostDataStream.setWeightedMALag(3,2);
+// BoostDataStream.setWeightedMACoeffs(coefficients,2);
+// BoostDataStream.setSimpleMALag(3,2);

@@ -1,7 +1,6 @@
 /********************************/
 /*		TextView Class			*/
 /********************************/
-//greg edit
 #include <iostream>
 #include "VG/openvg.h"		//
 #include "VG/vgu.h"			//
