@@ -470,3 +470,15 @@ string Menu::getPressedButtonName(void) {
 	}
 	return name;
 }
+
+string Menu::getSelectedButtonName(void){
+	string name = "";
+	for(int idx = 0; idx<menuButtons.size(); idx++)
+	{
+		if(menuButtons[idx].isSelected()) {
+			name.append(menuButtons[idx].getName());
+			break;
+		}
+	}
+	return name;
+}

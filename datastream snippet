@@ -1,0 +1,89 @@
+
+
+
+/////////////////////////
+
+// Off screen buffer hijinks
+	VGImage myImage = vgCreateImage(VG_sABGR_8888, 800, 480, VG_IMAGE_QUALITY_BETTER);
+	
+	static const EGLint attribute_list[] = {
+		EGL_RED_SIZE, 8,
+		EGL_GREEN_SIZE, 8,
+		EGL_BLUE_SIZE, 8,
+		EGL_ALPHA_SIZE, 8,
+		EGL_SURFACE_TYPE, EGL_WINDOW_BIT,
+		EGL_NONE
+	};
+
+
+
+	 realDisplay = eglGetCurrentDisplay();
+	if(realDisplay == EGL_NO_DISPLAY)
+	{
+		cout << "Failed to get current display" << endl;
+	}
+
+
+	result = eglChooseConfig(realDisplay, attribute_list, &config, 1, &num_config);
+	if(result == EGL_FALSE) {
+		cout << "Failed to choose config" << endl;
+	}
+
+
+	realSurface = eglGetCurrentSurface(EGL_DRAW);
+
+	if(realSurface == EGL_NO_SURFACE) {
+		cout << "Failed to get current surface" << endl;
+	}
+	realContext = eglGetCurrentContext();
+	if(realContext == EGL_NO_CONTEXT) {
+		cout << "Failed to get current context" << endl;
+	}
+	static const EGLint surfAttr[] = {
+		EGL_HEIGHT, 480,
+		EGL_WIDTH, 800,
+		EGL_NONE
+	};
+	mySurface = eglCreatePbufferFromClientBuffer (realDisplay, EGL_OPENVG_IMAGE, (EGLClientBuffer)myImage, config, surfAttr);
+	if(mySurface == EGL_NO_SURFACE) {
+		cout << "Failed to create pbuffer surface" << endl;
+	}
+	result = eglMakeCurrent(realDisplay, mySurface, mySurface, realContext);
+	if(result == EGL_FALSE)
+	{
+		cout << "Failed to make new display current" << endl;
+	}
+
+	float colour[4];
+	RGBA(0, 0, 0, 0.1, colour);
+	vgSetfv(VG_CLEAR_COLOR, 4, colour);
+	vgClear(0, 0, 800, 480);
+
+	Stroke(255,255,255,1);
+	StrokeWidth(10);
+	Line(width/2-100, height/2, width/2+100, height/2);
+
+	eglMakeCurrent(realDisplay, realSurface, realSurface, realContext);
+	if(result == EGL_FALSE)
+	{
+		cout << "Failed to make original display current" << endl;
+	}
+
+
+
+
+	/////////////////////////////////
+
+
+					// Draws image saved in buffer:
+				// Needed to use vgDrawImage to get opacity to work
+				// Needed to set VG_MATRIX_MODE to apply translations to image matrices
+				vgSeti(VG_MATRIX_MODE, VG_MATRIX_IMAGE_USER_TO_SURFACE);
+				vgTranslate(200, 0);
+				vgDrawImage(myImage);
+				vgTranslate(-200, 0);
+				vgSeti(VG_MATRIX_MODE, VG_MATRIX_PATH_USER_TO_SURFACE);
+
+				
+
+///////////////////////

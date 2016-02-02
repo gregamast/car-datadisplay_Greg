@@ -5,6 +5,7 @@
 
 #include "TouchableObject.h"
 #include "Button.h"
+#include "EGL/egl.h"
 
 /******************************************************************************************************************************
 									GAUGE CLASS
@@ -56,10 +57,14 @@ private: //This is an access_specifier.
 
 	Fontinfo* labelFont;
 	
-	VGImage gaugeBuffer;
-
-	
-	
+	VGImage gaugeBuffer; //THis is now going to be the buffer which feeeds the offscreen surface
+	EGLint num_config;
+	EGLBoolean result; //result denotes success of choosing a configuration
+	EGLConfig config;
+	EGLDisplay realDisplay; 
+	EGLSurface realSurface;
+	EGLContext realContext;
+	EGLSurface mySurface;
 
 
 public: //This is an access_specifier. 

@@ -69,7 +69,15 @@ int initialFadePercentage;
 	uint64_t pressDebounceFinishTime;
 	uint64_t pressOutsideStartTime;
 	uint64_t pressOutsideDebounceFinishTime;
-	bool pressed; // This shows the object was pressed
+	
+	uint64_t releaseStartTime;
+	uint64_t releaseFinishTime;
+	
+	bool released;
+	bool releaseRead;
+	bool inReleaseDebounce;
+	
+	bool pressed; // This is true if object was touched and/OR currently inside debounce period
 	bool pressedOutside;
 	bool pressRead;
 	bool pressOutsideRead;
@@ -147,6 +155,9 @@ private:
 void pressProcessing(void); //This is for touch debounce.  A debounce touch is a press
 
 public:
+virtual void update(void){}
+virtual void update(touch_t){}
+
 
 bool isMoving(void);				// Called to determine if an object is in motion
 
@@ -194,6 +205,7 @@ bool isMoving(void);				// Called to determine if an object is in motion
 	
 	void setPressDebounce(int);
 bool isPressed(void) ;
+bool isReleased(void);
 
 bool isPressedOutside(void) ;
 	

@@ -17,6 +17,8 @@ using namespace std;
 
 #include "parsingUtils.h" // utilize parsing utilities for configuration file processing
 
+#include "EGL/egl.h"
+
 #include "Gauge.h"        
 
 #include <fstream> //This is for reading the config file in
@@ -169,67 +171,6 @@ void Gauge::configure(string configType) {
 
 
 
-
-
-
-
-
-
-/****************************************************************
-	Define SET METHODS
-****************************************************************/
-
-// void Gauge::setNumRanges( int ranges ){
-// numRanges = ranges;
-
-// /****************************************************************
-// Instatiating DISPLAY RANGE Member Properties
-// ****************************************************************/
-// EngUnits 			= new string[numRanges];
-
-// startVal 			= new float[numRanges];
-// stopVal				= new float[numRanges];
-// startAng			= new float[numRanges];
-// stopAng				= new float[numRanges];
-// majorInt			= new float[numRanges];
-// minorInt			= new float[numRanges];
-// majorTickColorRed	= new float[numRanges];
-// majorTickColorGreen	= new float[numRanges];
-// majorTickColorBlue	= new float[numRanges];
-// majorTickColorAlpha	= new float[numRanges];
-// minorTickColorRed	= new float[numRanges];
-// minorTickColorGreen	= new float[numRanges];
-// minorTickColorBlue	= new float[numRanges];
-// minorTickColorAlpha	= new float[numRanges];
-
-// /****************************************************************
-// Instatiating DISPLAY LABEL Member Properties
-// ****************************************************************/
-
-// labelStartVal		= new float[numRanges];
-// labelStopVal		= new float[numRanges];
-// labelIncrement		= new float[numRanges];
-// labelDecPlaces		= new int[numRanges];
-// labelStartAng		= new float[numRanges];
-// labelStopAng		= new float[numRanges];
-// labelColorRed		= new float[numRanges];
-// labelColorGreen		= new float[numRanges];
-// labelColorBlue		= new float[numRanges];
-// labelColorAlpha		= new float[numRanges];
-// labelFont			= new Fontinfo[numRanges];
-
-
-
-// }
-
-
-
-
-
-// void Gauge::setEngUnits(string EU, int range){
-// EngUnits[range-1]=EU;
-//cout<<"this is the unit "<<EngUnits[range-1]<<endl;
-// }
 string Gauge::getIdentifier(void){
 	return identifier;
 	
@@ -329,6 +270,70 @@ float Gauge::degToRad(float degrees){
 
 void Gauge::draw(void){
 	
+	
+	
+	/****************************************************************
+		
+	****************************************************************/
+	
+	
+	gaugeBuffer = vgCreateImage(VG_sABGR_8888, 2*radius	, 2*radius, VG_IMAGE_QUALITY_BETTER);
+	
+	// get the current display
+	realDisplay = eglGetCurrentDisplay();	 
+	if(realDisplay == EGL_NO_DISPLAY) cout << "Failed to get current display" << endl;
+	
+	
+	static const EGLint attribute_list[] = {
+		EGL_RED_SIZE, 8,
+		EGL_GREEN_SIZE, 8,
+		EGL_BLUE_SIZE, 8,
+		EGL_ALPHA_SIZE, 8,
+		EGL_SURFACE_TYPE, EGL_WINDOW_BIT,
+		EGL_NONE
+	};
+	
+	
+		result = eglChooseConfig(realDisplay, attribute_list, &config, 1, &num_config); //result denotes success of choosing a configuration
+	if(result == EGL_FALSE) cout << "Failed to choose config" << endl;
+	
+	//Get the current drawing surface: this is so that when we are done working with the pbuffer surfcae, we can swithc back to the current one
+	realSurface = eglGetCurrentSurface(EGL_DRAW);
+	if(realSurface == EGL_NO_SURFACE) cout << "Failed to get current surface" << endl;
+		
+		//Get the current context: this is so we know what context to use
+	realContext = eglGetCurrentContext();
+	if(realContext == EGL_NO_CONTEXT) cout << "Failed to get current context" << endl;
+	
+	
+		static const EGLint surfAttr[] = {
+		EGL_HEIGHT, radius*2,
+		EGL_WIDTH, radius*2,
+		EGL_NONE
+	};
+	
+		mySurface = eglCreatePbufferFromClientBuffer (realDisplay, EGL_OPENVG_IMAGE, (EGLClientBuffer)gaugeBuffer, config, surfAttr); //the image needs to be cast to EGLClientBuffer
+	if(mySurface == EGL_NO_SURFACE)  cout << "Failed to create pbuffer surface" << endl;
+	
+	
+	// https://www.khronos.org/registry/egl/sdk/docs/man/html/eglMakeCurrent.xhtml
+		result = eglMakeCurrent(realDisplay, mySurface, mySurface, realContext);
+	if(result == EGL_FALSE) cout << "Failed to make new display current" << endl;
+	
+	
+	
+	float surfaceBackgroundColor[4];
+	RGBA(0, 0, 0, 0.1, surfaceBackgroundColor); //dumps these attribures into the array we created
+	vgSetfv(VG_CLEAR_COLOR, 4, surfaceBackgroundColor); //setv sets a value, seti sets an attribute
+	vgClear(0, 0, radius*2, 2*radius);
+		
+	
+	/****************************************************************
+		Do a translate
+	****************************************************************/
+	vgTranslate(-centerX+radius, -centerY+radius);
+	
+	
 	/****************************************************************
 		Draw the gauge background
 	****************************************************************/
@@ -388,12 +393,17 @@ void Gauge::draw(void){
 		Circle(centerX,centerY,gaugeRadius*2);	// Draw gauge border (on top of ticks)
 	}
 	
-	//gaugeBuffer = vgCreateImage(VG_sABGR_8888, 2*radius, 2*radius, VG_IMAGE_QUALITY_BETTER);
-	//vgGetPixels(gaugeBuffer, 0 , 0 , centerX-radius, centerY-radius, 2*radius , 2*radius);
 	
-	gaugeBuffer = vgCreateImage(VG_sABGR_8888, 800	, 480, VG_IMAGE_QUALITY_BETTER);
+	//Translate bakc
 	
-	vgGetPixels(gaugeBuffer, centerX-radius , centerY-radius , centerX-radius, centerY-radius, 2*radius , 2*radius);
+	vgTranslate(centerX-radius, centerY-radius);
+	
+	
+	
+	//switch back to original surface
+		eglMakeCurrent(realDisplay, realSurface, realSurface, realContext);
+	if(result == EGL_FALSE) cout << "Failed to make original display current" << endl;
+
 	
 	
 }
@@ -442,9 +452,18 @@ void Gauge::update(float needleValue, string units){
 		vgSeti(VG_IMAGE_MODE, VG_DRAW_IMAGE_MULTIPLY);
 		float alphaScalar = (100.0-getDesiredFadePercentage())/100.0; // NEEDS TO BE ".0" !!!!!
 		Fill(255,255,255,alphaScalar);
-		vgDrawImage(gaugeBuffer);
+	
+		// Draws image saved in buffer:
+				// Needed to use vgDrawImage to get opacity to work
+				// Needed to set VG_MATRIX_MODE to apply translations to image matrices
+				vgSeti(VG_MATRIX_MODE, VG_MATRIX_IMAGE_USER_TO_SURFACE);
+				//translate, draw image, then translate back (cant just draw image in a location)
+				vgTranslate(centerX - radius, centerY - radius);
+				vgDrawImage(gaugeBuffer);
+				vgTranslate(radius-centerX, radius-centerY);
+				vgSeti(VG_MATRIX_MODE, VG_MATRIX_PATH_USER_TO_SURFACE);
 		
-		
+		vgSeti(VG_IMAGE_MODE, VG_DRAW_IMAGE_NORMAL); //
 		
 
 		/****************************************************************
@@ -579,8 +598,8 @@ void Gauge::drawNeedle(float angle){
 	Circle(centerX, centerY, centerRadius);
 	int focalX = centerX - 15;
 	int focalY = centerY + 0;
-	VGfloat stops[] = {	0.000,	5,5,5,.05*alphaScalar,
-		1.000,	0,0,0,1*alphaScalar};
+	VGfloat stops[] = {	0.000,	5.0,5.0,5.0,(float)0.05*alphaScalar,
+		1.000,	0.0,0.0,(float)1.0*alphaScalar};
 	FillRadialGradient(centerX, centerY, focalX, focalY, centerRadius*scaling, stops,0);
 	Circle(centerX, centerY, centerRadius*2);
 	Fill(0,0,0,.7*alphaScalar);
@@ -606,9 +625,9 @@ void Gauge::drawNeedle(float angle){
 	yVertices[3] = centerY + 0.92*needleLength*sin(degToRad(angle)) + (0.5*centerRadius)*sin(degToRad(angle-90));
 	xVertices[4] = centerX - centerRadius*cos(degToRad(angle-90));
 	yVertices[4] = centerY + centerRadius*sin(degToRad(angle-90));
-	VGfloat needleStops[] = {	0.000,	255,255,255,0.1*alphaScalar,
-		0.250, 	needleColor[0],needleColor[1],needleColor[2],.8*alphaScalar,
-		1.000, 	needleColor[0],needleColor[1],needleColor[2],.8*alphaScalar};
+	VGfloat needleStops[] = {	0.000,	255,255,255,(float)0.1*alphaScalar,
+		0.250, 	needleColor[0],needleColor[1],needleColor[2],(float).8*alphaScalar,
+		1.000, 	needleColor[0],needleColor[1],needleColor[2],(float).8*alphaScalar};
 	FillRadialGradient(centerX, centerY, centerX, centerY, needleLength, needleStops, 3);
 	Polygon(xVertices, yVertices, 5);
 

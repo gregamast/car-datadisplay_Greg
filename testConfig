@@ -274,3 +274,361 @@ PIDMenu1 {
 };
 
 
+
+hotButton1 {
+	name = "hotButton1";
+	width = "25";
+	cornerRadius = "20";
+	borderWidth = "2";
+	borderColor = ["1.0", "1.0", "1.0", "1.0"];
+	backgroundColor = ["0.0", "0.0", "0.0", "0.6"];
+	enableText = "false";
+	textAlign = "B";
+	textColor = ["1.0", "1.0", "1.0", "1.0"];
+	defaultText = "Hz";
+	enableValue = "false";
+	pressDebounce = "500";
+	selectable = "false";
+	touchEnable = "true";
+
+}
+
+hotButton2 {
+	name = "hotButton2";
+	width = "25";
+	cornerRadius = "20";
+	borderWidth = "2";
+	borderColor = ["1.0", "1.0", "1.0", "1.0"];
+	backgroundColor = ["0.0", "0.0", "0.0", "0.6"];
+	enableText = "false";
+	textAlign = "B";
+	textColor = ["1.0", "1.0", "1.0", "1.0"];
+	defaultText = "Hz";
+	enableValue = "false";
+	pressDebounce = "500";
+	selectable = "false";
+	touchEnable = "true";
+}
+
+hotButton3 {
+	name = "hotButton3";
+	width = "25";
+	cornerRadius = "20";
+	borderWidth = "2";
+	borderColor = ["1.0", "1.0", "1.0", "1.0"];
+	backgroundColor = ["0.0", "0.0", "0.0", "0.6"];
+	enableText = "false";
+	textAlign = "B";
+	textColor = ["1.0", "1.0", "1.0", "1.0"];
+	defaultText = "Hz";
+	enableValue = "false";
+	pressDebounce = "500";
+	selectable = "false";
+	touchEnable = "true";
+}
+
+HOTBUTTON_GroupMenu {
+	name = "DIABETISS";
+	titled = "true";
+	titlePercentHeight = "9";
+	titleText = "DIABETISS";
+	titleFontSize = "20";
+	titleColor = ["1.0", "0.0", "0.0", "1.0"];
+	scrollable = "false";
+	numButtons = "3";
+	buttonPadding = "7";
+	cornerRadius = "10";
+	borderWidth = "1";
+	borderColor = ["0.43", "0.43", "0.43", "0.0"];
+	backgroundColor = ["0.0", "0.0", "0.0", "0.6"];
+	pressDebounce = "500";
+	isHorizontal = "false";
+	selectMode = "radio";
+	#selectMode = "timed";
+	#timedSelectDuration = "100";
+	hideable = "false";
+	hideDuration = "500";
+	hideDeltaX = "0";
+	hideDeltaY = "50";
+	hideFade = "60";
+
+	configureButtons = "true";
+
+	buttonCornerRadius = "10";
+	buttonBorderWidth = "2";
+	buttonBorderColor = ["0.43", "0.43", "0.43", "1.0"];
+	buttonBackgroundColor = ["0.0", "0.0", "0.0", "0.6"];
+	buttonTextColor = ["1.0", "1.0", "1.0", "1.0"];
+	buttonSelectedBackgroundColor = ["0.43", "0.43", "0.43", "0.4"];
+	buttonSelectedBorderColor = ["1.0", "1.0", "1.0", "1.0"];
+	buttonSelectedBorderWidth = "2";
+	buttonSelectedTextColor = ["1.0", "0.0", "0.0", "1.0"];
+	buttonName1 = "G1";
+	buttonText1 = "G1";
+	buttonName2 = "G2";
+	buttonText2 = "G2";
+	buttonName3 = "G3";
+	buttonText3 = "G3";
+}
+
+G1 {
+	titled = "true";
+	titlePercentHeight = "9";
+	titleText = "G1 Parameters";
+	titleFontSize = "20";
+	titleColor = ["1.0", "0.0", "0.0", "1.0"];
+	scrollable = "true";
+	totalItems = "16";
+	scrollItems = "8";
+	scrollButtonPercentHeight = "9";
+	prevButton = "true";
+	prevButtonText = "PREV";
+	nextButton = "true";
+	nextButtonText = "NEXT";
+
+
+	numButtons = "8";
+	buttonPadding = "7";
+	cornerRadius = "10";
+	borderWidth = "1";
+	borderColor = ["0.43", "0.43", "0.43", "1.0"];
+	backgroundColor = ["0.0", "0.0", "0.0", "0.6"];
+	pressDebounce = "500";
+	isHorizontal = "false";
+	selectMode = "radio";
+	timedSelectDuration = "250";
+	hideable = "false";
+	configureButtons = "true";
+	buttonCornerRadius = "10";
+	buttonBorderWidth = "2";
+	buttonBorderColor = ["0.43", "0.43", "0.43", "1.0"];
+	buttonBackgroundColor = ["0.0", "0.0", "0.0", "0.6"];
+	buttonTextColor = ["1.0", "1.0", "1.0", "1.0"];
+	buttonSelectedBackgroundColor = ["0.43", "0.43", "0.43", "0.4"];
+	buttonSelectedBorderColor = ["1.0", "1.0", "1.0", "1.0"];
+	buttonSelectedBorderWidth = "2";
+	buttonSelectedTextColor = ["1.0", "0.0", "0.0", "1.0"];
+	buttonName1 = "0100";
+	buttonText1 = "0100 Supp. PIDs 1-20";
+	buttonName2 = "0101";
+	buttonText2 = "0101 Monitor Sts";
+	buttonName3 = "0102";
+	buttonText3 = "0102 Freeze DTC";
+	buttonName4 = "0103";
+	buttonText4 = "0103 Fuel Sts";
+	buttonName5 = "0104";
+	buttonText5 = "0104 Calc Load";
+	buttonName6 = "0105";
+	buttonText6 = "0105 Eng Cool Temp";
+	buttonName7 = "0106";
+	buttonText7 = "0106 Bank1 STFT";
+	buttonName8 = "0107";
+	buttonText8 = "0107 Bank1 LTFT";
+	buttonName9 = "0108";
+	buttonText9 = "0108 Bank2 STFT";
+	buttonName10 = "0109";
+	buttonText10 = "0109 Bank2 LTFT";
+	buttonName11 = "100A";
+	buttonText11 = "010A Fuel Press";
+	buttonName12 = "010B";
+	buttonText12 = "010B Man Abs Press";
+	buttonName13 = "010C";
+	buttonText13 = "010C Eng RPM";
+	buttonName14 = "010D";
+	buttonText14 = "010D Veh Speed";
+	buttonName15 = "010E";
+	buttonText15 = "010E Timing Adv";
+	buttonName16 = "010F";
+	buttonText16 = "010F Int Air Temp";
+};
+
+G2 {
+	titled = "true";
+	titlePercentHeight = "9";
+	titleText = "G2 Parameters";
+	titleFontSize = "20";
+	titleColor = ["1.0", "0.0", "0.0", "1.0"];
+	scrollable = "true";
+	totalItems = "16";
+	scrollItems = "8";
+	scrollButtonPercentHeight = "9";
+	prevButton = "true";
+	prevButtonText = "PREV";
+	nextButton = "true";
+	nextButtonText = "NEXT";
+
+
+	numButtons = "8";
+	buttonPadding = "7";
+	cornerRadius = "10";
+	borderWidth = "1";
+	borderColor = ["0.43", "0.43", "0.43", "1.0"];
+	backgroundColor = ["0.0", "0.0", "0.0", "0.6"];
+	pressDebounce = "500";
+	isHorizontal = "false";
+	selectMode = "radio";
+	timedSelectDuration = "250";
+	hideable = "false";
+	configureButtons = "true";
+	buttonCornerRadius = "10";
+	buttonBorderWidth = "2";
+	buttonBorderColor = ["0.43", "0.43", "0.43", "1.0"];
+	buttonBackgroundColor = ["0.0", "0.0", "0.0", "0.6"];
+	buttonTextColor = ["1.0", "1.0", "1.0", "1.0"];
+	buttonSelectedBackgroundColor = ["0.43", "0.43", "0.43", "0.4"];
+	buttonSelectedBorderColor = ["1.0", "1.0", "1.0", "1.0"];
+	buttonSelectedBorderWidth = "2";
+	buttonSelectedTextColor = ["1.0", "0.0", "0.0", "1.0"];
+	buttonName1 = "0100";
+	buttonText1 = "0100 Supp. PIDs 1-20";
+	buttonName2 = "0101";
+	buttonText2 = "0101 Monitor Sts";
+	buttonName3 = "0102";
+	buttonText3 = "0102 Freeze DTC";
+	buttonName4 = "0103";
+	buttonText4 = "0103 Fuel Sts";
+	buttonName5 = "0104";
+	buttonText5 = "0104 Calc Load";
+	buttonName6 = "0105";
+	buttonText6 = "0105 Eng Cool Temp";
+	buttonName7 = "0106";
+	buttonText7 = "0106 Bank1 STFT";
+	buttonName8 = "0107";
+	buttonText8 = "0107 Bank1 LTFT";
+	buttonName9 = "0108";
+	buttonText9 = "0108 Bank2 STFT";
+	buttonName10 = "0109";
+	buttonText10 = "0109 Bank2 LTFT";
+	buttonName11 = "100A";
+	buttonText11 = "010A Fuel Press";
+	buttonName12 = "010B";
+	buttonText12 = "010B Man Abs Press";
+	buttonName13 = "010C";
+	buttonText13 = "010C Eng RPM";
+	buttonName14 = "010D";
+	buttonText14 = "010D Veh Speed";
+	buttonName15 = "010E";
+	buttonText15 = "010E Timing Adv";
+	buttonName16 = "010F";
+	buttonText16 = "010F Int Air Temp";
+};
+
+G3 {
+	titled = "true";
+	titlePercentHeight = "9";
+	titleText = "G3 Parameters";
+	titleFontSize = "20";
+	titleColor = ["1.0", "0.0", "0.0", "1.0"];
+	scrollable = "true";
+	totalItems = "16";
+	scrollItems = "8";
+	scrollButtonPercentHeight = "9";
+	prevButton = "true";
+	prevButtonText = "PREV";
+	nextButton = "true";
+	nextButtonText = "NEXT";
+
+
+	numButtons = "8";
+	buttonPadding = "7";
+	cornerRadius = "10";
+	borderWidth = "1";
+	borderColor = ["0.43", "0.43", "0.43", "1.0"];
+	backgroundColor = ["0.0", "0.0", "0.0", "0.6"];
+	pressDebounce = "500";
+	isHorizontal = "false";
+	selectMode = "radio";
+	timedSelectDuration = "250";
+	hideable = "false";
+	configureButtons = "true";
+	buttonCornerRadius = "10";
+	buttonBorderWidth = "2";
+	buttonBorderColor = ["0.43", "0.43", "0.43", "1.0"];
+	buttonBackgroundColor = ["0.0", "0.0", "0.0", "0.6"];
+	buttonTextColor = ["1.0", "1.0", "1.0", "1.0"];
+	buttonSelectedBackgroundColor = ["0.43", "0.43", "0.43", "0.4"];
+	buttonSelectedBorderColor = ["1.0", "1.0", "1.0", "1.0"];
+	buttonSelectedBorderWidth = "2";
+	buttonSelectedTextColor = ["1.0", "0.0", "0.0", "1.0"];
+	buttonName1 = "0100";
+	buttonText1 = "0100 Supp. PIDs 1-20";
+	buttonName2 = "0101";
+	buttonText2 = "0101 Monitor Sts";
+	buttonName3 = "0102";
+	buttonText3 = "0102 Freeze DTC";
+	buttonName4 = "0103";
+	buttonText4 = "0103 Fuel Sts";
+	buttonName5 = "0104";
+	buttonText5 = "0104 Calc Load";
+	buttonName6 = "0105";
+	buttonText6 = "0105 Eng Cool Temp";
+	buttonName7 = "0106";
+	buttonText7 = "0106 Bank1 STFT";
+	buttonName8 = "0107";
+	buttonText8 = "0107 Bank1 LTFT";
+	buttonName9 = "0108";
+	buttonText9 = "0108 Bank2 STFT";
+	buttonName10 = "0109";
+	buttonText10 = "0109 Bank2 LTFT";
+	buttonName11 = "100A";
+	buttonText11 = "010A Fuel Press";
+	buttonName12 = "010B";
+	buttonText12 = "010B Man Abs Press";
+	buttonName13 = "010C";
+	buttonText13 = "010C Eng RPM";
+	buttonName14 = "010D";
+	buttonText14 = "010D Veh Speed";
+	buttonName15 = "010E";
+	buttonText15 = "010E Timing Adv";
+	buttonName16 = "010F";
+	buttonText16 = "010F Int Air Temp";
+};
+
+HOTBUTTON_DisplayTypeMenu {
+
+	name = "DisplayTypeMenu";
+	titled = "true";
+	titlePercentHeight = "9";
+	titleText = "Display Type";
+	titleFontSize = "20";
+	titleColor = ["1.0", "0.0", "0.0", "1.0"];
+	scrollable = "false";
+	numButtons = "4";
+	buttonPadding = "7";
+	cornerRadius = "10";
+	borderWidth = "1";
+	borderColor = ["0.43", "0.43", "0.43", "0.0"];
+	backgroundColor = ["0.0", "0.0", "0.0", "0.6"];
+	pressDebounce = "500";
+	isHorizontal = "false";
+	selectMode = "radio";
+	#selectMode = "timed";
+	#timedSelectDuration = "100";
+	hideable = "false";
+	hideDuration = "500";
+	hideDeltaX = "0";
+	hideDeltaY = "50";
+	hideFade = "60";
+
+	configureButtons = "true";
+
+	buttonCornerRadius = "10";
+	buttonBorderWidth = "2";
+	buttonBorderColor = ["0.43", "0.43", "0.43", "1.0"];
+	buttonBackgroundColor = ["0.0", "0.0", "0.0", "0.6"];
+	buttonTextColor = ["1.0", "1.0", "1.0", "1.0"];
+	buttonSelectedBackgroundColor = ["0.43", "0.43", "0.43", "0.4"];
+	buttonSelectedBorderColor = ["1.0", "1.0", "1.0", "1.0"];
+	buttonSelectedBorderWidth = "2";
+	buttonSelectedTextColor = ["1.0", "0.0", "0.0", "1.0"];
+	buttonName1 = "Gauge";
+	buttonText1 = "Gauge";
+	buttonName2 = "Graph";
+	buttonText2 = "Graph";
+	buttonName3 = "Readout";
+	buttonText3 = "Readout";
+	buttonName4 = "Tape";
+	buttonText4 = "Tape";
+
+
+};

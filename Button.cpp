@@ -182,58 +182,58 @@ void Button::update(void) {
 	}
 
 	*/
-	if(!bufferSaved) {
-		if(selected) {
-			setfill(selectedBackgroundColor);
-			StrokeWidth(selectedBorderWidth);
-			setstroke(selectedBorderColor);
-		}
-		else {
-			setfill(backgroundColor);
-			StrokeWidth(borderWidth);
-			setstroke(borderColor);
-		}
-		if(cornerRadius == 0) Rect(bottomLeftX, bottomLeftY, rectWidth, rectHeight);
-		else {
-			float cornerHeight = 0.01 * cornerRadius * rectWidth;
-			Roundrect(bottomLeftX, bottomLeftY, rectWidth, rectHeight, cornerRadius, cornerRadius);
-		}
-		if(containsText) {
-			if(selected) setfill(selectedTextColor);
-			else setfill(textColor);
-			StrokeWidth(0);
-			textFontSize = (rectHeight-borderWidth)/2;
-			int textWidth = TextWidth((char*)text.c_str(), SansTypeface, textFontSize);
-			while(textWidth > 0.9*rectWidth) {
-				textFontSize--;
-				textWidth = TextWidth((char*)text.c_str(), SansTypeface, textFontSize);
-			}
-			if(textVertAlign == 'T')
-			TextMid(centerX, bottomLeftY+rectHeight-textFontSize, (char*)text.c_str(), SansTypeface, textFontSize-2);
-			if(textVertAlign == 'C')
-				TextMid(centerX, centerY-textFontSize/2, (char*)text.c_str(), SansTypeface, textFontSize-2);
-			if(textVertAlign == 'B')
-				TextMid(centerX, bottomLeftY+borderWidth, (char*)text.c_str(), SansTypeface, textFontSize-2);
-		}
-		if(containsValue) {
-			if(selected) setfill(selectedValueColor);
-			else setfill(valueColor);
-			if(valueVertAlign == 'T')
-				TextMid(centerX, bottomLeftY+rectHeight-valueFontSize, (char*)valueString.c_str(), SansTypeface, valueFontSize-2);
-			if(valueVertAlign == 'C')
-				TextMid(centerX, centerY-valueFontSize/2, (char*)valueString.c_str(), SansTypeface, valueFontSize-2);
-			if(valueVertAlign == 'B')
-				TextMid(centerX, bottomLeftY+borderWidth, (char*)valueString.c_str(), SansTypeface, valueFontSize-2);
-		}
 
-		/*
+	if(selected) {
+		setfill(selectedBackgroundColor);
+		StrokeWidth(selectedBorderWidth);
+		setstroke(selectedBorderColor);
+	}
+	else {
+		setfill(backgroundColor);
+		StrokeWidth(borderWidth);
+		setstroke(borderColor);
+	}
+	if(cornerRadius == 0) Rect(bottomLeftX, bottomLeftY, rectWidth, rectHeight);
+	else {
+		float cornerHeight = 0.01 * cornerRadius * rectWidth;
+		Roundrect(bottomLeftX, bottomLeftY, rectWidth, rectHeight, cornerRadius, cornerRadius);
+	}
+	if(containsText) {
+		if(selected) setfill(selectedTextColor);
+		else setfill(textColor);
+		StrokeWidth(0);
+		textFontSize = (rectHeight-borderWidth)/2;
+		int textWidth = TextWidth((char*)text.c_str(), SansTypeface, textFontSize);
+		while(textWidth > 0.9*rectWidth) {
+			textFontSize--;
+			textWidth = TextWidth((char*)text.c_str(), SansTypeface, textFontSize);
+		}
+		if(textVertAlign == 'T')
+		TextMid(centerX, bottomLeftY+rectHeight-textFontSize, (char*)text.c_str(), SansTypeface, textFontSize-2);
+		if(textVertAlign == 'C')
+		TextMid(centerX, centerY-textFontSize/2, (char*)text.c_str(), SansTypeface, textFontSize-2);
+		if(textVertAlign == 'B')
+		TextMid(centerX, bottomLeftY+borderWidth, (char*)text.c_str(), SansTypeface, textFontSize-2);
+	}
+	if(containsValue) {
+		if(selected) setfill(selectedValueColor);
+		else setfill(valueColor);
+		if(valueVertAlign == 'T')
+		TextMid(centerX, bottomLeftY+rectHeight-valueFontSize, (char*)valueString.c_str(), SansTypeface, valueFontSize-2);
+		if(valueVertAlign == 'C')
+		TextMid(centerX, centerY-valueFontSize/2, (char*)valueString.c_str(), SansTypeface, valueFontSize-2);
+		if(valueVertAlign == 'B')
+		TextMid(centerX, bottomLeftY+borderWidth, (char*)valueString.c_str(), SansTypeface, valueFontSize-2);
+	}
+
+	/*
 		if(!isMoving() && !selected) {
 			vgGetPixels(bufferImage, centerX-readoutWidth/2, centerY-readoutHeight/2, centerX - readoutWidth/2, centerY - readoutHeight/2, readoutWidth, readoutHeight);
 			bufferSaved = true;
 			cout << "Button image saved" << endl;
 		}
 		*/
-	}
+	
 	/*
 	else if(bufferSaved) {
 		vgSeti(VG_IMAGE_MODE, VG_DRAW_IMAGE_MULTIPLY);
