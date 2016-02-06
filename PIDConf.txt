@@ -2,6 +2,7 @@
 
 
 0105 {
+	command		= "0105";
 	fullName 		= "Engine Coolant Temperature";
 	shortName 		= "ECT";
 	numDataBytes	= "1";

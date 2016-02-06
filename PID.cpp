@@ -46,10 +46,10 @@ void PID::configure(string configType){
 		
 		cfg->parse("/home/pi/openvg/client/PIDConf.txt"); //use full path name so program can run from startup and not break...
 		
-		
-		numDataBytes	=   parseInt( 		cfg , scope , "numDataBytes" 	);
+		command			= parseString( 	cfg , scope , "command" );
+		numDataBytes	=   parseInt( 	cfg , scope , "numDataBytes" 	);
 		numRanges 		=	parseInt(		cfg , scope , "numRanges"		);
-		fullName 		=	parseString( 	cfg , scope , "fullName" 		);
+		fullName 			=	parseString( 	cfg , scope , "fullName" 		);
 		shortName 		=	parseString( 	cfg , scope , "shortName" 		);
 
 		
@@ -133,7 +133,9 @@ void PID::configure(string configType){
 	
 }
 
-
+string PID::getCommand(void) {
+	return command;
+}
 
 string PID::getEngUnits(void){
 	return engUnits[currRange-1];

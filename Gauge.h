@@ -5,12 +5,14 @@
 
 #include "TouchableObject.h"
 #include "Button.h"
+#include "DisplayableObject.h"
 #include "EGL/egl.h"
+
 
 /******************************************************************************************************************************
 									GAUGE CLASS
 ******************************************************************************************************************************/
-class Gauge: public TouchableObject{
+class Gauge: public TouchableObject, DisplayableObject{
 	
 private: //This is an access_specifier.  
 	

@@ -15,6 +15,8 @@ using namespace std;
 #include <cmath>
 #include "TouchableObject.h"
 
+#include "DisplayableObject.h"
+
 #include "parsingUtils.h" // utilize parsing utilities for configuration file processing
 
 #include "EGL/egl.h"
@@ -277,55 +279,16 @@ void Gauge::draw(void){
 	****************************************************************/
 	
 	
-	gaugeBuffer = vgCreateImage(VG_sABGR_8888, 2*radius	, 2*radius, VG_IMAGE_QUALITY_BETTER);
-	
-	// get the current display
-	realDisplay = eglGetCurrentDisplay();	 
-	if(realDisplay == EGL_NO_DISPLAY) cout << "Failed to get current display" << endl;
-	
-	
-	static const EGLint attribute_list[] = {
-		EGL_RED_SIZE, 8,
-		EGL_GREEN_SIZE, 8,
-		EGL_BLUE_SIZE, 8,
-		EGL_ALPHA_SIZE, 8,
-		EGL_SURFACE_TYPE, EGL_WINDOW_BIT,
-		EGL_NONE
-	};
-	
-	
-		result = eglChooseConfig(realDisplay, attribute_list, &config, 1, &num_config); //result denotes success of choosing a configuration
-	if(result == EGL_FALSE) cout << "Failed to choose config" << endl;
-	
-	//Get the current drawing surface: this is so that when we are done working with the pbuffer surfcae, we can swithc back to the current one
-	realSurface = eglGetCurrentSurface(EGL_DRAW);
-	if(realSurface == EGL_NO_SURFACE) cout << "Failed to get current surface" << endl;
-		
-		//Get the current context: this is so we know what context to use
-	realContext = eglGetCurrentContext();
-	if(realContext == EGL_NO_CONTEXT) cout << "Failed to get current context" << endl;
-	
-	
-		static const EGLint surfAttr[] = {
-		EGL_HEIGHT, radius*2,
-		EGL_WIDTH, radius*2,
-		EGL_NONE
-	};
-	
-		mySurface = eglCreatePbufferFromClientBuffer (realDisplay, EGL_OPENVG_IMAGE, (EGLClientBuffer)gaugeBuffer, config, surfAttr); //the image needs to be cast to EGLClientBuffer
-	if(mySurface == EGL_NO_SURFACE)  cout << "Failed to create pbuffer surface" << endl;
-	
-	
-	// https://www.khronos.org/registry/egl/sdk/docs/man/html/eglMakeCurrent.xhtml
-		result = eglMakeCurrent(realDisplay, mySurface, mySurface, realContext);
-	if(result == EGL_FALSE) cout << "Failed to make new display current" << endl;
 	
 	
 	
-	float surfaceBackgroundColor[4];
-	RGBA(0, 0, 0, 0.1, surfaceBackgroundColor); //dumps these attribures into the array we created
-	vgSetfv(VG_CLEAR_COLOR, 4, surfaceBackgroundColor); //setv sets a value, seti sets an attribute
-	vgClear(0, 0, radius*2, 2*radius);
+	// Displayable Object Method: Create the "off-screen" buffer surface:  Want the width and height to be size of the largest gauge radius.
+	EGLSurface bufferSurface = createBufferSurface( 2*radius, 2*radius ,  &gaugeBuffer );
+	
+	//Displayable Object Method:  switch to "off-screen" buffer surface
+	
+	switchToBufferSurface(bufferSurface);
+
 		
 	
 	/****************************************************************
@@ -401,8 +364,9 @@ void Gauge::draw(void){
 	
 	
 	//switch back to original surface
-		eglMakeCurrent(realDisplay, realSurface, realSurface, realContext);
-	if(result == EGL_FALSE) cout << "Failed to make original display current" << endl;
+	
+	switchToDisplaySurface();
+
 
 	
 	

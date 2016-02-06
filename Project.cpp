@@ -12,6 +12,7 @@ using namespace std;
 
 #include <vector>
 
+#include <iterator> //for std::distance
 #include <string> 
 
 #include "VG/openvg.h"		// OpenVG
@@ -75,10 +76,11 @@ float receivecolor[] = {0.4, 0.69, 1.0, 1.0};
 
 vector<Button> DASHBOARD_HotButtons;
 
-vector<TouchableObject*> DASHBOARD_DisplayObjects;
-vector<TouchableObject*> test;
+//vector<TouchableObject*> DASHBOARD_DisplayObjects;
+vector<PID> DASHBOARD_PIDs;
+//vector<TouchableObject*> test;
 
-vector<Button*> HotButtonTestVector; //Vector of type pointer to a Button class object
+//vector<Button*> HotButtonTestVector; //Vector of type pointer to a Button class object
 vector<Gauge> GaugeObjects;
 
 
@@ -155,8 +157,8 @@ int main(){
 	string groupName = "G1";// THis is to determine which group of PIDS is first displayed onfirst diisplay of hot button menu
 	HOTBUTTON_GroupMenu.selectButton("G1");
 	HOTBUTTON_ParameterMenus.emplace_back(3*width/6 , 0.5*(height-30) , width/3-10 , height-120,groupName);
-			
-			
+	
+	
 	
 	
 	/****************************************************************
@@ -211,7 +213,7 @@ int main(){
 		Mode1Menu.update(loopTouch);
 		
 		// HotButtonTestVector[0]->updateTouch(loopTouch);
-					// HotButtonTestVector[0]->update();
+		// HotButtonTestVector[0]->update();
 
 
 		if(Mode1Menu.isButtonPressed("m1")) Mode1Menu.selectButton("m1");
@@ -227,15 +229,23 @@ int main(){
 		****************************************************************/
 		if(Mode1Menu.isButtonSelected("m1")){
 			
-			std::vector<Button>::iterator it; // create iterator for a vector of object type Button
+			// create PID iterator for requests
+			std::vector<PID>::iterator p = DASHBOARD_PIDs.begin();
+			bool waitingOnData;
+			
+			// create iterator for a vector of object type Button
 			// Loop through the hotbuttons for the DASHBOARD mode and call the touchEnable method of class Button
-			for( it = DASHBOARD_HotButtons.begin(); it != DASHBOARD_HotButtons.end(); it++) (it)->touchEnable();
+			for(std::vector<Button>::iterator it= DASHBOARD_HotButtons.begin(); it != DASHBOARD_HotButtons.end(); it++) (it)->touchEnable();
+			
 			
 			
 			bool menuVisable = false;
 			
-			ELMSerial.serialWrite("ATZ");
-			string serialData = ""
+			
+			string serialData = "";
+			
+			
+	
 			
 
 			while(1){
@@ -244,29 +254,37 @@ int main(){
 				
 				loopTime = bcm2835_st_read();
 				loopTouch = threadTouch;
+			
 				
-				serialData = ELMSerial.serialReadUntil()
-					if(!serialData.empty()){
-						PID1.update( serialData , loopTime );
-						ELMSerial.serialWrite("0105");
-						
-					}
-						
-					
-					
+				//Loop through PID vector and attempt a call and read until from SErial object to obtain data
+				//If data not requested
+				if( !waitingOnData && p!= DASHBOARD_PIDs.end() ){
+					ELMSerial.serialWrite((p)->getCommand() );
+					waitingOnData = true;
+				}
+				
+				else if(waitingOnData && !serialData.empty() ){
+					waitingOnData = false;
+					(p) ->update(serialData, loopTime);
+					if(p<DASHBOARD_PIDs.end() ) p++;
+					if(p== DASHBOARD_PIDs.end() ) p = DASHBOARD_PIDs.begin();
+				}
+				
+				
+				
 				vgSetPixels(0, 0, backgroundImage, 0, 0, 800, 480);
 				Mode1Menu.update(loopTouch);
 				
 				
 				// Loop through the hotbuttons for the DASHBOARD mode and call the touchEnable method of class Button
-				for( it = DASHBOARD_HotButtons.begin(); it != DASHBOARD_HotButtons.end(); it++) {
+				for( std::vector<Button>::iterator it = DASHBOARD_HotButtons.begin(); it != DASHBOARD_HotButtons.end(); it++) {
 					(it)->updateTouch(loopTouch);
 					(it)->update();
 					
 					//if( (it)->isPressed() && DASHBOARD_DisplayObjects.size()==0){
 					if( (it)->isReleased() && !menuVisable){
-						 	
-						 menuVisable=true;
+						
+						menuVisable=true;
 						for( std::vector<Button>::iterator obj = DASHBOARD_HotButtons.begin(); obj != DASHBOARD_HotButtons.end(); obj++) (obj)->touchDisable();
 					}
 					
@@ -276,24 +294,35 @@ int main(){
 				
 				
 				
-	
-	
-	
-					//update all object vectors appropriatelay: we want to update gauge objects before so that they show up "underneath" the menu if it is called upon
-				for( std::vector<Gauge>::iterator obj = GaugeObjects.begin(); obj != GaugeObjects.end(); obj++){
-	
 				
-				(obj)->updateTouch(loopTouch);
-				(obj)->update( PID1.getRawDatum() ,"PSI" );
-				(obj)->touchEnable();
+				
+				
+				//update all object vectors appropriatelay: we want to update gauge objects before so that they show up "underneath" the menu if it is called upon
+				for( std::vector<Gauge>::iterator obj = GaugeObjects.begin(); obj != GaugeObjects.end(); obj++){
+					
+					
+					(obj)->updateTouch(loopTouch);
+					
+					// SImply select the same element that obj currently points to, but from the PID vector standpoint.  THis requires an in-parallel "update" to gauge and PID vectors such that gauge of element i always takes data from PID of element i
+					(obj)->update( PID1.getRawDatum() ,"PSI" );
+					(obj)->touchEnable();
+					if((obj)->isPressed() ){
+					GaugeObjects.erase(obj);
+					
+					cout<<std::distance(GaugeObjects.begin(), obj)<<endl;
+					//DASHBOARD_PIDs.erase ;
 						
+					}
+					
+					//
+					
 				}
 				
 				
 				
 				
 				
-				 //IF the menu is visible, we need to then update it with touch and draw it (part of update method)
+				//IF the menu is visible, we need to then update it with touch and draw it (part of update method)
 				if(menuVisable){
 					
 					string groupNamePressed = ""; //THis tells us which of the grouyps of first menu was pressed
@@ -303,11 +332,11 @@ int main(){
 					if(!groupNamePressed.empty()){
 						HOTBUTTON_GroupMenu.selectButton(groupNamePressed);
 						if(groupNamePressed.compare(groupName)!=0){ //Nonzero value means it doesnt compare, and we have selected a different gropuname and need to repopluate the vector with the second menu to ddisplay
-						groupName = groupNamePressed;
-						
-						if(HOTBUTTON_ParameterMenus.size()>0) HOTBUTTON_ParameterMenus.erase(HOTBUTTON_ParameterMenus.end());
-						
-						HOTBUTTON_ParameterMenus.emplace_back(3*width/6 , 0.5*(height-30) , width/3-10 , height-100,groupName);
+							groupName = groupNamePressed;
+							
+							if(HOTBUTTON_ParameterMenus.size()>0) HOTBUTTON_ParameterMenus.erase(HOTBUTTON_ParameterMenus.end());
+							
+							HOTBUTTON_ParameterMenus.emplace_back(3*width/6 , 0.5*(height-30) , width/3-10 , height-100,groupName);
 						}
 						
 						
@@ -322,7 +351,7 @@ int main(){
 						if(!parameterPressed.empty()) (m)->selectButton(parameterPressed);
 					}
 					
-				
+					
 					// SELECT the Display object menu button
 					HOTBUTTON_DisplayObjectMenu.update(loopTouch);
 					string buttonName = HOTBUTTON_DisplayObjectMenu.getPressedButtonName();
@@ -341,12 +370,27 @@ int main(){
 						cout<<"ALl menus selected"<<endl;
 						
 						
+						//In parallel, populate the appropriate PID object in the PID vector
+						DASHBOARD_PIDs.emplace_back(parameterMenuButtonSelected);
+						p = DASHBOARD_PIDs.begin(); //THis is to reset iterator to beginning of vector: avoid bug when this is not done, causes program crash
+						
+						
 						//Popluate appropriate object vectors with selected object
 						
-						GaugeObjects.emplace_back(width/6, height/2, width/6 , "BoostGauge");
+						cout<<parameterMenuButtonSelected<<endl;
+						cout<<displayObjectedMenuButtonSelected<<endl;
+						cout<<groupMenuButtonSelected<<endl;
+						cout<<displayObjectedMenuButtonSelected.compare("Gauge") <<endl;
+						
+						if( displayObjectedMenuButtonSelected.compare("Gauge")==0 ){
+						GaugeObjects.emplace_back(width/6, height/2, width/6 , parameterMenuButtonSelected.append("Gauge") );
+						
+						
 						
 						//oNLY DRAW THE GAUGE ONCE:
 						GaugeObjects.back().draw();
+						
+						}
 						
 						
 						// Deselect buttons (except first menu)
@@ -366,8 +410,8 @@ int main(){
 					}
 					
 					
-						
-						
+					
+					
 
 				} //END if Menu is visible
 				
@@ -405,7 +449,7 @@ int main(){
 				
 				
 				
-			
+				
 				
 				
 				End();

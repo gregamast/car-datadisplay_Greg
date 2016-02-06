@@ -1,4 +1,4 @@
-BoostGauge {
+0105Gauge {
 	gaugeGroup = "NONE";
     pressDebounce = "500";
     numRanges = "2";

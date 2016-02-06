@@ -5,7 +5,7 @@ INCLUDEFLAGS=-I/opt/vc/include -I/opt/vc/include/interface/vmcs_host/linux -I/op
 
 LIBFLAGS=-L/opt/vc/lib -L/opt/vc/lib -lGLESv2 -lEGL -lbcm_host -lpthread  -ljpeg -L/home/pi/openvg/client/config4cpp/lib
 
-objects = Serial.o touchScreen.o Gauge.o TouchableObject.o PID.o Button.o TextView.o Menu.o parsingUtils.o Project.o
+objects = Serial.o touchScreen.o Gauge.o TouchableObject.o DisplayableObject.o PID.o Button.o TextView.o Menu.o parsingUtils.o Project.o
 
 all: $(objects) Project
 
@@ -26,6 +26,8 @@ Serial.o: Serial.cpp
 PID.o: PID.cpp
 
 TouchableObject.o: TouchableObject.cpp
+
+DisplayableObject.o: DisplayableObject.cpp
 
 touchScreen.o: touchScreen.cpp
 

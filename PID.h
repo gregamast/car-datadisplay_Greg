@@ -44,7 +44,7 @@ private: //This is an access_specifier.
 	float** weightedMAData;
 	float** simpleMAData;
 	
-	
+	string command; //THe command issued to ELM to request data for this particular PID
 	
 	
 	float* rangeScaling; // the scaling value associated for every range
@@ -85,6 +85,7 @@ public: //This is an access_specifier.
 	float getRawUpdateRate(void);
 	float getReadoutUpdateRate(void);
 	string getEngUnits(void);
+	string getCommand( void );
 	
 	
 	void update(string , uint64_t); // Data being sent over serail as ascii string, thats why first input is type char
