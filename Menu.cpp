@@ -185,6 +185,7 @@ void Menu::configure(string ident) {
 	try {
 		cfg->parse("testConfig");
 		string menuName = ident;
+		type = parseString(cfg, menuName, "type");
 		cornerRadius = parseInt(cfg, menuName, "cornerRadius");
 		borderWidth = parseInt(cfg, menuName, "borderWidth");
 		// Given position and border, determine size and start coordinate of menu rectangle
@@ -408,6 +409,9 @@ void Menu::selectButton(string name) {
 
 /* Deselects the first button which matches the provided name */
 void Menu::deselectButton(string name) {
+	//cout<<"************************"<<endl;
+	//cout<<getVectorIndex(name)<<endl;
+	//cout<<menuButtons[getVectorIndex(name)].getName()<<endl;
 	menuButtons[getVectorIndex(name)].deselect();
 	bufferSaved = false;
 }

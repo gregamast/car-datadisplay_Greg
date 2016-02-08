@@ -114,6 +114,18 @@ void DisplayableObject::switchToDisplaySurface(void){
 }
 
 
+	int DisplayableObject::getDOPosX(void){
+		return centerX;
+	}
+	int DisplayableObject::getDOPosY(void){
+	return centerY;	
+	}
+
+void DisplayableObject::setDOPos(int cposx, int cposy){
+	centerX = cposx;
+	centerY = cposy;
+	
+}
 
 
 

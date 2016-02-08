@@ -32,6 +32,9 @@ private: //This is an access_specifier.
 	EGLint 				num_config;				//	Number of EGLConfigs returned (eglChooseConfig)
 	EGLBoolean 		result; 						//	Boolean used to store result of EGL calls
 	EGLConfig 		config;						//	Frame Buffer configuration (eglChooseConfig)
+	
+	int centerX; 										//The displayable object center position: A private attribute, and as such cannot be collected by derived classes.
+	int centerY;										//The displayable object center position: A private attribute, and as such cannot be collected by derived classes.
 
 
 public: //This is an access_specifier. 
@@ -47,9 +50,14 @@ public: //This is an access_specifier.
 	
 	void drawBuffer(int, int, int, int, float, VGImage); //
 	
+	int getDOPosX(void); //Return the X position of the current Displayable Object:  This is to collect the position of derivede classes
+	int getDOPosY(void); // return the  position
+	
 private:
 
-	
+protected:
+
+void setDOPos(int , int); //THe derived class object (gauge, graph, etc) calls this base class method in constructor to set the display object position equal to position it was instaitated at
 	
 };
 

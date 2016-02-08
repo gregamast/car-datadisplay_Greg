@@ -13,7 +13,7 @@ using namespace std;
 
 class Menu : public TouchableObject {
 private:
-	string menuIdentifier;
+	
 	VGImage bufferImage;
 	bool bufferSaved;
 	int width, height, borderWidth, centerX, centerY;
@@ -89,6 +89,9 @@ private:
 	vector<Button> menuButtons;
 
 public:
+	string menuIdentifier; // SO we can find which menu exactly to pull fro mthe configuration file
+	string type;  //This is the type of menu displayed: for example thing the second submenu for hotbuttons: different menus can be called for the second sub-menu, however all those unique menus should carry the same type
+	
 	Menu(int, int, int, int, string);		// Menu Constructor: center X, center Y, width, height, identifier
 	
 	void update(touch_t);					// Menu update function: draws menu & updates buttons with provided touch data

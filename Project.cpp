@@ -47,74 +47,72 @@ using namespace std;
 #include "Menu.h"
 #include "TextView.h"
 
+#include <algorithm>
+
 
 
 /***********************************************************************************************************************************
-							VARIABLE DECLARATIONS
+VARIABLE DECLARATIONS
 ***********************************************************************************************************************************/
 
 // Color definitions (float r, float g, float b, float alpha)
-float black[] = {0,0,0,1};
-float green[] = {0,1,0,1};
-float red[] = {1,0,0,1};
-float blue[] = {0,0,1,1};
-float white[] = {1,1,1,1};
-float translucentBlack[] = {0,0,0,0.5};
-float gray[] = {0.43,0.43,0.43,1};
+float black[] 						= { 0 , 0 , 0 , 1 };
+float green[] 						= { 0 , 1 , 0 , 1 };
+float red[] 						= { 1 , 0 , 0 , 1 };
+float blue[] 						= { 0 , 0 , 1 , 1 };
+float white[] 						= { 1 , 1 , 1 , 1 };
+float translucentBlack[] 		= { 0 , 0 , 0 , 0.5 };
+float gray[] 						= { 0.43 , 0.43 , 0.43 , 1 };
+float sendcolor[] 				= { 1.0 , 0.4 , 0.4 , 1.0 };
+float receivecolor[] 			= { 0.4 , 0.69 , 1.0 , 1.0 };
 
 touch_t threadTouch, loopTouch; //loopTouch is a copy to allow each loop iteration to operate on same data.  touch is constantly updated in a seperate thread (consider renaming this to threadTouch)
 int quitState = 0;
 
 VGImage backgroundImage;
-
-
+int width, height;
 
 uint64_t loopTime;
 
-float sendcolor[] = {1.0, 0.4, 0.4, 1.0};
-float receivecolor[] = {0.4, 0.69, 1.0, 1.0};
-
-vector<Button> DASHBOARD_HotButtons;
-
-//vector<TouchableObject*> DASHBOARD_DisplayObjects;
-vector<PID> DASHBOARD_PIDs;
-//vector<TouchableObject*> test;
-
-//vector<Button*> HotButtonTestVector; //Vector of type pointer to a Button class object
-vector<Gauge> GaugeObjects;
+// Set up container vectors per mode: ex DASHBOARD is a mode
+vector<Button> 	DASHBOARD_HotButtons;
+vector<PID> 		DASHBOARD_PIDs;
+vector<Gauge>	 	DASHBOARD_GaugeObjects;
+vector<Menu> 		DASHBOARD_Menus;
 
 
 
 /***********************************************************************************************************************************
-							PROTOTYPES
+PROTOTYPES
 ***********************************************************************************************************************************/
 void setupGraphics(int*, int*);
+void DisplayObjectManager( std::vector<Gauge>& , std::vector<PID>& , std::vector<Menu>& , std::vector<Button>& );
 
 
 /***********************************************************************************************************************************
-							MAIN
+MAIN
 ***********************************************************************************************************************************/
 
 int main(){
 	
 	
-	if(!bcm2835_init())
-	return 1;
-	
-	int width, height;
-
+	if(!bcm2835_init()) return 1;
 	
 	/****************************************************************
-		Initialize Screen Graphics
+	Initialize Screen Graphics
 			- This is a comment
 	****************************************************************/
 	setupGraphics(&width,&height);	
 	
 	/****************************************************************
-		Serial Communication
+	Serial Communication
 	****************************************************************/
 	//Serial ELMSerial( "/dev/cp210x" , B9600 ); // The persisnet name has been assigned to the UART to serial bridge device i plug into my pi: cp210x
 	Serial ELMSerial( "/dev/ttyUSB1" , B38400 );
+	ELMSerial.setReadTimeout(5000);
+	ELMSerial.serialWrite("ATZ");
+	ELMSerial.setEndChar('>');
+	
 	/****************************************************************
 		touch Thread Creation: THis is for reading touch data from touchscreen actions
 	****************************************************************/
@@ -124,83 +122,31 @@ int main(){
 	}
 
 
-	Menu Mode1Menu(width/2, height-40, width-20, 60, "Mode1Menu");
-	Mode1Menu.touchEnable();
+	/****************************************************************
+		CREATE MAIN MODE MENU
+	****************************************************************/
+	Menu ModeMenu(width/2, height-40, width-20, 60, "ModeMenu");
+	ModeMenu.touchEnable();
 	
-	Menu PIDMenu(width-width/4, height/2, width/2-20, 360, "PIDMenu1");
-	PIDMenu.touchEnable();
+	
+	
 
-
-	ELMSerial.serialWrite("ATZ");
-	ELMSerial.setEndChar('>');
-	ELMSerial.setReadTimeout(5000);
-
-	
-	PID PID1("0105");
-	
-	
-	DASHBOARD_HotButtons.emplace_back(Button(1*width/6, 0.5*(height-30), 25, 25, "hotButton1"));
-	DASHBOARD_HotButtons.emplace_back(Button(3*width/6, 0.5*(height-30), 25, 25, "hotButton2"));
-	DASHBOARD_HotButtons.emplace_back(Button(5*width/6, 0.5*(height-30), 25, 25, "hotButton3"));
-	
-	Menu HOTBUTTON_GroupMenu(1*width/6 , 0.5*(height-30) , width/3-10 , height-120,"HOTBUTTON_GroupMenu");
-	vector<Menu> HOTBUTTON_ParameterMenus;
-	//Menu HOTBUTTON_ParameterMenu(3*width/6 , 0.5*(height-30) , width/3-10 , height-100,"HOTBUTTON_GroupMenu");
-	Menu HOTBUTTON_DisplayObjectMenu(5*width/6 , 0.5*(height-30) , width/3-10 , height-120,"HOTBUTTON_DisplayTypeMenu");
-	
-	
-	//We want our hot button general menu first menu (parameter goruping) to have the first
-	//grouping button automatically selected, and then show for the second menu (PIDS menu) automatically
-	//those PIDS associated wiht the first menu grouping.  WE SHOULD CREATE A FEATURE IN THE CONFIG
-	//FILE FOR INITIALIZED ISSELECTED FEATURE and not have this hard coded here...
-	
-	string groupName = "G1";// THis is to determine which group of PIDS is first displayed onfirst diisplay of hot button menu
-	HOTBUTTON_GroupMenu.selectButton("G1");
-	HOTBUTTON_ParameterMenus.emplace_back(3*width/6 , 0.5*(height-30) , width/3-10 , height-120,groupName);
 	
 	
 	
 	
 	/****************************************************************
-		Loop through program start sequence
+		Draw Main Background image
 	****************************************************************/
-	// // std::cin.ignore();
-	
-	
-	// Image(VGfloat x, VGfloat y, int w, int h, char * filename)
-	
-	/* 		for(float alpha=1;alpha>=0;alpha-=0.01){
-			Image(-300, -100, width+400, height+400, "mickey.jpg");
-	
-	//Background(0, 0, 0,alpha);
-	Fill(0,0,0,alpha);
-	Rect(0,0,width,height);
-	End();//This ends the picture
-	
-	bcm2835_delay(1);
-	
 
-	}
-	
-// // std::cin.ignore();
-	
-	Background(0, 0, 0); */
-	
-	//Image(0, 0, width, height, "bgImage2.jpg"); 
 	Image(0, 0, width, height, "carbon.jpg");
 	backgroundImage = vgCreateImage(VG_sABGR_8888, width, height, VG_IMAGE_QUALITY_BETTER);
 	vgGetPixels(backgroundImage , 0 , 0 , 0 , 0 , width , height);
 	
-	
-	/****************************************************************
-		set all touchable objects to be touchable
-	****************************************************************/
-	
 
-	
-	
-
-	
+	/***********************************************************************************************************************************
+	TOP-LEVEL INFINITE WHILE
+	***********************************************************************************************************************************/
 	while(1) {
 		loopTime = bcm2835_st_read();
 		
@@ -210,51 +156,48 @@ int main(){
 		vgSetPixels(0, 0, backgroundImage, 0, 0, 800, 480);
 
 		// Update menus
-		Mode1Menu.update(loopTouch);
+		ModeMenu.update(loopTouch);
 		
-		// HotButtonTestVector[0]->updateTouch(loopTouch);
-		// HotButtonTestVector[0]->update();
 
 
-		if(Mode1Menu.isButtonPressed("m1")) Mode1Menu.selectButton("m1");
-		if(Mode1Menu.isButtonPressed("m2")) Mode1Menu.selectButton("m2");
-		if(Mode1Menu.isButtonPressed("m3")) Mode1Menu.selectButton("m3");
-		if(Mode1Menu.isButtonPressed("m4")) Mode1Menu.selectButton("m4");
-		if(Mode1Menu.isButtonPressed("m5")) Mode1Menu.selectButton("m5");
-		if(Mode1Menu.isButtonPressed("m6")) Mode1Menu.selectButton("m6");
+		if(ModeMenu.isButtonPressed("m1")) ModeMenu.selectButton("m1");
+		if(ModeMenu.isButtonPressed("m2")) ModeMenu.selectButton("m2");
+		if(ModeMenu.isButtonPressed("m3")) ModeMenu.selectButton("m3");
+		if(ModeMenu.isButtonPressed("m4")) ModeMenu.selectButton("m4");
+		if(ModeMenu.isButtonPressed("m5")) ModeMenu.selectButton("m5");
+		if(ModeMenu.isButtonPressed("m6")) ModeMenu.selectButton("m6");
 
 		
-		/****************************************************************
+		/**************************************************************************************************************************************************************************
 		Infinite While loop for Mode 1: Display mode
-		****************************************************************/
-		if(Mode1Menu.isButtonSelected("m1")){
+		***************************************************************************************************************************************************************************/
+		
+		// NOTE WANT TO IMPLEMENT A SWITCH CASE HERE
+		if(ModeMenu.isButtonSelected("m1")){
+			
+			int numPIDs = 0;
 			
 			// create PID iterator for requests
 			std::vector<PID>::iterator p = DASHBOARD_PIDs.begin();
 			bool waitingOnData;
 			
 			// create iterator for a vector of object type Button
-			// Loop through the hotbuttons for the DASHBOARD mode and call the touchEnable method of class Button
-			for(std::vector<Button>::iterator it= DASHBOARD_HotButtons.begin(); it != DASHBOARD_HotButtons.end(); it++) (it)->touchEnable();
-			
 			
 			
 			bool menuVisable = false;
-			
-			
+
 			string serialData = "";
-			
-			
-	
-			
 
 			while(1){
 				
-				
+
+				if(DASHBOARD_PIDs.size() != numPIDs){
+					numPIDs = DASHBOARD_PIDs.size();
+					p = DASHBOARD_PIDs.begin();
+				}
 				
 				loopTime = bcm2835_st_read();
 				loopTouch = threadTouch;
-			
 				
 				//Loop through PID vector and attempt a call and read until from SErial object to obtain data
 				//If data not requested
@@ -273,52 +216,66 @@ int main(){
 				
 				
 				vgSetPixels(0, 0, backgroundImage, 0, 0, 800, 480);
-				Mode1Menu.update(loopTouch);
+				ModeMenu.update(loopTouch);
 				
 				
-				// Loop through the hotbuttons for the DASHBOARD mode and call the touchEnable method of class Button
+				
+				
+				
+				
+				
 				for( std::vector<Button>::iterator it = DASHBOARD_HotButtons.begin(); it != DASHBOARD_HotButtons.end(); it++) {
 					(it)->updateTouch(loopTouch);
 					(it)->update();
-					
-					//if( (it)->isPressed() && DASHBOARD_DisplayObjects.size()==0){
+				}
+				
+				for( std::vector<Menu>::iterator it = DASHBOARD_Menus.begin(); it != DASHBOARD_Menus.end(); it++) {
+					(it)->update(loopTouch);
+				}
+				
+				for( std::vector<Gauge>::iterator it = DASHBOARD_GaugeObjects.begin(); it != DASHBOARD_GaugeObjects.end(); it++) {
+					(it)->updateTouch(loopTouch);
+					(it)->update(0, "PSI");
+				}
+				
+				DisplayObjectManager( DASHBOARD_GaugeObjects , DASHBOARD_PIDs , DASHBOARD_Menus , DASHBOARD_HotButtons );
+				
+				
+				//************************************************************************************************************************************************************
+				
+				//************************************************************************************************************************************************************
+				
+				//************************************************************************************************************************************************************
+				
+				//************************************************************************************************************************************************************
+				
+				//************************************************************************************************************************************************************
+				
+				/*
 					if( (it)->isReleased() && !menuVisable){
 						
 						menuVisable=true;
 						for( std::vector<Button>::iterator obj = DASHBOARD_HotButtons.begin(); obj != DASHBOARD_HotButtons.end(); obj++) (obj)->touchDisable();
 					}
-					
-					
 				}
 				
-				
-				
-				
-				
-				
-				
+
 				//update all object vectors appropriatelay: we want to update gauge objects before so that they show up "underneath" the menu if it is called upon
-				for( std::vector<Gauge>::iterator obj = GaugeObjects.begin(); obj != GaugeObjects.end(); obj++){
-					
-					
-					(obj)->updateTouch(loopTouch);
+				std::vector<PID>::iterator PIter = DASHBOARD_PIDs.begin();
+				for( std::vector<Gauge>::iterator GIter = DASHBOARD_GaugeObjects.begin(); GIter != DASHBOARD_GaugeObjects.end(); GIter++){
+					(GIter)->updateTouch(loopTouch);
 					
 					// SImply select the same element that obj currently points to, but from the PID vector standpoint.  THis requires an in-parallel "update" to gauge and PID vectors such that gauge of element i always takes data from PID of element i
-					(obj)->update( PID1.getRawDatum() ,"PSI" );
-					(obj)->touchEnable();
-					if((obj)->isPressed() ){
-					GaugeObjects.erase(obj);
-					
-					cout<<std::distance(GaugeObjects.begin(), obj)<<endl;
-					//DASHBOARD_PIDs.erase ;
-						
+					(GIter)->update( (PIter)->getRawDatum() ,"PSI" );
+					(GIter)->touchEnable();
+					if((GIter)->isPressed() ){
+						DASHBOARD_GaugeObjects.erase(GIter);
+						DASHBOARD_PIDs.erase(PIter);	
 					}
-					
-					//
-					
+					PIter++;
 				}
 				
-				
+
 				
 				
 				
@@ -382,21 +339,24 @@ int main(){
 						cout<<groupMenuButtonSelected<<endl;
 						cout<<displayObjectedMenuButtonSelected.compare("Gauge") <<endl;
 						
+						// Deselect buttons (except first menu)
+						cout<<parameterMenuButtonSelected<<endl;
+						HOTBUTTON_ParameterMenus[0].deselectButton(parameterMenuButtonSelected);
+						HOTBUTTON_DisplayObjectMenu.deselectButton(displayObjectedMenuButtonSelected);
+						
+						
+						
 						if( displayObjectedMenuButtonSelected.compare("Gauge")==0 ){
-						GaugeObjects.emplace_back(width/6, height/2, width/6 , parameterMenuButtonSelected.append("Gauge") );
-						
-						
-						
-						//oNLY DRAW THE GAUGE ONCE:
-						GaugeObjects.back().draw();
-						
+							string parmMenuButtonSelectedForAppend = parameterMenuButtonSelected;
+							DASHBOARD_GaugeObjects.emplace_back(width/6, height/2, width/6 , parmMenuButtonSelectedForAppend.append("Gauge") );
+
+							//oNLY DRAW THE GAUGE ONCE:
+							DASHBOARD_GaugeObjects.back().draw();
+							
 						}
 						
 						
-						// Deselect buttons (except first menu)
-						HOTBUTTON_GroupMenu.deselectButton(groupMenuButtonSelected);
-						HOTBUTTON_ParameterMenus[0].deselectButton(parameterMenuButtonSelected);
-						HOTBUTTON_DisplayObjectMenu.deselectButton(displayObjectedMenuButtonSelected);
+						
 						
 						
 						//Re-touchenable all other buttons/hotbuttons/objects
@@ -404,68 +364,76 @@ int main(){
 						
 						menuVisable = false; 
 						
+						// De-select the buttons which were selected in this round of menu display
+						// HOTBUTTON_ParameterMenus[0].deselectButton(parameterMenuButtonSelected);
+						// HOTBUTTON_DisplayObjectMenu.deselectButton(displayObjectedMenuButtonSelected);
+
 						
-						
-						
-					}
-					
-					
-					
-					
+					} // END IF ALL MENU BUTTONS ARE SELECTED
 
 				} //END if Menu is visible
 				
 				
+				*/
 				
+				//************************************************************************************************************************************************************
 				
+				//************************************************************************************************************************************************************
+				
+				//************************************************************************************************************************************************************
+				
+				//************************************************************************************************************************************************************
+				
+				//************************************************************************************************************************************************************
+
 				
 				
 				// Check if any other top menu buttons have been pressed, if so, break out of this loop for the current top menu button which is pressed
-				if(Mode1Menu.isButtonPressed("m1")) {
-					Mode1Menu.selectButton("m1");
+				if(ModeMenu.isButtonPressed("m1")) {
+					ModeMenu.selectButton("m1");
 					break;
 				}
-				if(Mode1Menu.isButtonPressed("m2")) {
-					Mode1Menu.selectButton("m2");
+				if(ModeMenu.isButtonPressed("m2")) {
+					ModeMenu.selectButton("m2");
 					break;
 				}
-				if(Mode1Menu.isButtonPressed("m3")) {
-					Mode1Menu.selectButton("m3");
+				if(ModeMenu.isButtonPressed("m3")) {
+					ModeMenu.selectButton("m3");
 					break;
 				}
-				if(Mode1Menu.isButtonPressed("m4")) {
-					Mode1Menu.selectButton("m4");
+				if(ModeMenu.isButtonPressed("m4")) {
+					ModeMenu.selectButton("m4");
 					break;
 				}
-				if(Mode1Menu.isButtonPressed("m5")) {
-					Mode1Menu.selectButton("m5");
-					break;
-				}
-				
-				if(Mode1Menu.isButtonPressed("m6")) {
-					Mode1Menu.selectButton("m6");
+				if(ModeMenu.isButtonPressed("m5")) {
+					ModeMenu.selectButton("m5");
 					break;
 				}
 				
-				
-				
-				
-				
+				if(ModeMenu.isButtonPressed("m6")) {
+					ModeMenu.selectButton("m6");
+					break;
+				}
+
 				
 				End();
-			}
+			}//END MODE 61INFIINTE WHILE LOOP
+			
+		} // END if mode 1 pressed
+		
+		
+		
+		
+		/**************************************************************************************************************************************************************************
+		Infinite While loop for Mode 6: 
+		***************************************************************************************************************************************************************************/
+		
+		if(ModeMenu.isButtonSelected("m6")) {
+			
+			Menu PIDMenu(width-width/4, height/2, width/2-20, 360, "PIDMenu1");
+			PIDMenu.touchEnable();
 			
 			
-		}
-		
-		
-		
-		
-		/****************************************************************
-		Infinite While loop for Mode 6
-		****************************************************************/
-		
-		if(Mode1Menu.isButtonSelected("m6")) {
 			TextView SerialViewer(width/4, height/2, width/2-20, 360, "SerialViewer");
 			Menu SerialViewerMenu(width/4, 30, width/2-20, 50, "SerialViewerMenu");
 			SerialViewerMenu.touchEnable();
@@ -480,7 +448,7 @@ int main(){
 				//vgSeti(VG_IMAGE_MODE, VG_DRAW_IMAGE_MULTIPLY);
 				
 				
-				Mode1Menu.update(loopTouch);
+				ModeMenu.update(loopTouch);
 				SerialViewerMenu.update(loopTouch);
 				PIDMenu.update(loopTouch);
 				
@@ -530,30 +498,34 @@ int main(){
 					cout << endl;
 					SerialViewer.addNewLine(data, receivecolor);
 				}
-				if(Mode1Menu.isButtonPressed("m1")) {
-					Mode1Menu.selectButton("m1");
+				if(ModeMenu.isButtonPressed("m1")) {
+					ModeMenu.selectButton("m1");
 					break;
 				}
-				if(Mode1Menu.isButtonPressed("m2")) {
-					Mode1Menu.selectButton("m2");
+				if(ModeMenu.isButtonPressed("m2")) {
+					ModeMenu.selectButton("m2");
 					break;
 				}
-				if(Mode1Menu.isButtonPressed("m3")) {
-					Mode1Menu.selectButton("m3");
+				if(ModeMenu.isButtonPressed("m3")) {
+					ModeMenu.selectButton("m3");
 					break;
 				}
-				if(Mode1Menu.isButtonPressed("m4")) {
-					Mode1Menu.selectButton("m4");
+				if(ModeMenu.isButtonPressed("m4")) {
+					ModeMenu.selectButton("m4");
 					break;
 				}
-				if(Mode1Menu.isButtonPressed("m5")) {
-					Mode1Menu.selectButton("m5");
+				if(ModeMenu.isButtonPressed("m5")) {
+					ModeMenu.selectButton("m5");
 					break;
 				}
 				End();
-			}
+			} //END MODE 6 INFIINTE WHILE LOOP
 
-		}
+		} // END if mode 6 pressed
+		
+		
+		
+		
 		End(); //called after every itereation of the loop
 	}
 }
@@ -565,107 +537,171 @@ void setupGraphics(int* widthPtr, int* heightPtr) {
 	Background(0,0,0);
 }
 
+//
 
-
-// if ( BoostGauge.isTouched() ){
-//std::cout << "screen RR Button was touched!!!" << endl;
-//void TouchableObject::move(int finalX, int finalY, int transTime, string motionType )
-
-
-
-// if(MenuButton1.getCurrentPosY() <0){
-
-// for(int i=0;i<=2;i++){
-// gaugeArray[i]->update(BoostDataStream.getWeightedMADatum(), BoostDataStream.getEngUnits());
-// }
-
-// BoostGauge.fade(75 ,250+60*6,"emptyForNow");
-// TempGauge.fade(75 ,250+60*6,"emptyForNow");
-// BoostGauge2.fade(75 ,250+60*6,"emptyForNow");
-// ScreenRRButton.fade(75, 250+60*6,"emptyForNow" );
-
-// MenuButton7.move(width-50, 25,250,"emptyForNow");
-// MenuButton7.fade( 0 ,250,"emptyForNow");
-
-// MenuButton6.move(width-150-10, 25, 250+60*1,"emptyForNow");
-// MenuButton6.fade( 0,250+60*1,"emptyForNow");
-
-// MenuButton5.move(width-250-20,25, 250+60*2, "emptyForNow");
-// MenuButton5.fade( 0,250+60*2,"emptyForNow");
-
-// MenuButton4.move(width-350-30,25,250+60*3,"emptyForNow");
-// MenuButton4.fade( 0,250+60*3,"emptyForNow");
-
-// MenuButton3.move(width-450-40,25,250+60*4,"emptyForNow");
-// MenuButton3.fade( 0,250+60*4,"emptyForNow");
-
-// MenuButton2.move(width-550-50,25,250+60*5,"emptyForNow");
-// MenuButton2.fade( 0,250+60*5,"emptyForNow");
-
-// MenuButton1.move(width-650-60,25,250+60*6,"emptyForNow");
-// MenuButton1.fade( 0,250+60*6,"emptyForNow");
-
-// }
-
-// if(MenuButton1.getCurrentPosY() >0){
-
-// BoostGauge.fade(0 ,250+60*6,"emptyForNow");
-// TempGauge.fade(0 ,250+60*6,"emptyForNow");
-// BoostGauge2.fade(0 ,250+60*6,"emptyForNow");
-// ScreenRRButton.fade(0, 250+60*6,"emptyForNow" );
-
-// MenuButton7.move(width-50, -20,250,"emptyForNow");
-// MenuButton7.fade( 75,250,"emptyForNow");
-
-// MenuButton6.move(width-150-10, -22, 250+60*1,"emptyForNow");
-// MenuButton6.fade( 75,250+60*1,"emptyForNow");
-
-// MenuButton5.move(width-250-20,-22, 250+60*2, "emptyForNow");
-// MenuButton5.fade( 75,250+60*2,"emptyForNow");
-
-// MenuButton4.move(width-350-30,-22,250+60*3,"emptyForNow");
-// MenuButton4.fade( 75,250+60*3,"emptyForNow");
-
-// MenuButton3.move(width-450-40,-22,250+60*4,"emptyForNow");
-// MenuButton3.fade( 75,250+60*4,"emptyForNow");
-
-// MenuButton2.move(width-550-50,-22,250+60*5,"emptyForNow");
-// MenuButton2.fade( 75,250+60*5,"emptyForNow");
-
-// MenuButton1.move(width-650-60,-22,250+60*6,"emptyForNow");
-// MenuButton1.fade( 75,250+60*6,"emptyForNow");
-
-// }
-
-
-// }
+void DisplayObjectManager( std::vector<Gauge>& Gauges, std::vector<PID>& PIDs, std::vector<Menu>& Menus, std::vector<Button>& HotButtons ){
 
 
 
+		int width = 800; 
+		int height = 480;
+	//If not hotbuttons are visible & you are in mode 1 (to be added later) then we want to create hot buttons
+	if( HotButtons.size()==0 && Gauges.size()==0 ){
+		HotButtons.emplace_back(Button(1*width/6, 0.5*(height-30), 25, 25, "hotButton1"));
+		HotButtons.back().touchEnable();
+		HotButtons.emplace_back(Button(3*width/6, 0.5*(height-30), 25, 25, "hotButton2"));
+		HotButtons.back().touchEnable();
+		HotButtons.emplace_back(Button(5*width/6, 0.5*(height-30), 25, 25, "hotButton3"));
+		HotButtons.back().touchEnable();
+	}
+
+	/**************************************************************************************
+	VECTOR LOOP: BUTTONS
+	**************************************************************************************/
+
+	for(std::vector<Button>::iterator BIter = HotButtons.begin(); BIter != HotButtons.end(); BIter++){
+		
+
+		
+		if(BIter->isPressed()) BIter->select();
+		if(BIter->isReleased()) {
+			
+			// Disable touch for all other objects
+			for(std::vector<Button>::iterator BIter 	= HotButtons.begin(); 	BIter != HotButtons.end(); 	BIter++) BIter->touchDisable();
+			for(std::vector<Menu>::iterator MIter 	= Menus.begin(); 			MIter != Menus.end(); 		MIter++) MIter->touchDisable();
+			for(std::vector<Gauge>::iterator GIter 	= Gauges.begin(); 		GIter != Gauges.end(); 		GIter++) GIter->touchDisable();
+			
+			Menus.emplace_back(1*width/6 , 0.5*(height-30) , width/3-10 , height-120,"HOTBUTTON_GroupMenu");
+			string defaultGroup  = "G1";
+			Menus.back().selectButton(defaultGroup);
+			Menus.emplace_back(5*width/6 , 0.5*(height-30) , width/3-10 , height-120,"HOTBUTTON_DisplayTypeMenu");
+			Menus.emplace_back(3*width/6 , 0.5*(height-30) , width/3-10 , height-120,defaultGroup);
+			
+			
+			
+		}
+	
+	}
+	
+	/**************************************************************************************
+	VECTOR LOOP: MENUS
+	**************************************************************************************/
+	
+	if(Menus.size() != 0 ){
+		
+	string menuType = "group";
+	auto HOTBUTTON_GroupMenu_it = find_if( Menus.begin() , Menus.end() , [&menuType](const Menu& obj) {return obj.type.compare(menuType) ==0; } ); 
+	
+	menuType = "parameter";
+	auto HOTBUTTON_ParameterMenu_it = find_if( Menus.begin() , Menus.end() , [&menuType](const Menu& obj) {return obj.type.compare(menuType) ==0; } ); 
+	
+	menuType = "DisplayType";
+	auto HOTBUTTON_DisplayMenu_it = find_if( Menus.begin() , Menus.end() , [&menuType](const Menu& obj) {return obj.type.compare(menuType) ==0; } ); 
+	
+
+	
+	string pressedButtonName = HOTBUTTON_GroupMenu_it->getPressedButtonName();
+	if( ! pressedButtonName.empty()){
+		HOTBUTTON_GroupMenu_it->selectButton(pressedButtonName);
+		
+		//remove second menu and repopulate with appropriate menu
+			Menus.erase(HOTBUTTON_ParameterMenu_it);
+			Menus.emplace_back(3*width/6 , 0.5*(height-30) , width/3-10 , height-120,HOTBUTTON_GroupMenu_it->getSelectedButtonName() );
+			//recreate iterator
+			menuType = "parameter";
+			HOTBUTTON_ParameterMenu_it = find_if( Menus.begin() , Menus.end() , [&menuType](const Menu& obj) {return obj.type.compare(menuType) ==0; } ); 
+	}	
+
+	
+	
+	pressedButtonName = HOTBUTTON_ParameterMenu_it->getPressedButtonName();
+	if( ! pressedButtonName.empty()){
+		HOTBUTTON_ParameterMenu_it->selectButton(pressedButtonName);
+	}
+	
+	pressedButtonName = HOTBUTTON_DisplayMenu_it->getPressedButtonName();
+	if( ! pressedButtonName.empty()){
+		HOTBUTTON_DisplayMenu_it->selectButton(pressedButtonName);
+		if( !HOTBUTTON_GroupMenu_it->getSelectedButtonName().empty() && !HOTBUTTON_ParameterMenu_it->getSelectedButtonName().empty()  ){
+			
+			
+			
+									cout<<"ALl menus selected"<<endl;
+						
+						
+						//In parallel, populate the appropriate PID object in the PID vector
+						PIDs.emplace_back( HOTBUTTON_ParameterMenu_it->getSelectedButtonName() );
+						
+						
+						
+						if( HOTBUTTON_DisplayMenu_it->getSelectedButtonName().compare("Gauge")==0 ){
+							string parmMenuButtonSelectedForAppend = HOTBUTTON_ParameterMenu_it->getSelectedButtonName();
+							Gauges.emplace_back(width/6, height/2, width/6 , parmMenuButtonSelectedForAppend.append("Gauge") );
+
+							//oNLY DRAW THE GAUGE ONCE:
+							Gauges.back().draw();
+							
+						}
+						
+
+			Menus.erase(HOTBUTTON_GroupMenu_it);
+			Menus.erase(HOTBUTTON_ParameterMenu_it);
+			Menus.erase(HOTBUTTON_DisplayMenu_it);
+			
+			// Since menu is closing, loop through and re-touch enable and re-diplsay all other objects
+			for(std::vector<Button>::iterator BIter 	= HotButtons.begin(); 	BIter != HotButtons.end(); 	BIter++) BIter->touchEnable();
+			for(std::vector<Menu>::iterator MIter 	= Menus.begin(); 			MIter != Menus.end(); 		MIter++) MIter->touchEnable();
+			for(std::vector<Gauge>::iterator GIter 	= Gauges.begin(); 		GIter != Gauges.end(); 		GIter++) GIter->touchEnable();
+			
+		}
+	}
+	
+	
+	
+	
+	// if(HOTBUTTON_GroupMenu_it->getSelectedButtonName().compare
+	// for(std::vector<Menu>::iterator MIter = Menus.begin(); MIter != Menus.end(); MIter++){
+		
+		
+		//Check special case of us having selected (or reselected) a group sub-menu button: change the second sub-menu
+		// if(MIter->menuIdenifier.compare("HOTBUTTON_GroupMenu")==0){
+			// string pressedButtonName = MIter->getPressedButtonName();
+			// if( ! pressedButtonName.empty() ) MIter->selectButton( pressedButtonName);
+			
+			
+		// }
+		
+		
+		// string pressedButtonName = MIter->getPressedButtonName();
+		// if( ! pressedButtonName.empty() ) MIter->selectButton( pressedButtonName);
+		//if(menu is type ...)
+		
+		
+		
+	// }
+	
+	
+
+}
+}
+	
+	
+	/**************************************************************************************
+	VECTOR LOOP: GAUGES
+	**************************************************************************************/
+
+	/**************************************************************************************
+	VECTOR LOOP: GRAPHS
+	**************************************************************************************/
+
+	/**************************************************************************************
+	VECTOR LOOP: TAPES
+	**************************************************************************************/
 
 
-// /****************************************************************
-// Create DATA STREAM Object
-// ****************************************************************/
-// DataStream BoostDataStream(2);
 
-// BoostDataStream.setCharTags('A' , 'B');
-// BoostDataStream.setStreamScaling(100.0);
-// BoostDataStream.setRangeScaling(1.0,1); //for the PSI positive data values. data comes in from arduino for boost gauge as PSI*streamscaling factor
-// BoostDataStream.setRangeLimits(0,30,1);
-// string eu1="PSI";
-// BoostDataStream.setEngUnits(eu1,1);
-// BoostDataStream.setWeightedMALag(3,1);
-// float coefficients[]={0.25,0.25,0.5};
-// BoostDataStream.setWeightedMACoeffs(coefficients,1);
-// BoostDataStream.setSimpleMALag(3,1);
 
-// Configure the second range
 
-// BoostDataStream.setRangeScaling(-2.036,2); //for the PSI positive data values. data comes in from arduino for boost gauge as PSI*streamscaling factor
-// BoostDataStream.setRangeLimits(-14.734,0,2); // this is PSI equivlanet of 30 inHG, we are rejecting larger magnitude values
-// string eu2="inHG";
-// BoostDataStream.setEngUnits(eu2,2);
-// BoostDataStream.setWeightedMALag(3,2);
-// BoostDataStream.setWeightedMACoeffs(coefficients,2);
-// BoostDataStream.setSimpleMALag(3,2);
+
+
+

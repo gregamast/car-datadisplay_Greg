@@ -37,6 +37,8 @@ Button::Button(string identifier) {
 	setRectWidthHeight(readoutWidth, readoutHeight);	// Called by derived class to set rectangular touch area size
 	setRectCenter(centerX, centerY);					// Called by derived class to set rectangular touch area bottom left corner
 	bufferSaved = false;
+	
+	setDOPos(centerX, centerY); //This is a method of DO base class, for which this Button class is a derivative
 }
 
 /* Button Constructor: Use given location and size, load properties from config file*/
@@ -61,6 +63,8 @@ Button::Button(int cX, int cY, int w, int h, string identifier) {
 	setRectangular();
 	setRectWidthHeight(readoutWidth, readoutHeight);	// Called by derived class to set rectangular touch area size
 	setRectCenter(centerX, centerY);					// Called by derived class to set rectangular touch area bottom left corner
+	
+	setDOPos(centerX, centerY); //This is a method of DO base class, for which this Button class is a derivative
 }
 
 /* Button Constructor: Use given location and size, call setters for everything else*/
@@ -84,6 +88,8 @@ Button::Button(int cX, int cY, int w, int h) {
 	setRectangular();
 	setRectWidthHeight(readoutWidth, readoutHeight);	// Called by derived class to set rectangular touch area size
 	setRectCenter(centerX, centerY);					// Called by derived class to set rectangular touch area bottom left corner
+	
+	setDOPos(centerX, centerY); //This is a method of DO base class, for which this Button class is a derivative
 	
 	//bufferImage = vgCreateImage(VG_sABGR_8888, 800, 480, VG_IMAGE_QUALITY_BETTER);
 }
